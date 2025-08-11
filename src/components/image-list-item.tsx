@@ -71,6 +71,11 @@ export function ImageListItem({ image, onRemove, onUpdateImage, onConvert }: Ima
     };
   }, [image.file, image.convertedUrl]);
 
+  useEffect(() => {
+    setFormat(image.conversionOptions.format);
+    setQuality(image.conversionOptions.quality * 100);
+  }, [image.conversionOptions]);
+
   const sizeReduction = image.convertedSize
     ? ((image.originalSize - image.convertedSize) / image.originalSize) * 100
     : 0;
