@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import {
   FileImage,
@@ -10,18 +10,31 @@ import {
   Trash2,
   Wand2,
   Loader2,
+  RefreshCw,
+  ChevronDown
 } from 'lucide-react';
-import type { ImageFile } from '@/types';
+import type { ImageFile, ConversionOptions } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { AICompressionDialog } from './ai-compression-dialog';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import { Slider } from "@/components/ui/slider"
+import { Label } from "@/components/ui/label"
+
 
 interface ImageListItemProps {
   image: ImageFile;
   onRemove: (id: string) => void;
   onUpdateImage: (id: string, newImageData: Partial<ImageFile>) => void;
+  onConvert: (id: string, options: ConversionOptions) => void;
 }
 
 function formatBytes(bytes: number, decimals = 2) {
@@ -33,23 +46,36 @@ function formatBytes(bytes: number, decimals = 2) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
 
-export function ImageListItem({ image, onRemove, onUpdateImage }: ImageListItemProps) {
+const formatMapping: { [key: string]: string } = {
+    'image/webp': 'WebP',
+    'image/jpeg': 'JPEG',
+    'image/png': 'PNG',
+};
+
+export function ImageListItem({ image, onRemove, onUpdateImage, onConvert }: ImageListItemProps) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isAiDialogOpen, setIsAiDialogOpen] = useState(false);
+  
+  const [format, setFormat] = useState(image.conversionOptions.format);
+  const [quality, setQuality] = useState(image.conversionOptions.quality * 100);
 
   useEffect(() => {
-    if (image.status === 'converted' && image.convertedUrl) {
-      setImageUrl(image.convertedUrl);
-    } else {
-      const url = URL.createObjectURL(image.file);
-      setImageUrl(url);
-      return () => URL.revokeObjectURL(url);
-    }
-  }, [image.file, image.status, image.convertedUrl]);
-  
+    const url = image.convertedUrl || URL.createObjectURL(image.file);
+    setImageUrl(url);
+    
+    // Revoke object URL on cleanup, unless it's a new converted URL
+    return () => {
+        if (image.convertedUrl !== url && url.startsWith('blob:')) {
+            URL.revokeObjectURL(url);
+        }
+    };
+  }, [image.file, image.convertedUrl]);
+
   const sizeReduction = image.convertedSize
     ? ((image.originalSize - image.convertedSize) / image.originalSize) * 100
     : 0;
+
+  const isConverting = image.status === 'converting' || image.status === 'ai_optimizing';
 
   const StatusIndicator = () => {
     switch (image.status) {
@@ -67,75 +93,123 @@ export function ImageListItem({ image, onRemove, onUpdateImage }: ImageListItemP
   
   const handleDownload = () => {
     if (!image.convertedUrl || !image.convertedFile) return;
+    const extension = image.conversionOptions.format.split('/')[1];
     const a = document.createElement('a');
     a.href = image.convertedUrl;
-    a.download = image.file.name.replace(/\.[^/.]+$/, ".webp");
+    a.download = image.file.name.replace(/\.[^/.]+$/, `.${extension}`);
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
   };
 
+  const handleConvertClick = () => {
+    onConvert(image.id, { format, quality: quality / 100 });
+  };
+  
+  const showQualitySlider = useMemo(() => format === 'image/jpeg' || format === 'image/webp', [format]);
+
   return (
-    <div className="flex items-center gap-4 p-4 border rounded-lg bg-card hover:bg-muted/50 transition-colors">
-      <div className="flex-shrink-0 w-16 h-16 relative bg-muted rounded-md overflow-hidden">
-        {imageUrl ? (
-          <Image src={imageUrl} alt={image.file.name} layout="fill" objectFit="cover" />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <Loader2 className="animate-spin text-muted-foreground" />
+    <div className="flex flex-col gap-4 p-4 border rounded-lg bg-card hover:bg-muted/50 transition-colors">
+      <div className="flex items-center gap-4">
+          <div className="flex-shrink-0 w-16 h-16 relative bg-muted rounded-md overflow-hidden">
+            {imageUrl ? (
+              <Image src={imageUrl} alt={image.file.name} layout="fill" objectFit="cover" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <Loader2 className="animate-spin text-muted-foreground" />
+              </div>
+            )}
           </div>
-        )}
-      </div>
 
-      <div className="flex-grow">
-        <p className="font-semibold truncate" title={image.file.name}>{image.file.name}</p>
-        <div className="text-sm text-muted-foreground flex items-center gap-2 flex-wrap">
-          <span>{formatBytes(image.originalSize)}</span>
-          {image.convertedSize && (
-            <>
-              <span>&rarr;</span>
-              <span className="font-medium text-foreground">{formatBytes(image.convertedSize)}</span>
-              {sizeReduction > 0 && (
-                <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                  -{sizeReduction.toFixed(1)}%
-                </Badge>
+          <div className="flex-grow min-w-0">
+            <p className="font-semibold truncate" title={image.file.name}>{image.file.name}</p>
+            <div className="text-sm text-muted-foreground flex items-center gap-2 flex-wrap">
+              <span>{formatBytes(image.originalSize)}</span>
+              {image.convertedSize && image.status === 'converted' && (
+                <>
+                  <span>&rarr;</span>
+                  <span className="font-medium text-foreground">{formatBytes(image.convertedSize)}</span>
+                  {sizeReduction > 0 && (
+                    <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                      -{sizeReduction.toFixed(1)}%
+                    </Badge>
+                  )}
+                </>
               )}
-            </>
-          )}
-        </div>
-        {(image.status === 'converting' || image.status === 'ai_optimizing') && image.progress !== undefined && (
-          <Progress value={image.progress} className="h-2 mt-1" />
-        )}
-        {image.status === 'error' && (
-          <p className="text-xs text-destructive mt-1">{image.error}</p>
-        )}
-      </div>
-
-      <div className="flex items-center gap-2 ml-auto">
-        <StatusIndicator />
-        <Button
-            size="icon"
-            variant="ghost"
-            onClick={() => setIsAiDialogOpen(true)}
-            disabled={image.status !== 'converted'}
-            title="AI-Assisted Compression"
-          >
-            <Wand2 className="h-4 w-4" />
-        </Button>
-        <Button
-            size="icon"
-            variant="ghost"
-            onClick={handleDownload}
-            disabled={image.status !== 'converted'}
-            title="Download"
-          >
-            <Download className="h-4 w-4" />
-        </Button>
-        <Button size="icon" variant="ghost" onClick={() => onRemove(image.id)} title="Remove">
-          <Trash2 className="h-4 w-4 text-destructive" />
-        </Button>
+            </div>
+             {(image.status === 'converting' || image.status === 'ai_optimizing') && image.progress !== undefined && (
+              <Progress value={image.progress} className="h-2 mt-1 w-full" />
+            )}
+            {image.status === 'error' && (
+              <p className="text-xs text-destructive mt-1">{image.error}</p>
+            )}
+          </div>
+          <div className="flex items-center gap-1 ml-auto">
+            <StatusIndicator />
+            <Button
+                size="icon"
+                variant="ghost"
+                onClick={handleDownload}
+                disabled={image.status !== 'converted'}
+                title="Download"
+            >
+                <Download className="h-4 w-4" />
+            </Button>
+            <Button size="icon" variant="ghost" onClick={() => onRemove(image.id)} title="Remove">
+                <Trash2 className="h-4 w-4 text-destructive" />
+            </Button>
+          </div>
       </div>
       
+      {image.status !== 'pending' && (
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pl-20">
+          <div className='flex-grow grid grid-cols-1 sm:grid-cols-2 gap-4 items-center'>
+            <div>
+              <Label>Format</Label>
+              <Select value={format} onValueChange={setFormat} disabled={isConverting}>
+                  <SelectTrigger className="w-full mt-1 h-9">
+                      <SelectValue placeholder="Select format" />
+                  </SelectTrigger>
+                  <SelectContent>
+                      <SelectItem value="image/webp">WebP</SelectItem>
+                      <SelectItem value="image/jpeg">JPEG</SelectItem>
+                      <SelectItem value="image/png">PNG</SelectItem>
+                  </SelectContent>
+              </Select>
+            </div>
+            
+            <div className={cn(!showQualitySlider && 'opacity-50')}>
+                <Label>Quality: {quality}%</Label>
+                <Slider
+                    value={[quality]}
+                    onValueChange={(v) => setQuality(v[0])}
+                    max={100}
+                    step={1}
+                    className="mt-2"
+                    disabled={isConverting || !showQualitySlider}
+                />
+            </div>
+          </div>
+          
+          <div className="flex gap-2 self-end sm:self-center pt-4">
+             <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setIsAiDialogOpen(true)}
+                disabled={image.status !== 'converted'}
+                title="AI-Assisted Compression"
+              >
+                <Wand2 className="mr-2 h-4 w-4" />
+                AI Assist
+            </Button>
+            <Button size="sm" onClick={handleConvertClick} disabled={isConverting}>
+                {isConverting ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <RefreshCw className="mr-2 h-4 w-4" />}
+                Convert
+            </Button>
+          </div>
+        </div>
+      )}
+
       {image.status === 'converted' &&
         <AICompressionDialog
             isOpen={isAiDialogOpen}

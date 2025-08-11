@@ -3,7 +3,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
-import type { ImageFile } from '@/types';
+import type { ImageFile, ConversionOptions } from '@/types';
 import { ImageUploader } from '@/components/image-uploader';
 import { ImageList } from '@/components/image-list';
 import { Button } from '@/components/ui/button';
@@ -14,7 +14,7 @@ export default function Home() {
   const [images, setImages] = useState<ImageFile[]>([]);
   const { toast } = useToast();
 
-  const convertImage = useCallback((image: ImageFile) => {
+  const convertImage = useCallback((image: ImageFile, options: ConversionOptions) => {
     setImages((prev) =>
       prev.map((img) =>
         img.id === image.id
@@ -69,8 +69,8 @@ export default function Home() {
                   )
                 );
               },
-              'image/webp',
-              0.8 // Default quality
+              options.format,
+              options.quality
             );
           }
         }, 50);
@@ -94,6 +94,7 @@ export default function Home() {
         file,
         originalSize: file.size,
         status: 'pending',
+        conversionOptions: { format: 'image/webp', quality: 0.8 }
       }));
 
       const uniqueNewImages = newImages.filter(
@@ -102,10 +103,9 @@ export default function Home() {
 
       if (uniqueNewImages.length > 0) {
         setImages((prev) => [...prev, ...uniqueNewImages]);
-        uniqueNewImages.forEach(convertImage);
       }
     },
-    [images, convertImage]
+    [images]
   );
 
   const handleError = (id: string, message: string) => {
@@ -132,6 +132,14 @@ export default function Home() {
   const handleUpdateImage = useCallback((id: string, newImageData: Partial<ImageFile>) => {
     setImages(prev => prev.map(img => img.id === id ? { ...img, ...newImageData } : img));
   }, []);
+  
+  const handleReconvertImage = useCallback((id: string, options: ConversionOptions) => {
+    const imageToConvert = images.find(img => img.id === id);
+    if(imageToConvert) {
+      handleUpdateImage(id, { conversionOptions: options });
+      convertImage(imageToConvert, options);
+    }
+  }, [images, convertImage, handleUpdateImage]);
 
   const convertedImages = useMemo(() => images.filter(img => img.status === 'converted' && img.convertedFile), [images]);
 
@@ -146,13 +154,14 @@ export default function Home() {
 
     const zip = new JSZip();
     convertedImages.forEach((image) => {
-      const newName = image.file.name.substring(0, image.file.name.lastIndexOf('.')) + '.webp';
+      const extension = image.conversionOptions.format.split('/')[1];
+      const newName = image.file.name.substring(0, image.file.name.lastIndexOf('.')) + `.${extension}`;
       zip.file(newName, image.convertedFile!);
     });
 
     try {
       const zipBlob = await zip.generateAsync({ type: 'blob' });
-      saveAs(zipBlob, 'WebPGator_images.zip');
+      saveAs(zipBlob, 'ImagePress_images.zip');
     } catch (error) {
       toast({
         variant: 'destructive',
@@ -167,14 +176,14 @@ export default function Home() {
     <div className="flex flex-col h-full bg-background text-foreground">
       <header className="p-6 border-b border-border">
         <div className="container mx-auto">
-          <h1 className="text-3xl font-bold font-headline text-center">WebPGator</h1>
+          <h1 className="text-3xl font-bold font-headline text-center">ImagePress</h1>
           <p className="text-muted-foreground text-center mt-2">
-            Bulk convert and optimize your images to WebP with AI-powered precision.
+            Convert and optimize your images with precision.
           </p>
         </div>
       </header>
       <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8">
-        <div className="max-w-4xl mx-auto flex flex-col gap-8">
+        <div className="max-w-6xl mx-auto flex flex-col gap-8">
           <ImageUploader onUpload={handleImageUpload} />
 
           {images.length > 0 && (
@@ -190,11 +199,16 @@ export default function Home() {
             </div>
           )}
 
-          <ImageList images={images} onRemove={handleRemoveImage} onUpdateImage={handleUpdateImage} />
+          <ImageList 
+            images={images} 
+            onRemove={handleRemoveImage} 
+            onUpdateImage={handleUpdateImage}
+            onConvert={handleReconvertImage}
+          />
         </div>
       </main>
       <footer className="p-4 border-t border-border text-center text-sm text-muted-foreground">
-        <p>&copy; {new Date().getFullYear()} WebPGator. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} ImagePress. All rights reserved.</p>
       </footer>
     </div>
   );

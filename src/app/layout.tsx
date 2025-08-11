@@ -3,8 +3,8 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'WebPGator',
-  description: 'Convert and optimize your images to WebP with AI-powered precision.',
+  title: 'ImagePress',
+  description: 'Convert and optimize your images with precision.',
 };
 
 export default function RootLayout({
