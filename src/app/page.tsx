@@ -3,7 +3,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
-import type { ImageFile, ConversionOptions } from '@/types';
+import type { ImageFile, ConversionOptions, ConversionFormat } from '@/types';
 import { ImageUploader } from '@/components/image-uploader';
 import { ImageList } from '@/components/image-list';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 
 export default function Home() {
   const [images, setImages] = useState<ImageFile[]>([]);
+  const [globalOptions, setGlobalOptions] = useState<ConversionOptions>({ format: 'image/webp', quality: 0.8 });
   const { toast } = useToast();
 
   const convertImage = useCallback((image: ImageFile, options: ConversionOptions) => {
@@ -37,7 +38,6 @@ export default function Home() {
         }
         ctx.drawImage(imgElement, 0, 0);
         
-        // Simulate progress for better UX
         let progress = 0;
         const interval = setInterval(() => {
           progress += 10;
@@ -94,7 +94,7 @@ export default function Home() {
         file,
         originalSize: file.size,
         status: 'pending',
-        conversionOptions: { format: 'image/webp', quality: 0.8 }
+        conversionOptions: globalOptions
       }));
 
       const uniqueNewImages = newImages.filter(
@@ -105,7 +105,7 @@ export default function Home() {
         setImages((prev) => [...prev, ...uniqueNewImages]);
       }
     },
-    [images]
+    [images, globalOptions]
   );
 
   const handleError = (id: string, message: string) => {
@@ -136,8 +136,9 @@ export default function Home() {
   const handleReconvertImage = useCallback((id: string, options: ConversionOptions) => {
     const imageToConvert = images.find(img => img.id === id);
     if(imageToConvert) {
+      const updatedImage = { ...imageToConvert, conversionOptions: options };
       handleUpdateImage(id, { conversionOptions: options });
-      convertImage(imageToConvert, options);
+      convertImage(updatedImage, options);
     }
   }, [images, convertImage, handleUpdateImage]);
 
@@ -171,6 +172,14 @@ export default function Home() {
     }
 
   }, [convertedImages, toast]);
+  
+  const handleApplyGlobalOptions = useCallback(() => {
+    setImages(prev => prev.map(img => ({ ...img, conversionOptions: globalOptions })));
+    toast({
+        title: "Global Settings Applied",
+        description: "All images have been updated with the new conversion settings.",
+    })
+  }, [globalOptions, toast]);
 
   return (
     <div className="flex flex-col h-full bg-background text-foreground">
@@ -204,6 +213,9 @@ export default function Home() {
             onRemove={handleRemoveImage} 
             onUpdateImage={handleUpdateImage}
             onConvert={handleReconvertImage}
+            globalOptions={globalOptions}
+            onGlobalOptionsChange={setGlobalOptions}
+            onApplyGlobalOptions={handleApplyGlobalOptions}
           />
         </div>
       </main>
