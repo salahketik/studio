@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Zap, Settings, Check } from 'lucide-react';
 import { GlobalConversionSettings } from './global-conversion-settings';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Progress } from '@/components/ui/progress';
 
 
 interface ImageListProps {
@@ -17,20 +18,31 @@ interface ImageListProps {
   globalOptions: ConversionOptions;
   onGlobalOptionsChange: (options: ConversionOptions) => void;
   onApplyGlobalOptions: () => void;
+  onConvertAll: () => void;
+  isConverting: boolean;
+  conversionProgress: number;
 }
 
-export function ImageList({ images, onRemove, onUpdateImage, onConvert, globalOptions, onGlobalOptionsChange, onApplyGlobalOptions }: ImageListProps) {
+export function ImageList({ 
+  images, 
+  onRemove, 
+  onUpdateImage, 
+  onConvert, 
+  globalOptions, 
+  onGlobalOptionsChange, 
+  onApplyGlobalOptions,
+  onConvertAll,
+  isConverting,
+  conversionProgress,
+}: ImageListProps) {
   if (images.length === 0) {
     return null;
   }
   
   const pendingImages = images.filter(img => img.status === 'pending');
-
-  const handleConvertAll = () => {
-    pendingImages.forEach(image => {
-      onConvert(image.id, image.conversionOptions);
-    })
-  }
+  const convertingImages = images.filter(img => img.status === 'converting');
+  const totalConverting = isConverting ? (pendingImages.length + convertingImages.length) : 0;
+  const completedInBatch = totalConverting > 0 ? (conversionProgress / 100) * totalConverting : 0;
 
   return (
     <Card>
@@ -39,13 +51,13 @@ export function ImageList({ images, onRemove, onUpdateImage, onConvert, globalOp
             <div>
                 <CardTitle>Conversion Queue</CardTitle>
                 <CardDescription>
-                    {images.length} image(s) ready to be processed.
+                    {images.length} image(s) in queue. {pendingImages.length} pending.
                 </CardDescription>
             </div>
             {pendingImages.length > 0 && (
-                <Button onClick={handleConvertAll} className="w-full sm:w-auto">
+                <Button onClick={onConvertAll} className="w-full sm:w-auto" disabled={isConverting}>
                     <Zap className="mr-2 h-4 w-4"/>
-                    Convert All Pending
+                    {isConverting ? 'Converting...' : `Convert All Pending (${pendingImages.length})`}
                 </Button>
             )}
         </div>
@@ -56,8 +68,18 @@ export function ImageList({ images, onRemove, onUpdateImage, onConvert, globalOp
             options={globalOptions}
             onOptionsChange={onGlobalOptionsChange}
             onApplyToAll={onApplyGlobalOptions}
-            disabled={images.length === 0}
+            disabled={images.length === 0 || isConverting}
           />
+
+          {isConverting && (
+            <div className='space-y-2'>
+                <p className='text-sm text-muted-foreground'>
+                  Converting {Math.round(completedInBatch)} of {totalConverting} images...
+                </p>
+                <Progress value={conversionProgress} className="w-full" />
+            </div>
+          )}
+
           <ScrollArea className="h-[45vh] pr-4">
             <div className="space-y-4">
               {images.map((image) => (
@@ -67,6 +89,7 @@ export function ImageList({ images, onRemove, onUpdateImage, onConvert, globalOp
                   onRemove={onRemove} 
                   onUpdateImage={onUpdateImage}
                   onConvert={onConvert}
+                  isConverting={isConverting}
                 />
               ))}
             </div>

@@ -34,6 +34,7 @@ interface ImageListItemProps {
   onRemove: (id: string) => void;
   onUpdateImage: (id: string, newImageData: Partial<ImageFile>) => void;
   onConvert: (id: string, options: ConversionOptions) => void;
+  isConverting: boolean;
 }
 
 function formatBytes(bytes: number, decimals = 2) {
@@ -51,7 +52,7 @@ const formatMapping: { [key: string]: string } = {
     'image/png': 'PNG',
 };
 
-export function ImageListItem({ image, onRemove, onUpdateImage, onConvert }: ImageListItemProps) {
+export function ImageListItem({ image, onRemove, onUpdateImage, onConvert, isConverting }: ImageListItemProps) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isAiDialogOpen, setIsAiDialogOpen] = useState(false);
   
@@ -79,7 +80,7 @@ export function ImageListItem({ image, onRemove, onUpdateImage, onConvert }: Ima
     ? ((image.originalSize - image.convertedSize) / image.originalSize) * 100
     : 0;
 
-  const isConverting = image.status === 'converting' || image.status === 'ai_optimizing';
+  const isItemConverting = image.status === 'converting' || image.status === 'ai_optimizing';
 
   const StatusIndicator = () => {
     switch (image.status) {
@@ -156,7 +157,7 @@ export function ImageListItem({ image, onRemove, onUpdateImage, onConvert }: Ima
             >
                 <Download className="h-4 w-4" />
             </Button>
-            <Button size="icon" variant="ghost" onClick={() => onRemove(image.id)} title="Remove">
+            <Button size="icon" variant="ghost" onClick={() => onRemove(image.id)} disabled={isItemConverting} title="Remove">
                 <Trash2 className="h-4 w-4 text-destructive" />
             </Button>
           </div>
@@ -197,14 +198,14 @@ export function ImageListItem({ image, onRemove, onUpdateImage, onConvert }: Ima
                 size="sm"
                 variant="outline"
                 onClick={() => setIsAiDialogOpen(true)}
-                disabled={image.status !== 'converted'}
+                disabled={image.status !== 'converted' || isConverting}
                 title="AI-Assisted Compression"
               >
                 <Wand2 className="mr-2 h-4 w-4" />
                 AI Assist
             </Button>
-            <Button size="sm" onClick={handleConvertClick} disabled={isConverting}>
-                {isConverting ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <RefreshCw className="mr-2 h-4 w-4" />}
+            <Button size="sm" onClick={handleConvertClick} disabled={isItemConverting || isConverting}>
+                {isItemConverting ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <RefreshCw className="mr-2 h-4 w-4" />}
                 Convert
             </Button>
           </div>

@@ -12,7 +12,6 @@ export interface ImageFile {
   file: File;
   originalSize: number;
   status: ConversionStatus;
-  progress?: number;
   convertedFile?: Blob;
   convertedSize?: number;
   convertedUrl?: string;

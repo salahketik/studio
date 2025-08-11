@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import type { ImageFile, ConversionOptions, ConversionFormat } from '@/types';
@@ -13,9 +13,11 @@ import { useToast } from '@/hooks/use-toast';
 export default function Home() {
   const [images, setImages] = useState<ImageFile[]>([]);
   const [globalOptions, setGlobalOptions] = useState<ConversionOptions>({ format: 'image/webp', quality: 0.8 });
+  const [conversionProgress, setConversionProgress] = useState(0);
+  const [isConverting, setIsConverting] = useState(false);
   const { toast } = useToast();
 
-  const convertImage = useCallback((image: ImageFile, options: ConversionOptions) => {
+  const convertImage = useCallback((image: ImageFile, options: ConversionOptions, onComplete: () => void) => {
     setImages((prev) =>
       prev.map((img) =>
         img.id === image.id
@@ -34,6 +36,7 @@ export default function Home() {
         const ctx = canvas.getContext('2d');
         if (!ctx) {
           handleError(image.id, 'Could not get canvas context');
+          onComplete();
           return;
         }
         ctx.drawImage(imgElement, 0, 0);
@@ -42,6 +45,7 @@ export default function Home() {
           (blob) => {
             if (!blob) {
               handleError(image.id, 'Failed to convert image');
+              onComplete();
               return;
             }
             setImages((prev) =>
@@ -53,11 +57,11 @@ export default function Home() {
                       convertedFile: blob,
                       convertedSize: blob.size,
                       convertedUrl: URL.createObjectURL(blob),
-                      progress: 100,
                     }
                   : img
               )
             );
+            onComplete();
           },
           options.format,
           options.quality
@@ -65,14 +69,37 @@ export default function Home() {
       };
       imgElement.onerror = () => {
         handleError(image.id, 'Failed to load image');
+        onComplete();
       };
       imgElement.src = e.target?.result as string;
     };
     reader.onerror = () => {
       handleError(image.id, 'Failed to read file');
+      onComplete();
     };
     reader.readAsDataURL(image.file);
   }, []);
+  
+  const handleBatchConvert = useCallback(async (imagesToConvert: ImageFile[]) => {
+      if (imagesToConvert.length === 0) return;
+      
+      setIsConverting(true);
+      setConversionProgress(0);
+      
+      let completedCount = 0;
+      
+      for (const image of imagesToConvert) {
+          await new Promise<void>(resolve => {
+              convertImage(image, image.conversionOptions, () => {
+                  completedCount++;
+                  setConversionProgress((completedCount / imagesToConvert.length) * 100);
+                  resolve();
+              });
+          });
+      }
+      
+      setIsConverting(false);
+  }, [convertImage]);
 
   const handleImageUpload = useCallback(
     (files: File[]) => {
@@ -125,11 +152,12 @@ export default function Home() {
     if(imageToConvert) {
       const updatedImage = { ...imageToConvert, conversionOptions: options };
       handleUpdateImage(id, { conversionOptions: options });
-      convertImage(updatedImage, options);
+      handleBatchConvert([updatedImage]);
     }
-  }, [images, convertImage, handleUpdateImage]);
+  }, [images, handleBatchConvert, handleUpdateImage]);
 
   const convertedImages = useMemo(() => images.filter(img => img.status === 'converted' && img.convertedFile), [images]);
+  const pendingImages = useMemo(() => images.filter(img => img.status === 'pending'), [images]);
 
   const handleDownloadAll = useCallback(async () => {
     if (convertedImages.length === 0) {
@@ -161,7 +189,7 @@ export default function Home() {
   }, [convertedImages, toast]);
   
   const handleApplyGlobalOptions = useCallback(() => {
-    setImages(prev => prev.map(img => ({ ...img, conversionOptions: globalOptions })));
+    setImages(prev => prev.map(img => ({ ...img, conversionOptions: globalOptions, status: 'pending' })));
     toast({
         title: "Global Settings Applied",
         description: "All images have been updated with the new conversion settings.",
@@ -184,11 +212,11 @@ export default function Home() {
 
           {images.length > 0 && (
             <div className="flex justify-end gap-2">
-               <Button onClick={handleDownloadAll} disabled={convertedImages.length === 0}>
+               <Button onClick={handleDownloadAll} disabled={convertedImages.length === 0 || isConverting}>
                 <Download className="mr-2 h-4 w-4" />
                 Download All (.zip)
               </Button>
-              <Button variant="destructive" onClick={handleClearAll}>
+              <Button variant="destructive" onClick={handleClearAll} disabled={isConverting}>
                 <Trash2 className="mr-2 h-4 w-4" />
                 Clear All
               </Button>
@@ -203,6 +231,9 @@ export default function Home() {
             globalOptions={globalOptions}
             onGlobalOptionsChange={setGlobalOptions}
             onApplyGlobalOptions={handleApplyGlobalOptions}
+            onConvertAll={() => handleBatchConvert(pendingImages)}
+            isConverting={isConverting}
+            conversionProgress={conversionProgress}
           />
         </div>
       </main>
