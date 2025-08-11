@@ -70,15 +70,15 @@ export function EditImageDialog({ isOpen, setIsOpen, image, onUpdateImage }: Edi
 
   useEffect(() => {
     if (isOpen) {
-      const { resize, crop, originalDimensions } = image;
+      const { resize, crop: cropData, originalDimensions } = image;
       setResizeEnabled(resize?.enabled ?? false);
       setWidth(resize?.width ?? originalDimensions?.width ?? 0);
       setHeight(resize?.height ?? originalDimensions?.height ?? 0);
 
-      setCropEnabled(crop?.enabled ?? false);
-      if (crop?.crop) {
-        setCompletedCrop(crop.crop);
-        setCrop({ ...crop.crop, unit: 'px' });
+      setCropEnabled(cropData?.enabled ?? false);
+      if (cropData?.crop) {
+        setCompletedCrop(cropData.crop);
+        setCrop({ ...cropData.crop, unit: 'px' });
       } else {
         setCompletedCrop(null);
         setCrop(undefined);
@@ -124,7 +124,7 @@ export function EditImageDialog({ isOpen, setIsOpen, image, onUpdateImage }: Edi
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-4xl">
         <DialogHeader>
           <DialogTitle>Edit Image: {image.file.name}</DialogTitle>
           <DialogDescription>
@@ -133,7 +133,7 @@ export function EditImageDialog({ isOpen, setIsOpen, image, onUpdateImage }: Edi
         </DialogHeader>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4 items-start">
-          <div className="relative aspect-video w-full rounded-md overflow-hidden border bg-muted flex items-center justify-center">
+          <div className="relative w-full rounded-md border bg-muted flex items-center justify-center overflow-hidden">
             {image.originalUrl && (
               <ReactCrop
                 crop={crop}
@@ -141,7 +141,7 @@ export function EditImageDialog({ isOpen, setIsOpen, image, onUpdateImage }: Edi
                 onComplete={(c) => setCompletedCrop(c)}
                 disabled={!cropEnabled}
                 aspect={isLocked ? aspectRatio : undefined}
-                className="max-h-[40vh]"
+                className="max-h-[50vh]"
               >
                 <Image 
                   ref={imgRef}
@@ -150,12 +150,12 @@ export function EditImageDialog({ isOpen, setIsOpen, image, onUpdateImage }: Edi
                   onLoad={onImageLoad}
                   width={image.originalDimensions?.width}
                   height={image.originalDimensions?.height}
-                  style={{ objectFit: 'contain' }}
+                  style={{ maxHeight: '70vh', objectFit: 'contain' }}
                 />
               </ReactCrop>
             )}
           </div>
-          <div className="space-y-4 max-h-[45vh] overflow-y-auto pr-2">
+          <div className="space-y-4 max-h-[55vh] overflow-y-auto pr-2">
             
             <Collapsible open={resizeEnabled} onOpenChange={setResizeEnabled} asChild>
               <div className="space-y-4 p-4 border rounded-lg">
