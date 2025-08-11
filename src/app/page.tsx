@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 
 export default function Home() {
   const [images, setImages] = useState<ImageFile[]>([]);
-  const [globalOptions, setGlobalOptions] = useState<ConversionOptions>({ format: 'image/webp', quality: 0.8 });
+  const [globalOptions, setGlobalOptions] = useState<ConversionOptions>({ format: 'image/webp', quality: 0.1 });
   const { toast } = useToast();
 
   const convertImage = useCallback((image: ImageFile, options: ConversionOptions) => {
