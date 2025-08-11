@@ -1,190 +1,41 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
-import type { ImageFile, ConversionOptions } from '@/types';
+import { useToast } from '@/hooks/use-toast';
+import { useImageFiles } from '@/hooks/use-image-files';
+import { useImageConverter } from '@/hooks/use-image-converter';
+
 import { ImageUploader } from '@/components/image-uploader';
 import { ImageList } from '@/components/image-list';
 import { Button } from '@/components/ui/button';
 import { Download, Trash2 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
 import { ThemeToggle } from '@/components/theme-toggle';
 
 
 export default function Home() {
-  const [images, setImages] = useState<ImageFile[]>([]);
-  const [globalOptions, setGlobalOptions] = useState<ConversionOptions>({ format: 'image/webp', quality: 0.8 });
-  const [conversionProgress, setConversionProgress] = useState(0);
-  const [isConverting, setIsConverting] = useState(false);
   const { toast } = useToast();
+  const {
+    images,
+    setImages,
+    handleImageUpload,
+    handleRemoveImage,
+    handleClearAll,
+    handleUpdateImage,
+    globalOptions,
+    setGlobalOptions,
+  } = useImageFiles();
 
-  const convertImage = useCallback((image: ImageFile, options: ConversionOptions, onComplete: () => void) => {
-    setImages((prev) =>
-      prev.map((img) =>
-        img.id === image.id
-          ? { ...img, status: 'converting' }
-          : img
-      )
-    );
+  const { isConverting, conversionProgress, convertImages } = useImageConverter(setImages);
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const imgElement = document.createElement('img');
-      imgElement.onload = () => {
-        const canvas = document.createElement('canvas');
-        
-        let width = imgElement.width;
-        let height = imgElement.height;
-
-        if (image.resize && image.resize.enabled) {
-          width = image.resize.width;
-          height = image.resize.height;
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        
-        const ctx = canvas.getContext('2d');
-        if (!ctx) {
-          handleError(image.id, 'Could not get canvas context');
-          onComplete();
-          return;
-        }
-        ctx.drawImage(imgElement, 0, 0, width, height);
-        
-        canvas.toBlob(
-          (blob) => {
-            if (!blob) {
-              handleError(image.id, 'Failed to convert image');
-              onComplete();
-              return;
-            }
-            setImages((prev) =>
-              prev.map((img) =>
-                img.id === image.id
-                  ? {
-                      ...img,
-                      status: 'converted',
-                      convertedFile: blob,
-                      convertedSize: blob.size,
-                      convertedUrl: URL.createObjectURL(blob),
-                    }
-                  : img
-              )
-            );
-            onComplete();
-          },
-          options.format,
-          options.quality
-        );
-      };
-      imgElement.onerror = () => {
-        handleError(image.id, 'Failed to load image');
-        onComplete();
-      };
-      imgElement.src = e.target?.result as string;
-    };
-    reader.onerror = () => {
-      handleError(image.id, 'Failed to read file');
-      onComplete();
-    };
-    reader.readAsDataURL(image.file);
-  }, []);
-  
-  const handleBatchConvert = useCallback(async (imagesToConvert: ImageFile[]) => {
-      if (imagesToConvert.length === 0) return;
-      
-      setIsConverting(true);
-      setConversionProgress(0);
-      
-      let completedCount = 0;
-      
-      const conversionPromises = imagesToConvert.map(image => {
-        return new Promise<void>(resolve => {
-            const options = image.conversionOptions;
-            convertImage(image, options, () => {
-                completedCount++;
-                setConversionProgress((completedCount / imagesToConvert.length) * 100);
-                resolve();
-            });
-        });
-      });
-
-      await Promise.all(conversionPromises);
-      
-      setIsConverting(false);
-  }, [convertImage]);
-
-  const handleImageUpload = useCallback(
-    (files: File[]) => {
-      const newImages: ImageFile[] = files.map((file) => {
-        const originalUrl = URL.createObjectURL(file);
-        const img = new Image();
-        img.onload = () => {
-          setImages(prev => prev.map(i => {
-            if(i.originalUrl === originalUrl) {
-              return { ...i, originalDimensions: { width: img.width, height: img.height } };
-            }
-            return i;
-          }));
-        };
-        img.src = originalUrl;
-
-        return {
-          id: `${file.name}-${file.lastModified}-${file.size}`,
-          file,
-          originalSize: file.size,
-          status: 'pending',
-          conversionOptions: globalOptions,
-          originalUrl: originalUrl
-        }
-      });
-
-      const uniqueNewImages = newImages.filter(
-        (newImg) => !images.some((existingImg) => existingImg.id === newImg.id)
-      );
-
-      if (uniqueNewImages.length > 0) {
-        setImages((prev) => [...prev, ...uniqueNewImages]);
-      }
-    },
-    [images, globalOptions]
-  );
-
-  const handleError = (id: string, message: string) => {
-    setImages((prev) =>
-      prev.map((img) =>
-        img.id === id ? { ...img, status: 'error', error: message } : img
-      )
-    );
-    toast({
-      variant: 'destructive',
-      title: 'Conversion Error',
-      description: `Could not process an image. ${message}`,
-    });
-  };
-
-  const handleRemoveImage = useCallback((id: string) => {
-    setImages((prev) => prev.filter((img) => img.id !== id));
-  }, []);
-
-  const handleClearAll = useCallback(() => {
-    setImages([]);
-  }, []);
-  
-  const handleUpdateImage = useCallback((id: string, newImageData: Partial<ImageFile>) => {
-    setImages(prev => prev.map(img => img.id === id ? { ...img, ...newImageData } : img));
-  }, []);
-  
-  const handleReconvertImage = useCallback((id: string, options: ConversionOptions) => {
+  const handleReconvertImage = useCallback((id: string) => {
     const imageToConvert = images.find(img => img.id === id);
     if(imageToConvert) {
-      const updatedImage = { ...imageToConvert, conversionOptions: options };
-      handleUpdateImage(id, { conversionOptions: options, status: 'pending' });
-      handleBatchConvert([updatedImage]);
+      handleUpdateImage(id, { status: 'pending' });
+      convertImages([imageToConvert]);
     }
-  }, [images, handleBatchConvert, handleUpdateImage]);
+  }, [images, convertImages, handleUpdateImage]);
 
   const convertedImages = useMemo(() => images.filter(img => img.status === 'converted' && img.convertedFile), [images]);
   const pendingImages = useMemo(() => images.filter(img => img.status === 'pending'), [images]);
@@ -215,7 +66,6 @@ export default function Home() {
         description: 'Could not create the zip file.',
       });
     }
-
   }, [convertedImages, toast]);
   
   const handleApplyGlobalOptions = useCallback(() => {
@@ -224,7 +74,7 @@ export default function Home() {
         title: "Global Settings Applied",
         description: "All images have been updated with the new conversion settings.",
     })
-  }, [globalOptions, toast]);
+  }, [globalOptions, toast, setImages]);
 
   return (
     <div className="flex flex-col h-full bg-background text-foreground">
@@ -259,7 +109,7 @@ export default function Home() {
             globalOptions={globalOptions}
             onGlobalOptionsChange={setGlobalOptions}
             onApplyGlobalOptions={handleApplyGlobalOptions}
-            onConvertAll={() => handleBatchConvert(pendingImages)}
+            onConvertAll={() => convertImages(pendingImages)}
             isConverting={isConverting}
             conversionProgress={conversionProgress}
           />

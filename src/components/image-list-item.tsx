@@ -13,7 +13,7 @@ import {
   RefreshCw,
   Pencil,
 } from 'lucide-react';
-import type { ImageFile, ConversionOptions } from '@/types';
+import type { ImageFile, ConversionOptions, ConversionFormat } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -34,7 +34,7 @@ interface ImageListItemProps {
   image: ImageFile;
   onRemove: (id: string) => void;
   onUpdateImage: (id: string, newImageData: Partial<ImageFile>) => void;
-  onConvert: (id: string, options: ConversionOptions) => void;
+  onConvert: (id: string) => void;
   isConverting: boolean;
 }
 
@@ -47,33 +47,19 @@ function formatBytes(bytes: number, decimals = 2) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
 
-const formatMapping: { [key: string]: string } = {
-    'image/webp': 'WebP',
-    'image/jpeg': 'JPEG',
-    'image/png': 'PNG',
-};
-
 export function ImageListItem({ image, onRemove, onUpdateImage, onConvert, isConverting }: ImageListItemProps) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isAiDialogOpen, setIsAiDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   
-  const [format, setFormat] = useState(image.conversionOptions.format);
-  const [quality, setQuality] = useState(image.conversionOptions.quality * 100);
-
+  const { conversionOptions } = image;
+  
   useEffect(() => {
     const url = image.convertedUrl || image.originalUrl;
     if (url) {
       setImageUrl(url);
     }
-    
-    // In this component, we don't revoke the URL because it's managed by the parent `page.tsx`
   }, [image.originalUrl, image.convertedUrl]);
-
-  useEffect(() => {
-    setFormat(image.conversionOptions.format);
-    setQuality(image.conversionOptions.quality * 100);
-  }, [image.conversionOptions]);
 
   const sizeReduction = image.convertedSize
     ? ((image.originalSize - image.convertedSize) / image.originalSize) * 100
@@ -107,10 +93,14 @@ export function ImageListItem({ image, onRemove, onUpdateImage, onConvert, isCon
   };
 
   const handleConvertClick = () => {
-    onConvert(image.id, { format, quality: quality / 100 });
+    onConvert(image.id);
+  };
+
+  const handleOptionsChange = (newOptions: Partial<ConversionOptions>) => {
+    onUpdateImage(image.id, { conversionOptions: { ...conversionOptions, ...newOptions } });
   };
   
-  const showQualitySlider = useMemo(() => format === 'image/jpeg' || format === 'image/webp', [format]);
+  const showQualitySlider = useMemo(() => conversionOptions.format === 'image/jpeg' || conversionOptions.format === 'image/webp', [conversionOptions.format]);
 
   return (
     <div className="flex flex-col gap-4 p-4 border rounded-lg bg-card hover:bg-muted/50 transition-colors">
@@ -162,12 +152,16 @@ export function ImageListItem({ image, onRemove, onUpdateImage, onConvert, isCon
           </div>
       </div>
       
-      {image.status !== 'pending' && (
+      {image.status !== 'pending' && image.status !== 'converting' && (
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pl-20">
           <div className='flex-grow grid grid-cols-1 sm:grid-cols-2 gap-4 items-center'>
             <div>
               <Label>Format</Label>
-              <Select value={format} onValueChange={(value) => setFormat(value as any)} disabled={isConverting}>
+              <Select 
+                value={conversionOptions.format} 
+                onValueChange={(value) => handleOptionsChange({ format: value as ConversionFormat })} 
+                disabled={isConverting}
+              >
                   <SelectTrigger className="w-full mt-1 h-9">
                       <SelectValue placeholder="Select format" />
                   </SelectTrigger>
@@ -180,10 +174,10 @@ export function ImageListItem({ image, onRemove, onUpdateImage, onConvert, isCon
             </div>
             
             <div className={cn(!showQualitySlider && 'opacity-50')}>
-                <Label>Quality: {quality}%</Label>
+                <Label>Quality: {Math.round(conversionOptions.quality * 100)}%</Label>
                 <Slider
-                    value={[quality]}
-                    onValueChange={(v) => setQuality(v[0])}
+                    value={[conversionOptions.quality * 100]}
+                    onValueChange={(v) => handleOptionsChange({ quality: v[0] / 100 })}
                     max={100}
                     step={1}
                     className="mt-2"

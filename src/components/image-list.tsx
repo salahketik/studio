@@ -4,7 +4,7 @@ import type { ImageFile, ConversionOptions } from '@/types';
 import { ImageListItem } from './image-list-item';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Zap, Settings, Check } from 'lucide-react';
+import { Zap } from 'lucide-react';
 import { GlobalConversionSettings } from './global-conversion-settings';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Progress } from '@/components/ui/progress';
@@ -14,7 +14,7 @@ interface ImageListProps {
   images: ImageFile[];
   onRemove: (id: string) => void;
   onUpdateImage: (id: string, newImageData: Partial<ImageFile>) => void;
-  onConvert: (id: string, options: ConversionOptions) => void;
+  onConvert: (id: string) => void;
   globalOptions: ConversionOptions;
   onGlobalOptionsChange: (options: ConversionOptions) => void;
   onApplyGlobalOptions: () => void;
