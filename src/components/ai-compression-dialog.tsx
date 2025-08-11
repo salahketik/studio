@@ -91,7 +91,6 @@ export function AICompressionDialog({ isOpen, setIsOpen, image, onUpdateImage }:
      toast({
         title: "Success",
         description: "AI optimized image has been applied.",
-        className: "bg-green-100 text-green-800"
      })
      setIsOpen(false);
   };

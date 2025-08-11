@@ -58,7 +58,7 @@ export default function Home() {
 
     try {
       const zipBlob = await zip.generateAsync({ type: 'blob' });
-      saveAs(zipBlob, 'ImagePress_images.zip');
+      saveAs(zipBlob, 'WebPGator_images.zip');
     } catch (error) {
       toast({
         variant: 'destructive',
@@ -80,7 +80,7 @@ export default function Home() {
     <div className="flex flex-col h-full bg-background text-foreground">
       <header className="p-4 border-b border-border">
         <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-xl font-bold font-headline">ImagePress</h1>
+          <h1 className="text-xl font-bold font-headline">WebPGator</h1>
           <ThemeToggle />
         </div>
       </header>
@@ -116,7 +116,7 @@ export default function Home() {
         </div>
       </main>
       <footer className="p-4 border-t border-border text-center text-sm text-muted-foreground">
-        <p>&copy; {new Date().getFullYear()} ImagePress. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} WebPGator. All rights reserved.</p>
       </footer>
     </div>
   );

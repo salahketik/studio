@@ -5,8 +5,8 @@ import { ThemeProvider } from '@/components/theme-provider';
 
 
 export const metadata: Metadata = {
-  title: 'ImagePress',
-  description: 'Convert and optimize your images with precision.',
+  title: 'WebPGator',
+  description: 'Bulk convert images to WebP with AI-assisted optimization.',
 };
 
 export default function RootLayout({
