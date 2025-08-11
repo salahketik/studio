@@ -1,9 +1,10 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useImageFiles } from '@/hooks/use-image-files';
 import { useImageConverter } from '@/hooks/use-image-converter';
+import { useDocumentTitle } from '@/hooks/use-document-title';
 
 import { ImageUploader } from '@/components/image-uploader';
 import { ImageList } from '@/components/image-list';
@@ -30,6 +31,12 @@ export default function Home() {
   const { isConverting, conversionProgress, convertImages } = useImageConverter(handleUpdateImage);
   
   const pendingImages = useMemo(() => images.filter(img => img.status === 'pending'), [images]);
+  
+  const documentTitle = pendingImages.length > 0
+    ? `(${pendingImages.length}) Pending - WebPGator`
+    : 'WebPGator';
+  useDocumentTitle(documentTitle);
+
 
   return (
     <div className="flex flex-col h-full bg-background text-foreground">
