@@ -11,43 +11,57 @@ const defaultGlobalOptions: ConversionOptions = {
     quality: 0.8,
 };
 
+const getImageDimensions = (file: File): Promise<{ width: number; height: number }> => {
+    return new Promise((resolve, reject) => {
+        const imageUrl = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => {
+            resolve({ width: img.width, height: img.height });
+            URL.revokeObjectURL(imageUrl); // Clean up immediately
+        };
+        img.onerror = (err) => {
+            reject(err);
+            URL.revokeObjectURL(imageUrl);
+        };
+        img.src = imageUrl;
+    });
+};
+
 export function useImageFiles() {
     const [images, setImages] = useState<ImageFile[]>([]);
     const [globalOptions, setGlobalOptions] = useState<ConversionOptions>(defaultGlobalOptions);
     const { toast } = useToast();
 
-    const handleImageUpload = useCallback((files: File[]) => {
-        const newImages: ImageFile[] = files.map((file) => {
-            const originalUrl = URL.createObjectURL(file);
-            const img = new Image();
-            img.onload = () => {
-                setImages(prev => prev.map(i => {
-                    if (i.originalUrl === originalUrl) {
-                        return { ...i, originalDimensions: { width: img.width, height: img.height } };
-                    }
-                    return i;
-                }));
-            };
-            img.src = originalUrl;
-
-            return {
-                id: `${file.name}-${file.lastModified}-${file.size}`,
-                file,
-                originalSize: file.size,
-                status: 'pending',
-                conversionOptions: globalOptions,
-                originalUrl: originalUrl,
-            };
+    const handleImageUpload = useCallback(async (files: File[]) => {
+        const newImagesPromises = files.map(async (file): Promise<ImageFile | null> => {
+            try {
+                const dimensions = await getImageDimensions(file);
+                return {
+                    id: `${file.name}-${file.lastModified}-${file.size}`,
+                    file,
+                    originalSize: file.size,
+                    status: 'pending',
+                    conversionOptions: globalOptions,
+                    originalUrl: URL.createObjectURL(file), // Create URL for display
+                    originalDimensions: dimensions,
+                };
+            } catch (error) {
+                console.error("Could not read image dimensions for file:", file.name, error);
+                return null;
+            }
         });
 
-        const uniqueNewImages = newImages.filter(
-            (newImg) => !images.some((existingImg) => existingImg.id === newImg.id)
+        const newImages = (await Promise.all(newImagesPromises)).filter(
+          (img): img is ImageFile => img !== null
         );
 
-        if (uniqueNewImages.length > 0) {
-            setImages((prev) => [...prev, ...uniqueNewImages]);
-        }
-    }, [images, globalOptions]);
+        setImages((prev) => {
+            const uniqueNewImages = newImages.filter(
+                (newImg) => !prev.some((existingImg) => existingImg.id === newImg.id)
+            );
+            return [...prev, ...uniqueNewImages];
+        });
+    }, [globalOptions]);
 
     const handleRemoveImage = useCallback((id: string) => {
         setImages((prev) => {

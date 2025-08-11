@@ -52,7 +52,7 @@ export default function Home() {
 
           {images.length > 0 && (
             <div className="flex justify-end gap-2">
-               <Button onClick={() => handleDownloadAll()} disabled={convertedImages.length === 0}>
+               <Button onClick={() => handleDownloadAll()} disabled={convertedImages.length === 0 || isConverting}>
                 <Download className="mr-2 h-4 w-4" />
                 Download All (.zip)
               </Button>

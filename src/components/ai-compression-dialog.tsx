@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { runAIOptimization } from '@/app/actions';
 import type { ImageFile } from '@/types';
@@ -33,6 +33,14 @@ export function AICompressionDialog({ isOpen, setIsOpen, image, onUpdateImage }:
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [optimizedImage, setOptimizedImage] = useState<{ url: string; size: number } | null>(null);
   const { toast } = useToast();
+  const isMounted = useRef(true);
+
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   const fileToDataUri = (file: Blob): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -56,6 +64,8 @@ export function AICompressionDialog({ isOpen, setIsOpen, image, onUpdateImage }:
         description,
       });
 
+      if (!isMounted.current) return;
+
       if (result.error) {
         throw new Error(result.error);
       }
@@ -66,14 +76,17 @@ export function AICompressionDialog({ isOpen, setIsOpen, image, onUpdateImage }:
       setOptimizedImage({ url, size: blob.size });
 
     } catch (error) {
+      if (!isMounted.current) return;
       toast({
         variant: 'destructive',
         title: 'AI Optimization Failed',
         description: error instanceof Error ? error.message : 'An unknown error occurred.',
       });
     } finally {
-      setIsOptimizing(false);
-      onUpdateImage(image.id, { status: 'converted', progress: 100 });
+      if (isMounted.current) {
+        setIsOptimizing(false);
+        onUpdateImage(image.id, { status: 'converted', progress: 100 });
+      }
     }
   };
   
@@ -99,7 +112,14 @@ export function AICompressionDialog({ isOpen, setIsOpen, image, onUpdateImage }:
     if (!isOpen) {
         setOptimizedImage(null);
     }
-  }, [isOpen]);
+
+    // Cleanup object URLs
+    return () => {
+        if (optimizedImage) {
+            URL.revokeObjectURL(optimizedImage.url);
+        }
+    }
+  }, [isOpen, optimizedImage]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>

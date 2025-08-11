@@ -47,7 +47,7 @@ export function EditImageDialog({ isOpen, setIsOpen, image, onUpdateImage }: Edi
 
   const aspectRatio = image.originalDimensions ? image.originalDimensions.width / image.originalDimensions.height : 1;
   
-  function onImageLoad(e: React.SyntheticEvent<HTMLImageElement>) {
+  function onImageLoad(e: React.SyntheticEvent<HTMLImageElement, Event>) {
     if (aspectRatio) {
       const { width, height } = e.currentTarget;
       const initialCrop = centerCrop(
