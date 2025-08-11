@@ -19,7 +19,7 @@ export default function Home() {
     setImages((prev) =>
       prev.map((img) =>
         img.id === image.id
-          ? { ...img, status: 'converting', progress: 0 }
+          ? { ...img, status: 'converting' }
           : img
       )
     );
@@ -38,43 +38,30 @@ export default function Home() {
         }
         ctx.drawImage(imgElement, 0, 0);
         
-        let progress = 0;
-        const interval = setInterval(() => {
-          progress += 10;
-          setImages((prev) =>
-            prev.map((img) =>
-              img.id === image.id ? { ...img, progress: Math.min(progress, 99) } : img
-            )
-          );
-          if (progress >= 100) {
-            clearInterval(interval);
-            canvas.toBlob(
-              (blob) => {
-                if (!blob) {
-                  handleError(image.id, 'Failed to convert image');
-                  return;
-                }
-                setImages((prev) =>
-                  prev.map((img) =>
-                    img.id === image.id
-                      ? {
-                          ...img,
-                          status: 'converted',
-                          convertedFile: blob,
-                          convertedSize: blob.size,
-                          convertedUrl: URL.createObjectURL(blob),
-                          progress: 100,
-                        }
-                      : img
-                  )
-                );
-              },
-              options.format,
-              options.quality
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              handleError(image.id, 'Failed to convert image');
+              return;
+            }
+            setImages((prev) =>
+              prev.map((img) =>
+                img.id === image.id
+                  ? {
+                      ...img,
+                      status: 'converted',
+                      convertedFile: blob,
+                      convertedSize: blob.size,
+                      convertedUrl: URL.createObjectURL(blob),
+                      progress: 100,
+                    }
+                  : img
+              )
             );
-          }
-        }, 50);
-
+          },
+          options.format,
+          options.quality
+        );
       };
       imgElement.onerror = () => {
         handleError(image.id, 'Failed to load image');

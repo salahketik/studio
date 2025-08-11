@@ -15,7 +15,6 @@ import {
 } from 'lucide-react';
 import type { ImageFile, ConversionOptions } from '@/types';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { AICompressionDialog } from './ai-compression-dialog';
@@ -142,9 +141,6 @@ export function ImageListItem({ image, onRemove, onUpdateImage, onConvert }: Ima
                 </>
               )}
             </div>
-             {(image.status === 'converting' || image.status === 'ai_optimizing') && image.progress !== undefined && (
-              <Progress value={image.progress} className="h-2 mt-1 w-full" />
-            )}
             {image.status === 'error' && (
               <p className="text-xs text-destructive mt-1">{image.error}</p>
             )}
