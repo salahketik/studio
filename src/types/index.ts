@@ -7,15 +7,23 @@ export interface ConversionOptions {
   quality: number;
 }
 
+export interface ResizeOptions {
+    enabled: boolean;
+    width: number;
+    height: number;
+}
+
 export interface ImageFile {
   id: string;
   file: File;
   originalSize: number;
+  originalUrl?: string;
+  originalDimensions?: { width: number; height: number };
   status: ConversionStatus;
   convertedFile?: Blob;
   convertedSize?: number;
   convertedUrl?: string;
-  originalUrl?: string;
   error?: string;
   conversionOptions: ConversionOptions;
+  resize?: ResizeOptions;
 }

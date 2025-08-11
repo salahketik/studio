@@ -11,13 +11,14 @@ import {
   Wand2,
   Loader2,
   RefreshCw,
-  ChevronDown
+  Pencil,
 } from 'lucide-react';
 import type { ImageFile, ConversionOptions } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { AICompressionDialog } from './ai-compression-dialog';
+import { EditImageDialog } from './edit-image-dialog';
 import {
     Select,
     SelectContent,
@@ -55,21 +56,19 @@ const formatMapping: { [key: string]: string } = {
 export function ImageListItem({ image, onRemove, onUpdateImage, onConvert, isConverting }: ImageListItemProps) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isAiDialogOpen, setIsAiDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   
   const [format, setFormat] = useState(image.conversionOptions.format);
   const [quality, setQuality] = useState(image.conversionOptions.quality * 100);
 
   useEffect(() => {
-    const url = image.convertedUrl || URL.createObjectURL(image.file);
-    setImageUrl(url);
+    const url = image.convertedUrl || image.originalUrl;
+    if (url) {
+      setImageUrl(url);
+    }
     
-    // Revoke object URL on cleanup, unless it's a new converted URL
-    return () => {
-        if (image.convertedUrl !== url && url.startsWith('blob:')) {
-            URL.revokeObjectURL(url);
-        }
-    };
-  }, [image.file, image.convertedUrl]);
+    // In this component, we don't revoke the URL because it's managed by the parent `page.tsx`
+  }, [image.originalUrl, image.convertedUrl]);
 
   useEffect(() => {
     setFormat(image.conversionOptions.format);
@@ -168,7 +167,7 @@ export function ImageListItem({ image, onRemove, onUpdateImage, onConvert, isCon
           <div className='flex-grow grid grid-cols-1 sm:grid-cols-2 gap-4 items-center'>
             <div>
               <Label>Format</Label>
-              <Select value={format} onValueChange={setFormat} disabled={isConverting}>
+              <Select value={format} onValueChange={(value) => setFormat(value as any)} disabled={isConverting}>
                   <SelectTrigger className="w-full mt-1 h-9">
                       <SelectValue placeholder="Select format" />
                   </SelectTrigger>
@@ -197,6 +196,16 @@ export function ImageListItem({ image, onRemove, onUpdateImage, onConvert, isCon
              <Button
                 size="sm"
                 variant="outline"
+                onClick={() => setIsEditDialogOpen(true)}
+                disabled={isItemConverting || isConverting}
+                title="Edit Image"
+              >
+                <Pencil className="mr-2 h-4 w-4" />
+                Edit
+            </Button>
+            <Button
+                size="sm"
+                variant="outline"
                 onClick={() => setIsAiDialogOpen(true)}
                 disabled={image.status !== 'converted' || isConverting}
                 title="AI-Assisted Compression"
@@ -211,7 +220,14 @@ export function ImageListItem({ image, onRemove, onUpdateImage, onConvert, isCon
           </div>
         </div>
       )}
-
+      
+      <EditImageDialog
+        isOpen={isEditDialogOpen}
+        setIsOpen={setIsEditDialogOpen}
+        image={image}
+        onUpdateImage={onUpdateImage}
+      />
+      
       {image.status === 'converted' &&
         <AICompressionDialog
             isOpen={isAiDialogOpen}

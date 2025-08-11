@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
-import type { ImageFile, ConversionOptions, ConversionFormat } from '@/types';
+import type { ImageFile, ConversionOptions } from '@/types';
 import { ImageUploader } from '@/components/image-uploader';
 import { ImageList } from '@/components/image-list';
 import { Button } from '@/components/ui/button';
-import { Download, Trash2, Moon, Sun } from 'lucide-react';
+import { Download, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { ThemeToggle } from '@/components/theme-toggle';
 
@@ -33,15 +33,25 @@ export default function Home() {
       const imgElement = document.createElement('img');
       imgElement.onload = () => {
         const canvas = document.createElement('canvas');
-        canvas.width = imgElement.width;
-        canvas.height = imgElement.height;
+        
+        let width = imgElement.width;
+        let height = imgElement.height;
+
+        if (image.resize && image.resize.enabled) {
+          width = image.resize.width;
+          height = image.resize.height;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        
         const ctx = canvas.getContext('2d');
         if (!ctx) {
           handleError(image.id, 'Could not get canvas context');
           onComplete();
           return;
         }
-        ctx.drawImage(imgElement, 0, 0);
+        ctx.drawImage(imgElement, 0, 0, width, height);
         
         canvas.toBlob(
           (blob) => {
@@ -92,7 +102,8 @@ export default function Home() {
       
       const conversionPromises = imagesToConvert.map(image => {
         return new Promise<void>(resolve => {
-            convertImage(image, image.conversionOptions, () => {
+            const options = image.conversionOptions;
+            convertImage(image, options, () => {
                 completedCount++;
                 setConversionProgress((completedCount / imagesToConvert.length) * 100);
                 resolve();
@@ -107,13 +118,28 @@ export default function Home() {
 
   const handleImageUpload = useCallback(
     (files: File[]) => {
-      const newImages: ImageFile[] = files.map((file) => ({
-        id: `${file.name}-${file.lastModified}-${file.size}`,
-        file,
-        originalSize: file.size,
-        status: 'pending',
-        conversionOptions: globalOptions
-      }));
+      const newImages: ImageFile[] = files.map((file) => {
+        const originalUrl = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => {
+          setImages(prev => prev.map(i => {
+            if(i.originalUrl === originalUrl) {
+              return { ...i, originalDimensions: { width: img.width, height: img.height } };
+            }
+            return i;
+          }));
+        };
+        img.src = originalUrl;
+
+        return {
+          id: `${file.name}-${file.lastModified}-${file.size}`,
+          file,
+          originalSize: file.size,
+          status: 'pending',
+          conversionOptions: globalOptions,
+          originalUrl: originalUrl
+        }
+      });
 
       const uniqueNewImages = newImages.filter(
         (newImg) => !images.some((existingImg) => existingImg.id === newImg.id)
