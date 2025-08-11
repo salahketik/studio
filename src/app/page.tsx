@@ -14,28 +14,6 @@ export default function Home() {
   const [images, setImages] = useState<ImageFile[]>([]);
   const { toast } = useToast();
 
-  const handleImageUpload = useCallback(
-    (files: File[]) => {
-      const newImages: ImageFile[] = files.map((file) => ({
-        id: `${file.name}-${file.lastModified}-${file.size}`,
-        file,
-        originalSize: file.size,
-        status: 'pending',
-      }));
-
-      setImages((prev) => {
-        const existingIds = new Set(prev.map((img) => img.id));
-        const uniqueNewImages = newImages.filter(
-          (img) => !existingIds.has(img.id)
-        );
-        return [...prev, ...uniqueNewImages];
-      });
-
-      uniqueNewImages.forEach(convertImage);
-    },
-    []
-  );
-
   const convertImage = useCallback((image: ImageFile) => {
     setImages((prev) =>
       prev.map((img) =>
@@ -108,6 +86,27 @@ export default function Home() {
     };
     reader.readAsDataURL(image.file);
   }, []);
+
+  const handleImageUpload = useCallback(
+    (files: File[]) => {
+      const newImages: ImageFile[] = files.map((file) => ({
+        id: `${file.name}-${file.lastModified}-${file.size}`,
+        file,
+        originalSize: file.size,
+        status: 'pending',
+      }));
+
+      const uniqueNewImages = newImages.filter(
+        (newImg) => !images.some((existingImg) => existingImg.id === newImg.id)
+      );
+
+      if (uniqueNewImages.length > 0) {
+        setImages((prev) => [...prev, ...uniqueNewImages]);
+        uniqueNewImages.forEach(convertImage);
+      }
+    },
+    [images, convertImage]
+  );
 
   const handleError = (id: string, message: string) => {
     setImages((prev) =>
