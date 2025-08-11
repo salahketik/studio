@@ -89,7 +89,6 @@ export function ImageList({
                   onRemove={onRemove} 
                   onUpdateImage={onUpdateImage}
                   onConvert={onConvert}
-                  isConverting={isConverting}
                 />
               ))}
             </div>
