@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import type { ImageFile } from '@/types';
 import { useToast } from '@/hooks/use-toast';
+import { PixelCrop } from 'react-image-crop';
 
 export function useImageConverter(
     setImages: React.Dispatch<React.SetStateAction<ImageFile[]>>
@@ -36,25 +37,51 @@ export function useImageConverter(
             const imgElement = document.createElement('img');
             imgElement.onload = () => {
                 const canvas = document.createElement('canvas');
-
-                let width = imgElement.width;
-                let height = imgElement.height;
-
-                if (image.resize && image.resize.enabled) {
-                    width = image.resize.width;
-                    height = image.resize.height;
-                }
-
-                canvas.width = width;
-                canvas.height = height;
-
                 const ctx = canvas.getContext('2d');
                 if (!ctx) {
                     handleError(image.id, 'Could not get canvas context');
                     onComplete();
                     return;
                 }
-                ctx.drawImage(imgElement, 0, 0, width, height);
+
+                let sourceX = 0;
+                let sourceY = 0;
+                let sourceWidth = imgElement.width;
+                let sourceHeight = imgElement.height;
+                let destWidth = imgElement.width;
+                let destHeight = imgElement.height;
+                
+                // Apply cropping first
+                if (image.crop?.enabled && image.crop.crop) {
+                    const crop = image.crop.crop as PixelCrop;
+                    sourceX = crop.x;
+                    sourceY = crop.y;
+                    sourceWidth = crop.width;
+                    sourceHeight = crop.height;
+                    destWidth = crop.width;
+                    destHeight = crop.height;
+                }
+
+                // Apply resizing
+                if (image.resize && image.resize.enabled) {
+                    destWidth = image.resize.width;
+                    destHeight = image.resize.height;
+                }
+                
+                canvas.width = destWidth;
+                canvas.height = destHeight;
+                
+                ctx.drawImage(
+                    imgElement,
+                    sourceX,
+                    sourceY,
+                    sourceWidth,
+                    sourceHeight,
+                    0,
+                    0,
+                    destWidth,
+                    destHeight
+                );
 
                 canvas.toBlob(
                     (blob) => {

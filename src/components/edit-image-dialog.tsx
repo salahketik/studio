@@ -1,7 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import ReactCrop, { type Crop, type PixelCrop, centerCrop, makeAspectCrop } from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
+
 import {
   Dialog,
   DialogContent,
@@ -15,9 +18,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import { Lock, Unlock } from 'lucide-react';
+import { Lock, Unlock, Crop as CropIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { ImageFile, ResizeOptions } from '@/types';
+import type { ImageFile, ResizeOptions, CropOptions } from '@/types';
 
 interface EditImageDialogProps {
   isOpen: boolean;
@@ -27,20 +30,58 @@ interface EditImageDialogProps {
 }
 
 export function EditImageDialog({ isOpen, setIsOpen, image, onUpdateImage }: EditImageDialogProps) {
+  // Resize state
   const [resizeEnabled, setResizeEnabled] = useState(image.resize?.enabled ?? false);
   const [width, setWidth] = useState(image.resize?.width ?? image.originalDimensions?.width ?? 0);
   const [height, setHeight] = useState(image.resize?.height ?? image.originalDimensions?.height ?? 0);
   const [isLocked, setIsLocked] = useState(true);
+
+  // Crop state
+  const [cropEnabled, setCropEnabled] = useState(image.crop?.enabled ?? false);
+  const [crop, setCrop] = useState<Crop | undefined>(undefined);
+  const [completedCrop, setCompletedCrop] = useState<PixelCrop | null>(image.crop?.crop ?? null);
+  const imgRef = useRef<HTMLImageElement>(null);
+
   const { toast } = useToast();
 
   const aspectRatio = image.originalDimensions ? image.originalDimensions.width / image.originalDimensions.height : 1;
+  
+  function onImageLoad(e: React.SyntheticEvent<HTMLImageElement>) {
+    if (aspectRatio) {
+      const { width, height } = e.currentTarget;
+      const initialCrop = centerCrop(
+        makeAspectCrop(
+          {
+            unit: '%',
+            width: 90,
+          },
+          aspectRatio,
+          width,
+          height
+        ),
+        width,
+        height
+      );
+      setCrop(image.crop?.crop ? { ...image.crop.crop, unit: 'px'} : initialCrop);
+    }
+  }
+
 
   useEffect(() => {
     if (isOpen) {
-      const currentResize = image.resize;
-      setResizeEnabled(currentResize?.enabled ?? false);
-      setWidth(currentResize?.width ?? image.originalDimensions?.width ?? 0);
-      setHeight(currentResize?.height ?? image.originalDimensions?.height ?? 0);
+      const { resize, crop, originalDimensions } = image;
+      setResizeEnabled(resize?.enabled ?? false);
+      setWidth(resize?.width ?? originalDimensions?.width ?? 0);
+      setHeight(resize?.height ?? originalDimensions?.height ?? 0);
+
+      setCropEnabled(crop?.enabled ?? false);
+      if (crop?.crop) {
+        setCompletedCrop(crop.crop);
+        setCrop({ ...crop.crop, unit: 'px' });
+      } else {
+        setCompletedCrop(null);
+        setCrop(undefined);
+      }
     }
   }, [isOpen, image]);
 
@@ -59,14 +100,20 @@ export function EditImageDialog({ isOpen, setIsOpen, image, onUpdateImage }: Edi
       setWidth(Math.round(newHeight * aspectRatio));
     }
   };
-
+  
   const handleApply = () => {
     const resizeOptions: ResizeOptions = {
       enabled: resizeEnabled,
       width: width,
       height: height,
     };
-    onUpdateImage(image.id, { resize: resizeOptions, status: 'pending' });
+    
+    const cropOptions: CropOptions = {
+        enabled: cropEnabled,
+        crop: completedCrop,
+    }
+
+    onUpdateImage(image.id, { resize: resizeOptions, crop: cropOptions, status: 'pending' });
     toast({
       title: 'Changes Applied',
       description: 'Image edit settings have been updated. Re-convert to see the changes.',
@@ -80,18 +127,37 @@ export function EditImageDialog({ isOpen, setIsOpen, image, onUpdateImage }: Edi
         <DialogHeader>
           <DialogTitle>Edit Image: {image.file.name}</DialogTitle>
           <DialogDescription>
-            Resize, crop, and rotate your image before conversion.
+            Resize and crop your image before conversion.
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4 items-start">
-          <div className="relative aspect-video w-full rounded-md overflow-hidden border bg-muted">
-            {image.originalUrl && <Image src={image.originalUrl} alt="Original Preview" layout="fill" objectFit="contain" />}
+          <div className="relative aspect-video w-full rounded-md overflow-hidden border bg-muted flex items-center justify-center">
+            {image.originalUrl && (
+              <ReactCrop
+                crop={crop}
+                onChange={(_, percentCrop) => setCrop(percentCrop)}
+                onComplete={(c) => setCompletedCrop(c)}
+                disabled={!cropEnabled}
+                aspect={isLocked ? aspectRatio : undefined}
+                className="max-h-[40vh]"
+              >
+                <Image 
+                  ref={imgRef}
+                  src={image.originalUrl} 
+                  alt="Original Preview" 
+                  onLoad={onImageLoad}
+                  width={image.originalDimensions?.width}
+                  height={image.originalDimensions?.height}
+                  style={{ objectFit: 'contain' }}
+                />
+              </ReactCrop>
+            )}
           </div>
-          <div className="space-y-6">
+          <div className="space-y-4 max-h-[45vh] overflow-y-auto pr-2">
             <div className="space-y-4 p-4 border rounded-lg">
                 <div className="flex items-center justify-between">
-                    <Label htmlFor="resize-switch" className="font-bold">Resize Image</Label>
+                    <Label htmlFor="resize-switch" className="font-bold flex items-center gap-2"><Pencil className="h-4 w-4" />Resize Image</Label>
                     <Switch
                         id="resize-switch"
                         checked={resizeEnabled}
@@ -122,9 +188,22 @@ export function EditImageDialog({ isOpen, setIsOpen, image, onUpdateImage }: Edi
                 </div>
             </div>
             
-            {/* Placeholder for future editing tools */}
+            <div className="space-y-4 p-4 border rounded-lg">
+                <div className="flex items-center justify-between">
+                    <Label htmlFor="crop-switch" className="font-bold flex items-center gap-2"><CropIcon className="h-4 w-4" />Crop Image</Label>
+                    <Switch
+                        id="crop-switch"
+                        checked={cropEnabled}
+                        onCheckedChange={setCropEnabled}
+                    />
+                </div>
+                <div className={cn("space-y-2", !cropEnabled && "opacity-50 pointer-events-none")}>
+                   <p className="text-xs text-muted-foreground text-center">Enable to draw a crop area on the preview image.</p>
+                </div>
+            </div>
+
             <div className="p-4 border rounded-lg opacity-50">
-                <p className="text-center text-sm text-muted-foreground">Crop & Rotate coming soon!</p>
+                <p className="text-center text-sm text-muted-foreground">Rotate coming soon!</p>
             </div>
           </div>
         </div>

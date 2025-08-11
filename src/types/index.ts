@@ -1,3 +1,5 @@
+import type { PixelCrop } from 'react-image-crop';
+
 export type ConversionStatus = 'pending' | 'converting' | 'converted' | 'ai_optimizing' | 'error';
 
 export type ConversionFormat = 'image/webp' | 'image/jpeg' | 'image/png';
@@ -13,6 +15,11 @@ export interface ResizeOptions {
     height: number;
 }
 
+export interface CropOptions {
+    enabled: boolean;
+    crop: PixelCrop | null;
+}
+
 export interface ImageFile {
   id: string;
   file: File;
@@ -26,4 +33,5 @@ export interface ImageFile {
   error?: string;
   conversionOptions: ConversionOptions;
   resize?: ResizeOptions;
+  crop?: CropOptions;
 }
