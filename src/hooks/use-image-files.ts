@@ -50,7 +50,14 @@ export function useImageFiles() {
     }, [images, globalOptions]);
 
     const handleRemoveImage = useCallback((id: string) => {
-        setImages((prev) => prev.filter((img) => img.id !== id));
+        setImages((prev) => {
+            const imageToRemove = prev.find((img) => img.id === id);
+            if (imageToRemove) {
+                if (imageToRemove.originalUrl) URL.revokeObjectURL(imageToRemove.originalUrl);
+                if (imageToRemove.convertedUrl) URL.revokeObjectURL(imageToRemove.convertedUrl);
+            }
+            return prev.filter((img) => img.id !== id);
+        });
     }, []);
 
     const handleClearAll = useCallback(() => {
@@ -64,7 +71,7 @@ export function useImageFiles() {
     const handleUpdateImage = useCallback((id: string, newImageData: Partial<ImageFile>) => {
         setImages(prev => prev.map(img => img.id === id ? { ...img, ...newImageData } : img));
     }, []);
-
+    
     const convertedImages = useMemo(() => images.filter(img => img.status === 'converted' && img.convertedFile), [images]);
 
     const handleDownloadAll = useCallback(async () => {
