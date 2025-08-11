@@ -18,9 +18,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import { Lock, Unlock, Crop as CropIcon } from 'lucide-react';
+import { Lock, Unlock, Crop as CropIcon, Pencil } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ImageFile, ResizeOptions, CropOptions } from '@/types';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 interface EditImageDialogProps {
   isOpen: boolean;
@@ -155,52 +156,61 @@ export function EditImageDialog({ isOpen, setIsOpen, image, onUpdateImage }: Edi
             )}
           </div>
           <div className="space-y-4 max-h-[45vh] overflow-y-auto pr-2">
-            <div className="space-y-4 p-4 border rounded-lg">
-                <div className="flex items-center justify-between">
-                    <Label htmlFor="resize-switch" className="font-bold flex items-center gap-2"><Pencil className="h-4 w-4" />Resize Image</Label>
-                    <Switch
-                        id="resize-switch"
-                        checked={resizeEnabled}
-                        onCheckedChange={setResizeEnabled}
-                    />
-                </div>
-                <div className={cn("space-y-4", !resizeEnabled && "opacity-50 pointer-events-none")}>
-                    <div className="flex items-end gap-2">
-                        <div className="grid w-full gap-1.5">
-                            <Label htmlFor="width">Width</Label>
-                            <Input id="width" type="number" value={width} onChange={handleWidthChange} />
-                        </div>
-                        <span className="pb-2 text-muted-foreground">x</span>
-                        <div className="grid w-full gap-1.5">
-                            <Label htmlFor="height">Height</Label>
-                            <Input id="height" type="number" value={height} onChange={handleHeightChange} />
-                        </div>
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            className="flex-shrink-0"
-                            onClick={() => setIsLocked(!isLocked)}
-                        >
-                            {isLocked ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
-                        </Button>
-                    </div>
-                     <p className="text-xs text-muted-foreground text-center">Original: {image.originalDimensions?.width} x {image.originalDimensions?.height}</p>
-                </div>
-            </div>
             
-            <div className="space-y-4 p-4 border rounded-lg">
-                <div className="flex items-center justify-between">
-                    <Label htmlFor="crop-switch" className="font-bold flex items-center gap-2"><CropIcon className="h-4 w-4" />Crop Image</Label>
-                    <Switch
-                        id="crop-switch"
-                        checked={cropEnabled}
-                        onCheckedChange={setCropEnabled}
-                    />
-                </div>
-                <div className={cn("space-y-2", !cropEnabled && "opacity-50 pointer-events-none")}>
-                   <p className="text-xs text-muted-foreground text-center">Enable to draw a crop area on the preview image.</p>
-                </div>
-            </div>
+            <Collapsible open={resizeEnabled} onOpenChange={setResizeEnabled} asChild>
+              <div className="space-y-4 p-4 border rounded-lg">
+                  <div className="flex items-center justify-between">
+                      <Label htmlFor="resize-switch" className="font-bold flex items-center gap-2 cursor-pointer"><Pencil className="h-4 w-4" />Resize Image</Label>
+                      <CollapsibleTrigger asChild>
+                         <Switch
+                          id="resize-switch"
+                          checked={resizeEnabled}
+                          onCheckedChange={setResizeEnabled}
+                        />
+                      </CollapsibleTrigger>
+                  </div>
+                  <CollapsibleContent className={cn("space-y-4", !resizeEnabled && "opacity-50 pointer-events-none")}>
+                      <div className="flex items-end gap-2">
+                          <div className="grid w-full gap-1.5">
+                              <Label htmlFor="width">Width</Label>
+                              <Input id="width" type="number" value={width} onChange={handleWidthChange} />
+                          </div>
+                          <span className="pb-2 text-muted-foreground">x</span>
+                          <div className="grid w-full gap-1.5">
+                              <Label htmlFor="height">Height</Label>
+                              <Input id="height" type="number" value={height} onChange={handleHeightChange} />
+                          </div>
+                          <Button
+                              variant="outline"
+                              size="icon"
+                              className="flex-shrink-0"
+                              onClick={() => setIsLocked(!isLocked)}
+                          >
+                              {isLocked ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
+                          </Button>
+                      </div>
+                      <p className="text-xs text-muted-foreground text-center">Original: {image.originalDimensions?.width} x {image.originalDimensions?.height}</p>
+                  </CollapsibleContent>
+              </div>
+            </Collapsible>
+            
+            <Collapsible open={cropEnabled} onOpenChange={setCropEnabled} asChild>
+              <div className="space-y-4 p-4 border rounded-lg">
+                  <div className="flex items-center justify-between">
+                      <Label htmlFor="crop-switch" className="font-bold flex items-center gap-2 cursor-pointer"><CropIcon className="h-4 w-4" />Crop Image</Label>
+                       <CollapsibleTrigger asChild>
+                          <Switch
+                              id="crop-switch"
+                              checked={cropEnabled}
+                              onCheckedChange={setCropEnabled}
+                          />
+                      </CollapsibleTrigger>
+                  </div>
+                  <CollapsibleContent className={cn("space-y-2", !cropEnabled && "opacity-50 pointer-events-none")}>
+                    <p className="text-xs text-muted-foreground text-center">Enable to draw a crop area on the preview image.</p>
+                  </CollapsibleContent>
+              </div>
+            </Collapsible>
 
             <div className="p-4 border rounded-lg opacity-50">
                 <p className="text-center text-sm text-muted-foreground">Rotate coming soon!</p>
