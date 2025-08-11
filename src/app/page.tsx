@@ -7,8 +7,10 @@ import type { ImageFile, ConversionOptions, ConversionFormat } from '@/types';
 import { ImageUploader } from '@/components/image-uploader';
 import { ImageList } from '@/components/image-list';
 import { Button } from '@/components/ui/button';
-import { Download, Trash2 } from 'lucide-react';
+import { Download, Trash2, Moon, Sun } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { ThemeToggle } from '@/components/theme-toggle';
+
 
 export default function Home() {
   const [images, setImages] = useState<ImageFile[]>([]);
@@ -88,15 +90,17 @@ export default function Home() {
       
       let completedCount = 0;
       
-      for (const image of imagesToConvert) {
-          await new Promise<void>(resolve => {
-              convertImage(image, image.conversionOptions, () => {
-                  completedCount++;
-                  setConversionProgress((completedCount / imagesToConvert.length) * 100);
-                  resolve();
-              });
-          });
-      }
+      const conversionPromises = imagesToConvert.map(image => {
+        return new Promise<void>(resolve => {
+            convertImage(image, image.conversionOptions, () => {
+                completedCount++;
+                setConversionProgress((completedCount / imagesToConvert.length) * 100);
+                resolve();
+            });
+        });
+      });
+
+      await Promise.all(conversionPromises);
       
       setIsConverting(false);
   }, [convertImage]);
@@ -151,7 +155,7 @@ export default function Home() {
     const imageToConvert = images.find(img => img.id === id);
     if(imageToConvert) {
       const updatedImage = { ...imageToConvert, conversionOptions: options };
-      handleUpdateImage(id, { conversionOptions: options });
+      handleUpdateImage(id, { conversionOptions: options, status: 'pending' });
       handleBatchConvert([updatedImage]);
     }
   }, [images, handleBatchConvert, handleUpdateImage]);
@@ -198,12 +202,10 @@ export default function Home() {
 
   return (
     <div className="flex flex-col h-full bg-background text-foreground">
-      <header className="p-6 border-b border-border">
-        <div className="container mx-auto">
-          <h1 className="text-3xl font-bold font-headline text-center">ImagePress</h1>
-          <p className="text-muted-foreground text-center mt-2">
-            Convert and optimize your images with precision.
-          </p>
+      <header className="p-4 border-b border-border">
+        <div className="container mx-auto flex justify-between items-center">
+          <h1 className="text-xl font-bold font-headline">ImagePress</h1>
+          <ThemeToggle />
         </div>
       </header>
       <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8">
