@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Zap, Settings, Check } from 'lucide-react';
 import { GlobalConversionSettings } from './global-conversion-settings';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 
 interface ImageListProps {
@@ -57,17 +58,19 @@ export function ImageList({ images, onRemove, onUpdateImage, onConvert, globalOp
             onApplyToAll={onApplyGlobalOptions}
             disabled={images.length === 0}
           />
-          <div className="space-y-4">
-            {images.map((image) => (
-              <ImageListItem 
-                key={image.id} 
-                image={image} 
-                onRemove={onRemove} 
-                onUpdateImage={onUpdateImage}
-                onConvert={onConvert}
-              />
-            ))}
-          </div>
+          <ScrollArea className="h-[45vh] pr-4">
+            <div className="space-y-4">
+              {images.map((image) => (
+                <ImageListItem 
+                  key={image.id} 
+                  image={image} 
+                  onRemove={onRemove} 
+                  onUpdateImage={onUpdateImage}
+                  onConvert={onConvert}
+                />
+              ))}
+            </div>
+          </ScrollArea>
         </div>
       </CardContent>
     </Card>
