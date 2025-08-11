@@ -111,45 +111,47 @@ export function AICompressionDialog({ isOpen, setIsOpen, image, onUpdateImage }:
             Fine-tune WebP compression for '{image.file.name}' with AI.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4 max-h-[70vh] overflow-y-auto pr-2">
-            <div>
-              <Label>Original (Converted)</Label>
-              <div className="mt-2 relative aspect-video w-full rounded-md overflow-hidden border">
-                <Image src={image.convertedUrl!} alt="Original" layout="fill" objectFit="contain" />
+        <div className="max-h-[70vh] overflow-y-auto pr-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+              <div>
+                <Label>Original (Converted)</Label>
+                <div className="mt-2 relative aspect-video w-full rounded-md overflow-hidden border">
+                  <Image src={image.convertedUrl!} alt="Original" layout="fill" objectFit="contain" />
+                </div>
+                <p className="text-sm text-muted-foreground mt-2 text-center">Size: {image.convertedSize ? (image.convertedSize / 1024).toFixed(2) : 0} KB</p>
               </div>
-              <p className="text-sm text-muted-foreground mt-2 text-center">Size: {image.convertedSize ? (image.convertedSize / 1024).toFixed(2) : 0} KB</p>
-            </div>
-            <div>
-              <Label>AI Optimized Preview</Label>
-              <div className="mt-2 relative aspect-video w-full rounded-md overflow-hidden border bg-muted flex items-center justify-center">
-                {isOptimizing && <Loader2 className="w-8 h-8 animate-spin text-primary" />}
-                {!isOptimizing && optimizedImage && <Image src={optimizedImage.url} alt="Optimized" layout="fill" objectFit="contain" />}
-                {!isOptimizing && !optimizedImage && <Sparkles className="w-8 h-8 text-muted-foreground" />}
+              <div>
+                <Label>AI Optimized Preview</Label>
+                <div className="mt-2 relative aspect-video w-full rounded-md overflow-hidden border bg-muted flex items-center justify-center">
+                  {isOptimizing && <Loader2 className="w-8 h-8 animate-spin text-primary" />}
+                  {!isOptimizing && optimizedImage && <Image src={optimizedImage.url} alt="Optimized" layout="fill" objectFit="contain" />}
+                  {!isOptimizing && !optimizedImage && <Sparkles className="w-8 h-8 text-muted-foreground" />}
+                </div>
+                <p className="text-sm text-muted-foreground mt-2 text-center">
+                  {optimizedImage ? `Size: ${(optimizedImage.size / 1024).toFixed(2)} KB` : 'Run optimizer to see preview'}
+                </p>
               </div>
-              <p className="text-sm text-muted-foreground mt-2 text-center">
-                {optimizedImage ? `Size: ${(optimizedImage.size / 1024).toFixed(2)} KB` : 'Run optimizer to see preview'}
-              </p>
-            </div>
-        </div>
-        
-        <div className="space-y-4 mt-4">
-            <div>
-              <Label htmlFor="loss-slider">Information Loss Tolerance: {lossTolerance[0]}%</Label>
-              <Slider
-                id="loss-slider"
-                min={0}
-                max={100}
-                step={1}
-                value={lossTolerance}
-                onValueChange={setLossTolerance}
-                className={cn('my-2')}
-              />
-              <p className="text-xs text-muted-foreground">0% is lossless (higher quality, larger size), 100% is maximum loss (lower quality, smaller size).</p>
-            </div>
-            <div>
-                <Label htmlFor="description">Image Description (Optional)</Label>
-                <Textarea id="description" placeholder="e.g., 'A vibrant portrait for a profile picture' or 'A small, fast-loading icon for a website menu'." value={description} onChange={(e) => setDescription(e.target.value)} className="mt-2" />
-            </div>
+          </div>
+          
+          <div className="space-y-4 mt-4">
+              <div>
+                <Label htmlFor="loss-slider">Information Loss Tolerance: {lossTolerance[0]}%</Label>
+                <Slider
+                  id="loss-slider"
+                  min={0}
+                  max={100}
+                  step={1}
+                  value={lossTolerance}
+                  onValueChange={setLossTolerance}
+                  className={cn('my-2')}
+                />
+                <p className="text-xs text-muted-foreground">0% is lossless (higher quality, larger size), 100% is maximum loss (lower quality, smaller size).</p>
+              </div>
+              <div>
+                  <Label htmlFor="description">Image Description (Optional)</Label>
+                  <Textarea id="description" placeholder="e.g., 'A vibrant portrait for a profile picture' or 'A small, fast-loading icon for a website menu'." value={description} onChange={(e) => setDescription(e.target.value)} className="mt-2" />
+              </div>
+          </div>
         </div>
 
         <DialogFooter className="mt-6">
