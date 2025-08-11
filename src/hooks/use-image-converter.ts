@@ -43,19 +43,24 @@ export function useImageConverter(
                 let destWidth = imgElement.width;
                 let destHeight = imgElement.height;
                 
-                if (image.crop?.enabled && image.crop.crop) {
+                const isCropEnabled = image.crop?.enabled && image.crop.crop;
+                const isResizeEnabled = image.resize?.enabled;
+
+                if (isCropEnabled) {
                     const crop = image.crop.crop as PixelCrop;
                     sourceX = crop.x;
                     sourceY = crop.y;
                     sourceWidth = crop.width;
                     sourceHeight = crop.height;
-                    destWidth = crop.width;
-                    destHeight = crop.height;
                 }
 
-                if (image.resize && image.resize.enabled) {
-                    destWidth = image.resize.width;
-                    destHeight = image.resize.height;
+                if (isResizeEnabled) {
+                    destWidth = image.resize!.width;
+                    destHeight = image.resize!.height;
+                } else if (isCropEnabled) {
+                    // If only cropping is enabled, the destination size is the crop size.
+                    destWidth = sourceWidth;
+                    destHeight = sourceHeight;
                 }
                 
                 canvas.width = destWidth;
