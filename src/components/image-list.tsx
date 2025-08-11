@@ -14,7 +14,6 @@ interface ImageListProps {
   images: ImageFile[];
   onRemove: (id: string) => void;
   onUpdateImage: (id: string, newImageData: Partial<ImageFile>) => void;
-  onConvert: (id: string) => void;
   globalOptions: ConversionOptions;
   onGlobalOptionsChange: (options: ConversionOptions) => void;
   onApplyGlobalOptions: () => void;
@@ -27,7 +26,6 @@ export function ImageList({
   images, 
   onRemove, 
   onUpdateImage, 
-  onConvert, 
   globalOptions, 
   onGlobalOptionsChange, 
   onApplyGlobalOptions,
@@ -88,7 +86,6 @@ export function ImageList({
                   image={image} 
                   onRemove={onRemove} 
                   onUpdateImage={onUpdateImage}
-                  onConvert={onConvert}
                 />
               ))}
             </div>

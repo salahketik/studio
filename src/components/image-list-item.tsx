@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import Image from 'next/image';
 import {
   FileImage,
@@ -10,7 +10,6 @@ import {
   Trash2,
   Wand2,
   Loader2,
-  RefreshCw,
   Pencil,
 } from 'lucide-react';
 import type { ImageFile, ConversionOptions, ConversionFormat } from '@/types';
@@ -28,13 +27,13 @@ import {
 } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
 import { Label } from "@/components/ui/label"
+import { useImageConverter } from '@/hooks/use-image-converter';
 
 
 interface ImageListItemProps {
   image: ImageFile;
   onRemove: (id: string) => void;
   onUpdateImage: (id: string, newImageData: Partial<ImageFile>) => void;
-  onConvert: (id: string) => void;
 }
 
 function formatBytes(bytes: number, decimals = 2) {
@@ -46,25 +45,23 @@ function formatBytes(bytes: number, decimals = 2) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
 
-export function ImageListItem({ image, onRemove, onUpdateImage, onConvert }: ImageListItemProps) {
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+export function ImageListItem({ image, onRemove, onUpdateImage }: ImageListItemProps) {
   const [isAiDialogOpen, setIsAiDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   
   const { conversionOptions } = image;
-  
-  useEffect(() => {
-    const url = image.convertedUrl || image.originalUrl;
-    if (url) {
-      setImageUrl(url);
-    }
+
+  const { convertImages, isConverting } = useImageConverter(onUpdateImage);
+
+  const imageUrl = useMemo(() => {
+    return image.convertedUrl || image.originalUrl;
   }, [image.originalUrl, image.convertedUrl]);
 
   const sizeReduction = image.convertedSize
     ? ((image.originalSize - image.convertedSize) / image.originalSize) * 100
     : 0;
 
-  const isItemConverting = image.status === 'converting' || image.status === 'ai_optimizing';
+  const isItemBusy = image.status === 'converting' || image.status === 'ai_optimizing' || isConverting;
 
   const StatusIndicator = () => {
     switch (image.status) {
@@ -92,11 +89,14 @@ export function ImageListItem({ image, onRemove, onUpdateImage, onConvert }: Ima
   };
 
   const handleConvertClick = () => {
-    onConvert(image.id);
+    if (image.status !== 'pending') {
+      onUpdateImage(image.id, { status: 'pending' });
+    }
+    convertImages([image]);
   };
 
   const handleOptionsChange = (newOptions: Partial<ConversionOptions>) => {
-    onUpdateImage(image.id, { conversionOptions: { ...conversionOptions, ...newOptions }, status: 'pending' });
+    onUpdateImage(image.id, { conversionOptions: { ...conversionOptions, ...newOptions } });
   };
   
   const showQualitySlider = useMemo(() => conversionOptions.format === 'image/jpeg' || conversionOptions.format === 'image/webp', [conversionOptions.format]);
@@ -145,81 +145,72 @@ export function ImageListItem({ image, onRemove, onUpdateImage, onConvert }: Ima
             >
                 <Download className="h-4 w-4" />
             </Button>
-            <Button size="icon" variant="ghost" onClick={() => onRemove(image.id)} disabled={isItemConverting} title="Remove">
+            <Button size="icon" variant="ghost" onClick={() => onRemove(image.id)} disabled={isItemBusy} title="Remove">
                 <Trash2 className="h-4 w-4 text-destructive" />
             </Button>
           </div>
       </div>
       
-      {image.status !== 'pending' && image.status !== 'converting' && image.status !== 'ai_optimizing' && (
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pl-20">
-          <div className='flex-grow grid grid-cols-1 sm:grid-cols-2 gap-4 items-center'>
-            <div>
-              <Label>Format</Label>
-              <Select 
-                value={conversionOptions.format} 
-                onValueChange={(value) => handleOptionsChange({ format: value as ConversionFormat })} 
-                disabled={isItemConverting}
-              >
-                  <SelectTrigger className="w-full mt-1 h-9">
-                      <SelectValue placeholder="Select format" />
-                  </SelectTrigger>
-                  <SelectContent>
-                      <SelectItem value="image/webp">WebP</SelectItem>
-                      <SelectItem value="image/jpeg">JPEG</SelectItem>
-                      <SelectItem value="image/png">PNG</SelectItem>
-                  </SelectContent>
-              </Select>
-            </div>
-            
-            <div className={cn(!showQualitySlider && 'opacity-50')}>
-                <Label>Quality: {Math.round(conversionOptions.quality * 100)}%</Label>
-                <Slider
-                    value={[conversionOptions.quality * 100]}
-                    onValueChange={(v) => handleOptionsChange({ quality: v[0] / 100 })}
-                    max={100}
-                    step={1}
-                    className="mt-2"
-                    disabled={isItemConverting || !showQualitySlider}
-                />
-            </div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pl-20">
+        <div className='flex-grow grid grid-cols-1 sm:grid-cols-2 gap-4 items-center'>
+          <div>
+            <Label>Format</Label>
+            <Select 
+              value={conversionOptions.format} 
+              onValueChange={(value) => handleOptionsChange({ format: value as ConversionFormat })} 
+              disabled={isItemBusy}
+            >
+                <SelectTrigger className="w-full mt-1 h-9">
+                    <SelectValue placeholder="Select format" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="image/webp">WebP</SelectItem>
+                    <SelectItem value="image/jpeg">JPEG</SelectItem>
+                    <SelectItem value="image/png">PNG</SelectItem>
+                </SelectContent>
+            </Select>
           </div>
           
-          <div className="flex gap-2 self-end sm:self-center pt-4">
-             <Button
-                size="sm"
-                variant="outline"
-                onClick={() => setIsEditDialogOpen(true)}
-                disabled={isItemConverting}
-                title="Edit Image"
-              >
-                <Pencil className="mr-2 h-4 w-4" />
-                Edit
-            </Button>
-            <Button
-                size="sm"
-                variant="outline"
-                onClick={() => setIsAiDialogOpen(true)}
-                disabled={image.status !== 'converted'}
-                title="AI-Assisted Compression"
-              >
-                <Wand2 className="mr-2 h-4 w-4" />
-                AI Assist
-            </Button>
-            <Button size="sm" onClick={handleConvertClick} disabled={isItemConverting}>
-                {isItemConverting ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <RefreshCw className="mr-2 h-4 w-4" />}
-                Convert
-            </Button>
+          <div className={cn(!showQualitySlider && 'opacity-50')}>
+              <Label>Quality: {Math.round(conversionOptions.quality * 100)}%</Label>
+              <Slider
+                  value={[conversionOptions.quality * 100]}
+                  onValueChange={(v) => handleOptionsChange({ quality: v[0] / 100 })}
+                  max={100}
+                  step={1}
+                  className="mt-2"
+                  disabled={isItemBusy || !showQualitySlider}
+              />
           </div>
         </div>
-      )}
+        
+        <div className="flex gap-2 self-end sm:self-center pt-4">
+           <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setIsEditDialogOpen(true)}
+              disabled={isItemBusy}
+              title="Edit Image"
+            >
+              <Pencil className="mr-2 h-4 w-4" />
+              Edit
+          </Button>
+          <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setIsAiDialogOpen(true)}
+              disabled={image.status !== 'converted' || isItemBusy}
+              title="AI-Assisted Compression"
+            >
+              <Wand2 className="mr-2 h-4 w-4" />
+              AI Assist
+          </Button>
+          <Button size="sm" onClick={handleConvertClick} disabled={isItemBusy}>
+              {isItemBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : 'Convert' }
+          </Button>
+        </div>
+      </div>
 
-      {image.status === 'pending' && (
-         <div className="flex items-center justify-center pl-20">
-            <p className='text-sm text-muted-foreground'>Ready to be converted. Change settings above or in the global settings.</p>
-         </div>
-      )}
-      
       <EditImageDialog
         isOpen={isEditDialogOpen}
         setIsOpen={setIsEditDialogOpen}

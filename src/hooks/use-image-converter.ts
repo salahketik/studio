@@ -6,31 +6,23 @@ import { useToast } from '@/hooks/use-toast';
 import { PixelCrop } from 'react-image-crop';
 
 export function useImageConverter(
-    setImages: React.Dispatch<React.SetStateAction<ImageFile[]>>
+    onUpdateImage: (id: string, newImageData: Partial<ImageFile>) => void
 ) {
     const [isConverting, setIsConverting] = useState(false);
     const [conversionProgress, setConversionProgress] = useState(0);
     const { toast } = useToast();
 
     const handleError = useCallback((id: string, message: string) => {
-        setImages((prev) =>
-            prev.map((img) =>
-                img.id === id ? { ...img, status: 'error', error: message } : img
-            )
-        );
+        onUpdateImage(id, { status: 'error', error: message });
         toast({
             variant: 'destructive',
             title: 'Conversion Error',
             description: `Could not process an image. ${message}`,
         });
-    }, [setImages, toast]);
+    }, [onUpdateImage, toast]);
 
     const convertImage = useCallback((image: ImageFile, onComplete: () => void) => {
-        setImages((prev) =>
-            prev.map((img) =>
-                img.id === image.id ? { ...img, status: 'converting' } : img
-            )
-        );
+        onUpdateImage(image.id, { status: 'converting' });
 
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -51,7 +43,6 @@ export function useImageConverter(
                 let destWidth = imgElement.width;
                 let destHeight = imgElement.height;
                 
-                // Apply cropping first
                 if (image.crop?.enabled && image.crop.crop) {
                     const crop = image.crop.crop as PixelCrop;
                     sourceX = crop.x;
@@ -62,7 +53,6 @@ export function useImageConverter(
                     destHeight = crop.height;
                 }
 
-                // Apply resizing
                 if (image.resize && image.resize.enabled) {
                     destWidth = image.resize.width;
                     destHeight = image.resize.height;
@@ -90,19 +80,12 @@ export function useImageConverter(
                             onComplete();
                             return;
                         }
-                        setImages((prev) =>
-                            prev.map((img) =>
-                                img.id === image.id
-                                    ? {
-                                        ...img,
-                                        status: 'converted',
-                                        convertedFile: blob,
-                                        convertedSize: blob.size,
-                                        convertedUrl: URL.createObjectURL(blob),
-                                    }
-                                    : img
-                            )
-                        );
+                        onUpdateImage(image.id, {
+                            status: 'converted',
+                            convertedFile: blob,
+                            convertedSize: blob.size,
+                            convertedUrl: URL.createObjectURL(blob),
+                        });
                         onComplete();
                     },
                     image.conversionOptions.format,
@@ -120,7 +103,7 @@ export function useImageConverter(
             onComplete();
         };
         reader.readAsDataURL(image.file);
-    }, [setImages, handleError]);
+    }, [onUpdateImage, handleError]);
 
     const convertImages = useCallback(async (imagesToConvert: ImageFile[]) => {
         if (imagesToConvert.length === 0) return;

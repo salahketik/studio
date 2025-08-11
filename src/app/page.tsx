@@ -1,8 +1,6 @@
 'use client';
 
-import { useCallback, useMemo } from 'react';
-import JSZip from 'jszip';
-import { saveAs } from 'file-saver';
+import { useMemo } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useImageFiles } from '@/hooks/use-image-files';
 import { useImageConverter } from '@/hooks/use-image-converter';
@@ -18,63 +16,20 @@ export default function Home() {
   const { toast } = useToast();
   const {
     images,
-    setImages,
     handleImageUpload,
     handleRemoveImage,
     handleClearAll,
     handleUpdateImage,
     globalOptions,
     setGlobalOptions,
+    handleDownloadAll,
+    handleApplyGlobalOptions,
+    convertedImages
   } = useImageFiles();
 
-  const { isConverting, conversionProgress, convertImages } = useImageConverter(setImages);
-
-  const handleReconvertImage = useCallback((id: string) => {
-    const imageToConvert = images.find(img => img.id === id);
-    if(imageToConvert) {
-      handleUpdateImage(id, { status: 'pending' });
-      convertImages([imageToConvert]);
-    }
-  }, [images, convertImages, handleUpdateImage]);
-
-  const convertedImages = useMemo(() => images.filter(img => img.status === 'converted' && img.convertedFile), [images]);
-  const pendingImages = useMemo(() => images.filter(img => img.status === 'pending'), [images]);
-
-  const handleDownloadAll = useCallback(async () => {
-    if (convertedImages.length === 0) {
-      toast({
-        title: 'No Images to Download',
-        description: 'Please convert some images first.',
-      });
-      return;
-    }
-
-    const zip = new JSZip();
-    convertedImages.forEach((image) => {
-      const extension = image.conversionOptions.format.split('/')[1];
-      const newName = image.file.name.substring(0, image.file.name.lastIndexOf('.')) + `.${extension}`;
-      zip.file(newName, image.convertedFile!);
-    });
-
-    try {
-      const zipBlob = await zip.generateAsync({ type: 'blob' });
-      saveAs(zipBlob, 'WebPGator_images.zip');
-    } catch (error) {
-      toast({
-        variant: 'destructive',
-        title: 'Zip Creation Failed',
-        description: 'Could not create the zip file.',
-      });
-    }
-  }, [convertedImages, toast]);
+  const { isConverting, conversionProgress, convertImages } = useImageConverter(handleUpdateImage);
   
-  const handleApplyGlobalOptions = useCallback(() => {
-    setImages(prev => prev.map(img => ({ ...img, conversionOptions: globalOptions, status: 'pending' })));
-    toast({
-        title: "Global Settings Applied",
-        description: "All images have been updated with the new conversion settings.",
-    })
-  }, [globalOptions, toast, setImages]);
+  const pendingImages = useMemo(() => images.filter(img => img.status === 'pending'), [images]);
 
   return (
     <div className="flex flex-col h-full bg-background text-foreground">
@@ -90,7 +45,7 @@ export default function Home() {
 
           {images.length > 0 && (
             <div className="flex justify-end gap-2">
-               <Button onClick={handleDownloadAll} disabled={convertedImages.length === 0 || isConverting}>
+               <Button onClick={() => handleDownloadAll()} disabled={convertedImages.length === 0 || isConverting}>
                 <Download className="mr-2 h-4 w-4" />
                 Download All (.zip)
               </Button>
@@ -105,7 +60,6 @@ export default function Home() {
             images={images} 
             onRemove={handleRemoveImage} 
             onUpdateImage={handleUpdateImage}
-            onConvert={handleReconvertImage}
             globalOptions={globalOptions}
             onGlobalOptionsChange={setGlobalOptions}
             onApplyGlobalOptions={handleApplyGlobalOptions}

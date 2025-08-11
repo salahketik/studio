@@ -1,7 +1,10 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 import type { ImageFile, ConversionOptions } from '@/types';
+import { useToast } from './use-toast';
 
 const defaultGlobalOptions: ConversionOptions = {
     format: 'image/webp',
@@ -11,6 +14,7 @@ const defaultGlobalOptions: ConversionOptions = {
 export function useImageFiles() {
     const [images, setImages] = useState<ImageFile[]>([]);
     const [globalOptions, setGlobalOptions] = useState<ConversionOptions>(defaultGlobalOptions);
+    const { toast } = useToast();
 
     const handleImageUpload = useCallback((files: File[]) => {
         const newImages: ImageFile[] = files.map((file) => {
@@ -50,21 +54,71 @@ export function useImageFiles() {
     }, []);
 
     const handleClearAll = useCallback(() => {
+        images.forEach(img => {
+            if (img.originalUrl) URL.revokeObjectURL(img.originalUrl);
+            if (img.convertedUrl) URL.revokeObjectURL(img.convertedUrl);
+        });
         setImages([]);
-    }, []);
+    }, [images]);
 
     const handleUpdateImage = useCallback((id: string, newImageData: Partial<ImageFile>) => {
         setImages(prev => prev.map(img => img.id === id ? { ...img, ...newImageData } : img));
     }, []);
 
+    const convertedImages = useMemo(() => images.filter(img => img.status === 'converted' && img.convertedFile), [images]);
+
+    const handleDownloadAll = useCallback(async () => {
+        if (convertedImages.length === 0) {
+          toast({
+            title: 'No Images to Download',
+            description: 'Please convert some images first.',
+          });
+          return;
+        }
+    
+        const zip = new JSZip();
+        convertedImages.forEach((image) => {
+          const extension = image.conversionOptions.format.split('/')[1];
+          const newName = image.file.name.substring(0, image.file.name.lastIndexOf('.')) + `.${extension}`;
+          zip.file(newName, image.convertedFile!);
+        });
+    
+        try {
+          const zipBlob = await zip.generateAsync({ type: 'blob' });
+          saveAs(zipBlob, 'WebPGator_images.zip');
+        } catch (error) {
+          toast({
+            variant: 'destructive',
+            title: 'Zip Creation Failed',
+            description: 'Could not create the zip file.',
+          });
+        }
+    }, [convertedImages, toast]);
+
+    const handleApplyGlobalOptions = useCallback(() => {
+        setImages(prev => prev.map(img => {
+            if (img.status === 'converting' || img.status === 'ai_optimizing') {
+                return img;
+            }
+            return { ...img, conversionOptions: globalOptions, status: 'pending' };
+        }));
+        toast({
+            title: "Global Settings Applied",
+            description: "All pending images have been updated with the new conversion settings.",
+        })
+    }, [globalOptions, toast]);
+
+
     return {
         images,
-        setImages,
         globalOptions,
         setGlobalOptions,
         handleImageUpload,
         handleRemoveImage,
         handleClearAll,
         handleUpdateImage,
+        handleDownloadAll,
+        handleApplyGlobalOptions,
+        convertedImages,
     };
 }
