@@ -4,14 +4,16 @@ import { useState, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
-import { runAITrimming } from '@/app/actions';
 
 import { ImageUploader } from '@/components/image-uploader';
 import { Button } from '@/components/ui/button';
-import { Download, Loader2, Sparkles, Image as ImageIcon } from 'lucide-react';
+import { Download, Loader2, Crop, Image as ImageIcon } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Card, CardContent } from '@/components/ui/card';
 import { saveAs } from 'file-saver';
+import { Slider } from '@/components/ui/slider';
+import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
 
 
 export default function TrimPage() {
@@ -19,6 +21,7 @@ export default function TrimPage() {
   const [originalImage, setOriginalImage] = useState<{file: File, url: string} | null>(null);
   const [trimmedImage, setTrimmedImage] = useState<{url: string, blob: Blob} | null>(null);
   const [isTrimming, setIsTrimming] = useState(false);
+  const [tolerance, setTolerance] = useState([20]);
 
   const handleImageUpload = useCallback((files: File[]) => {
     if (files.length > 0) {
@@ -34,14 +37,47 @@ export default function TrimPage() {
     }
   }, [toast]);
   
-  const fileToDataUri = (file: Blob): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  };
+  const trimCanvas = (canvas: HTMLCanvasElement, tolerance: number) => {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const { data, width, height } = imageData;
+
+    let top = height, bottom = 0, left = width, right = 0;
+
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            const i = (y * width + x) * 4;
+            // Check if pixel alpha is greater than the tolerance
+            if (data[i+3] > tolerance) {
+                if (y < top) top = y;
+                if (y > bottom) bottom = y;
+                if (x < left) left = x;
+                if (x > right) right = x;
+            }
+        }
+    }
+
+    // If the image is entirely blank
+    if (top > bottom) {
+        return null;
+    }
+
+    const trimWidth = right - left + 1;
+    const trimHeight = bottom - top + 1;
+
+    const trimmedCanvas = document.createElement('canvas');
+    trimmedCanvas.width = trimWidth;
+    trimmedCanvas.height = trimHeight;
+    const trimmedCtx = trimmedCanvas.getContext('2d');
+    if (!trimmedCtx) return null;
+
+    trimmedCtx.drawImage(canvas, left, top, trimWidth, trimHeight, 0, 0, trimWidth, trimHeight);
+
+    return trimmedCanvas;
+  }
+
 
   const handleTrim = async () => {
     if (!originalImage) return;
@@ -49,26 +85,39 @@ export default function TrimPage() {
     setIsTrimming(true);
     setTrimmedImage(null);
 
-    try {
-      const imageUri = await fileToDataUri(originalImage.file);
-      const result = await runAITrimming({ imageUri });
+    const img = document.createElement('img');
+    img.src = originalImage.url;
+    img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+            toast({ variant: 'destructive', title: 'Error', description: 'Could not create canvas context.' });
+            setIsTrimming(false);
+            return;
+        }
+        ctx.drawImage(img, 0, 0);
 
-      if (result.error) {
-        throw new Error(result.error);
-      }
+        const trimmedCanvas = trimCanvas(canvas, tolerance[0]);
 
-      const res = await fetch(result.trimmedImageUri!);
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      setTrimmedImage({ url, blob });
-
-    } catch (error) {
-        toast({
-            variant: 'destructive',
-            title: 'AI Trimming Failed',
-            description: error instanceof Error ? error.message : 'An unknown error occurred.',
-        });
-    } finally {
+        if (trimmedCanvas) {
+            trimmedCanvas.toBlob(blob => {
+                if (blob) {
+                    const url = URL.createObjectURL(blob);
+                    setTrimmedImage({ url, blob });
+                } else {
+                    toast({ variant: 'destructive', title: 'Error', description: 'Failed to create trimmed image blob.' });
+                }
+                setIsTrimming(false);
+            }, originalImage.file.type);
+        } else {
+            toast({ title: 'Nothing to Trim', description: 'The image appears to be empty or transparent.' });
+            setIsTrimming(false);
+        }
+    }
+    img.onerror = () => {
+        toast({ variant: 'destructive', title: 'Error', description: 'Failed to load image for processing.' });
         setIsTrimming(false);
     }
   };
@@ -123,7 +172,7 @@ export default function TrimPage() {
             <div className="text-center">
                 <h2 className="text-3xl font-bold tracking-tight">Smart Trim</h2>
                 <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">
-                    Upload an image and let our AI automatically remove the surrounding empty space or uniform background. Perfect for product photos and logos.
+                    Upload an image to automatically remove the surrounding empty or transparent space.
                 </p>
             </div>
             
@@ -152,9 +201,27 @@ export default function TrimPage() {
                                 </p>
                             </div>
                         </div>
+
+                        <div className="max-w-sm mx-auto mt-8 space-y-4">
+                            <div>
+                                <Label htmlFor="tolerance-slider">Trimming Tolerance: {tolerance[0]}</Label>
+                                <Slider
+                                    id="tolerance-slider"
+                                    min={0}
+                                    max={255}
+                                    step={1}
+                                    value={tolerance}
+                                    onValueChange={setTolerance}
+                                    className={cn('my-2')}
+                                    disabled={isTrimming}
+                                />
+                                <p className="text-xs text-muted-foreground">Adjusts sensitivity. Higher values will trim more aggressively (useful for images with faint shadows).</p>
+                            </div>
+                        </div>
+
                         <div className="flex justify-center gap-4 mt-8">
                             <Button onClick={handleTrim} disabled={isTrimming}>
-                                {isTrimming ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Trimming...</> : <><Sparkles className="mr-2 h-4 w-4" /> Trim Image</>}
+                                {isTrimming ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Trimming...</> : <><Crop className="mr-2 h-4 w-4" /> Trim Image</>}
                             </Button>
                             <Button onClick={handleDownload} disabled={!trimmedImage || isTrimming}>
                                 <Download className="mr-2 h-4 w-4" />
@@ -162,7 +229,7 @@ export default function TrimPage() {
                             </Button>
                         </div>
                          <div className="text-center mt-6">
-                            <Button variant="link" onClick={() => setOriginalImage(null)}>
+                            <Button variant="link" onClick={() => { setOriginalImage(null); setTrimmedImage(null); }}>
                                 Or upload a different image
                             </Button>
                         </div>
