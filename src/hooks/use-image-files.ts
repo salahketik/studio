@@ -99,7 +99,11 @@ export function useImageFiles() {
     
         const zip = new JSZip();
         convertedImages.forEach((image) => {
-          const extension = image.conversionOptions.format.split('/')[1];
+          let extension = image.conversionOptions.format.split('/')[1];
+          if (extension === 'jpeg') extension = 'jpeg';
+          if (image.conversionOptions.format === 'image/jpg') extension = 'jpg';
+          if (image.conversionOptions.format === 'image/x-icon') extension = 'ico';
+
           const newName = image.file.name.substring(0, image.file.name.lastIndexOf('.')) + `.${extension}`;
           zip.file(newName, image.convertedFile!);
         });

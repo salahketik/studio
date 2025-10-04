@@ -82,6 +82,8 @@ export function ImageListItem({ image, onRemove, onUpdateImage }: ImageListItemP
     if (!image.convertedUrl || !image.convertedFile) return;
     
     let extension = image.conversionOptions.format.split('/')[1];
+    if (extension === 'jpeg') extension = 'jpeg';
+    if (image.conversionOptions.format === 'image/jpg') extension = 'jpg';
     if (image.conversionOptions.format === 'image/x-icon') {
         extension = 'ico';
     }
@@ -90,7 +92,7 @@ export function ImageListItem({ image, onRemove, onUpdateImage }: ImageListItemP
     a.href = image.convertedUrl;
     a.download = image.file.name.replace(/\.[^/.]+$/, `.${extension}`);
     document.body.appendChild(a);
-    a.click();
+a.click();
     document.body.removeChild(a);
   };
 
@@ -105,7 +107,7 @@ export function ImageListItem({ image, onRemove, onUpdateImage }: ImageListItemP
     onUpdateImage(image.id, { conversionOptions: { ...conversionOptions, ...newOptions } });
   };
   
-  const showQualitySlider = useMemo(() => conversionOptions.format === 'image/jpeg' || conversionOptions.format === 'image/webp', [conversionOptions.format]);
+  const showQualitySlider = useMemo(() => conversionOptions.format === 'image/jpeg' || conversionOptions.format === 'image/jpg' || conversionOptions.format === 'image/webp', [conversionOptions.format]);
   const isIcoFormat = useMemo(() => conversionOptions.format === 'image/x-icon', [conversionOptions.format]);
 
   return (
@@ -173,6 +175,7 @@ export function ImageListItem({ image, onRemove, onUpdateImage }: ImageListItemP
                 <SelectContent>
                     <SelectItem value="image/webp">WebP</SelectItem>
                     <SelectItem value="image/jpeg">JPEG</SelectItem>
+                    <SelectItem value="image/jpg">JPG</SelectItem>
                     <SelectItem value="image/png">PNG</SelectItem>
                     <SelectItem value="image/x-icon">ICO (via PNG 32x32)</SelectItem>
                 </SelectContent>

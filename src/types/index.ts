@@ -2,7 +2,7 @@ import type { PixelCrop } from 'react-image-crop';
 
 export type ConversionStatus = 'pending' | 'converting' | 'converted' | 'ai_optimizing' | 'error';
 
-export type ConversionFormat = 'image/webp' | 'image/jpeg' | 'image/png' | 'image/x-icon';
+export type ConversionFormat = 'image/webp' | 'image/jpeg' | 'image/jpg' | 'image/png' | 'image/x-icon';
 
 export interface ConversionOptions {
   format: ConversionFormat;

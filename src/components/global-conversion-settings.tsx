@@ -33,7 +33,7 @@ export function GlobalConversionSettings({ options, onOptionsChange, onApplyToAl
         onOptionsChange({ ...options, quality: quality[0] / 100 });
     }
 
-    const showQualitySlider = useMemo(() => options.format === 'image/jpeg' || options.format === 'image/webp', [options.format]);
+    const showQualitySlider = useMemo(() => options.format === 'image/jpeg' || options.format === 'image/jpg' || options.format === 'image/webp', [options.format]);
 
     return (
         <Card className="bg-muted/50">
@@ -57,6 +57,7 @@ export function GlobalConversionSettings({ options, onOptionsChange, onApplyToAl
                             <SelectContent>
                                 <SelectItem value="image/webp">WebP</SelectItem>
                                 <SelectItem value="image/jpeg">JPEG</SelectItem>
+                                <SelectItem value="image/jpg">JPG</SelectItem>
                                 <SelectItem value="image/png">PNG</SelectItem>
                                 <SelectItem value="image/x-icon">ICO (via PNG 32x32)</SelectItem>
                             </SelectContent>

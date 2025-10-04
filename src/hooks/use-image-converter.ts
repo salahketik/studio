@@ -82,7 +82,13 @@ export function useImageConverter(
                     destHeight
                 );
 
-                const blobFormat = isIcoFormat ? 'image/png' : image.conversionOptions.format;
+                let blobFormat = image.conversionOptions.format;
+                if (isIcoFormat) {
+                    blobFormat = 'image/png';
+                } else if (blobFormat === 'image/jpg') {
+                    blobFormat = 'image/jpeg';
+                }
+
                 const blobQuality = isIcoFormat ? 1.0 : image.conversionOptions.quality;
 
 
