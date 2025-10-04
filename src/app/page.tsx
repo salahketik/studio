@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useEffect } from 'react';
+import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 import { useImageFiles } from '@/hooks/use-image-files';
 import { useImageConverter } from '@/hooks/use-image-converter';
@@ -42,7 +43,17 @@ export default function Home() {
     <div className="flex flex-col h-full bg-background text-foreground">
       <header className="p-4 border-b border-border">
         <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-xl font-bold font-headline">WebPGator</h1>
+            <div className="flex items-center gap-4">
+              <h1 className="text-xl font-bold font-headline">WebPGator</h1>
+              <nav className="flex items-center gap-2">
+                <Button variant="link" asChild className="p-0 text-muted-foreground data-[active]:text-foreground">
+                    <Link href="/">Bulk Converter</Link>
+                </Button>
+                <Button variant="link" asChild className="p-0 text-muted-foreground">
+                    <Link href="/trim">Smart Trim</Link>
+                </Button>
+              </nav>
+            </div>
           <ThemeToggle />
         </div>
       </header>
