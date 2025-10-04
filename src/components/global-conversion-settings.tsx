@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useMemo } from 'react';
@@ -57,6 +58,7 @@ export function GlobalConversionSettings({ options, onOptionsChange, onApplyToAl
                                 <SelectItem value="image/webp">WebP</SelectItem>
                                 <SelectItem value="image/jpeg">JPEG</SelectItem>
                                 <SelectItem value="image/png">PNG</SelectItem>
+                                <SelectItem value="image/x-icon">ICO (via PNG 32x32)</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>

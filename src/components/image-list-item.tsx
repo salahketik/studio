@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo } from 'react';
@@ -79,7 +80,12 @@ export function ImageListItem({ image, onRemove, onUpdateImage }: ImageListItemP
   
   const handleDownload = () => {
     if (!image.convertedUrl || !image.convertedFile) return;
-    const extension = image.conversionOptions.format.split('/')[1];
+    
+    let extension = image.conversionOptions.format.split('/')[1];
+    if (image.conversionOptions.format === 'image/x-icon') {
+        extension = 'ico';
+    }
+
     const a = document.createElement('a');
     a.href = image.convertedUrl;
     a.download = image.file.name.replace(/\.[^/.]+$/, `.${extension}`);
@@ -100,6 +106,7 @@ export function ImageListItem({ image, onRemove, onUpdateImage }: ImageListItemP
   };
   
   const showQualitySlider = useMemo(() => conversionOptions.format === 'image/jpeg' || conversionOptions.format === 'image/webp', [conversionOptions.format]);
+  const isIcoFormat = useMemo(() => conversionOptions.format === 'image/x-icon', [conversionOptions.format]);
 
   return (
     <div className="flex flex-col gap-4 p-4 border rounded-lg bg-card hover:bg-muted/50 transition-colors">
@@ -167,6 +174,7 @@ export function ImageListItem({ image, onRemove, onUpdateImage }: ImageListItemP
                     <SelectItem value="image/webp">WebP</SelectItem>
                     <SelectItem value="image/jpeg">JPEG</SelectItem>
                     <SelectItem value="image/png">PNG</SelectItem>
+                    <SelectItem value="image/x-icon">ICO (via PNG 32x32)</SelectItem>
                 </SelectContent>
             </Select>
           </div>
@@ -189,8 +197,8 @@ export function ImageListItem({ image, onRemove, onUpdateImage }: ImageListItemP
               size="sm"
               variant="outline"
               onClick={() => setIsEditDialogOpen(true)}
-              disabled={isItemBusy}
-              title="Edit Image"
+              disabled={isItemBusy || isIcoFormat}
+              title={isIcoFormat ? "Editing is disabled for ICO format" : "Edit Image"}
             >
               <Pencil className="mr-2 h-4 w-4" />
               Edit
@@ -199,8 +207,8 @@ export function ImageListItem({ image, onRemove, onUpdateImage }: ImageListItemP
               size="sm"
               variant="outline"
               onClick={() => setIsAiDialogOpen(true)}
-              disabled={image.status !== 'converted' || isItemBusy}
-              title="AI-Assisted Compression"
+              disabled={image.status !== 'converted' || isItemBusy || isIcoFormat}
+              title={isIcoFormat ? "AI Assist is disabled for ICO format" : "AI-Assisted Compression"}
             >
               <Wand2 className="mr-2 h-4 w-4" />
               AI Assist

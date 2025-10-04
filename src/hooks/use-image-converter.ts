@@ -43,8 +43,10 @@ export function useImageConverter(
                 let destWidth = imgElement.width;
                 let destHeight = imgElement.height;
                 
-                const isCropEnabled = image.crop?.enabled && image.crop.crop;
-                const isResizeEnabled = image.resize?.enabled;
+                const isIcoFormat = image.conversionOptions.format === 'image/x-icon';
+
+                const isCropEnabled = image.crop?.enabled && image.crop.crop && !isIcoFormat;
+                const isResizeEnabled = image.resize?.enabled && !isIcoFormat;
 
                 if (isCropEnabled) {
                     const crop = image.crop.crop as PixelCrop;
@@ -58,9 +60,11 @@ export function useImageConverter(
                     destWidth = image.resize!.width;
                     destHeight = image.resize!.height;
                 } else if (isCropEnabled) {
-                    // If only cropping is enabled, the destination size is the crop size.
                     destWidth = sourceWidth;
                     destHeight = sourceHeight;
+                } else if (isIcoFormat) {
+                    destWidth = 32;
+                    destHeight = 32;
                 }
                 
                 canvas.width = destWidth;
@@ -78,6 +82,10 @@ export function useImageConverter(
                     destHeight
                 );
 
+                const blobFormat = isIcoFormat ? 'image/png' : image.conversionOptions.format;
+                const blobQuality = isIcoFormat ? 1.0 : image.conversionOptions.quality;
+
+
                 canvas.toBlob(
                     (blob) => {
                         if (!blob) {
@@ -93,8 +101,8 @@ export function useImageConverter(
                         });
                         onComplete();
                     },
-                    image.conversionOptions.format,
-                    image.conversionOptions.quality
+                    blobFormat,
+                    blobQuality
                 );
             };
             imgElement.onerror = () => {
