@@ -159,6 +159,9 @@ export default function TrimPage() {
                 <Button variant="link" asChild className="p-0 text-muted-foreground">
                     <Link href="/">Bulk Converter</Link>
                 </Button>
+                <Button variant="link" asChild className="p-0 text-muted-foreground">
+                    <Link href="/pdf-converter">PDF Tools</Link>
+                </Button>
                 <Button variant="link" asChild className="p-0 text-muted-foreground data-[active]:text-foreground">
                     <Link href="/trim">Smart Trim</Link>
                 </Button>

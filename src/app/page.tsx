@@ -50,6 +50,9 @@ export default function Home() {
                     <Link href="/">Bulk Converter</Link>
                 </Button>
                 <Button variant="link" asChild className="p-0 text-muted-foreground">
+                    <Link href="/pdf-converter">PDF Tools</Link>
+                </Button>
+                <Button variant="link" asChild className="p-0 text-muted-foreground">
                     <Link href="/trim">Smart Trim</Link>
                 </Button>
               </nav>
