@@ -41,11 +41,11 @@ const prompt = ai.definePrompt({
   output: {schema: ConvertPdfToWordOutputSchema},
   prompt: `Anda adalah seorang ahli dalam konversi format dokumen. Tugas Anda adalah mengubah file PDF yang diberikan menjadi dokumen Microsoft Word (.docx) yang terstruktur dengan baik dan dapat disunting.
 
-  Analisis struktur PDF, termasuk judul (headings), paragraf, daftar (lists), tabel, dan gambar. Pertahankan tata letak dan format semirip mungkin dengan aslinya.
+Analisis struktur PDF, termasuk judul (headings), paragraf, daftar (lists), tabel, dan gambar. Pertahankan tata letak dan format semirip mungkin dengan aslinya.
 
-  PDF untuk dikonversi: {{media url=pdfDataUri}}
+PDF untuk dikonversi: {{media url=pdfDataUri}}
   
-  Kembalikan hasilnya sebagai file .docx yang di-encode sebagai data URI.`,
+Kembalikan hasilnya sebagai file .docx yang di-encode sebagai data URI.`,
 });
 
 const convertPdfToWordFlow = ai.defineFlow(

@@ -16,8 +16,8 @@ export function useImageConverter(
         onUpdateImage(id, { status: 'error', error: message });
         toast({
             variant: 'destructive',
-            title: 'Conversion Error',
-            description: `Could not process an image. ${message}`,
+            title: 'Kesalahan Konversi',
+            description: `Tidak dapat memproses gambar. ${message}`,
         });
     }, [onUpdateImage, toast]);
 
@@ -31,7 +31,7 @@ export function useImageConverter(
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
                 if (!ctx) {
-                    handleError(image.id, 'Could not get canvas context');
+                    handleError(image.id, 'Tidak dapat mengambil konteks kanvas');
                     onComplete();
                     return;
                 }
@@ -95,7 +95,7 @@ export function useImageConverter(
                 canvas.toBlob(
                     (blob) => {
                         if (!blob) {
-                            handleError(image.id, 'Failed to convert image');
+                            handleError(image.id, 'Gagal mengonversi gambar');
                             onComplete();
                             return;
                         }
@@ -112,13 +112,13 @@ export function useImageConverter(
                 );
             };
             imgElement.onerror = () => {
-                handleError(image.id, 'Failed to load image');
+                handleError(image.id, 'Gagal memuat gambar');
                 onComplete();
             };
             imgElement.src = e.target?.result as string;
         };
         reader.onerror = () => {
-            handleError(image.id, 'Failed to read file');
+            handleError(image.id, 'Gagal membaca file');
             onComplete();
         };
         reader.readAsDataURL(image.file);

@@ -150,11 +150,11 @@ a.click();
                 variant="ghost"
                 onClick={handleDownload}
                 disabled={image.status !== 'converted'}
-                title="Download"
+                title="Unduh"
             >
                 <Download className="h-4 w-4" />
             </Button>
-            <Button size="icon" variant="ghost" onClick={() => onRemove(image.id)} disabled={isItemBusy} title="Remove">
+            <Button size="icon" variant="ghost" onClick={() => onRemove(image.id)} disabled={isItemBusy} title="Hapus">
                 <Trash2 className="h-4 w-4 text-destructive" />
             </Button>
           </div>
@@ -170,7 +170,7 @@ a.click();
               disabled={isItemBusy}
             >
                 <SelectTrigger className="w-full mt-1 h-9">
-                    <SelectValue placeholder="Select format" />
+                    <SelectValue placeholder="Pilih format" />
                 </SelectTrigger>
                 <SelectContent>
                     <SelectItem value="image/webp">WebP</SelectItem>
@@ -183,7 +183,7 @@ a.click();
           </div>
           
           <div className={cn(!showQualitySlider && 'opacity-50')}>
-              <Label>Quality: {Math.round(conversionOptions.quality * 100)}%</Label>
+              <Label>Kualitas: {Math.round(conversionOptions.quality * 100)}%</Label>
               <Slider
                   value={[conversionOptions.quality * 100]}
                   onValueChange={(v) => handleOptionsChange({ quality: v[0] / 100 })}
@@ -201,7 +201,7 @@ a.click();
               variant="outline"
               onClick={() => setIsEditDialogOpen(true)}
               disabled={isItemBusy || isIcoFormat}
-              title={isIcoFormat ? "Editing is disabled for ICO format" : "Edit Image"}
+              title={isIcoFormat ? "Pengeditan dinonaktifkan untuk format ICO" : "Edit Gambar"}
             >
               <Pencil className="mr-2 h-4 w-4" />
               Edit
@@ -211,13 +211,13 @@ a.click();
               variant="outline"
               onClick={() => setIsAiDialogOpen(true)}
               disabled={image.status !== 'converted' || isItemBusy || isIcoFormat}
-              title={isIcoFormat ? "AI Assist is disabled for ICO format" : "AI-Assisted Compression"}
+              title={isIcoFormat ? "Bantuan AI dinonaktifkan untuk format ICO" : "Kompresi dengan Bantuan AI"}
             >
               <Wand2 className="mr-2 h-4 w-4" />
-              AI Assist
+              Bantuan AI
           </Button>
           <Button size="sm" onClick={handleConvertClick} disabled={isItemBusy}>
-              {isItemBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : 'Convert' }
+              {isItemBusy ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Konversi...</> : 'Konversi' }
           </Button>
         </div>
       </div>

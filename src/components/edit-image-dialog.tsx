@@ -116,8 +116,8 @@ export function EditImageDialog({ isOpen, setIsOpen, image, onUpdateImage }: Edi
 
     onUpdateImage(image.id, { resize: resizeOptions, crop: cropOptions, status: 'pending' });
     toast({
-      title: 'Changes Applied',
-      description: 'Image edit settings have been updated. Re-convert to see the changes.',
+      title: 'Perubahan Diterapkan',
+      description: 'Pengaturan edit gambar telah diperbarui. Konversi ulang untuk melihat perubahan.',
     });
     setIsOpen(false);
   };
@@ -126,9 +126,9 @@ export function EditImageDialog({ isOpen, setIsOpen, image, onUpdateImage }: Edi
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="max-w-4xl">
         <DialogHeader>
-          <DialogTitle>Edit Image: {image.file.name}</DialogTitle>
+          <DialogTitle>Edit Gambar: {image.file.name}</DialogTitle>
           <DialogDescription>
-            Resize and crop your image before conversion.
+            Ubah ukuran dan potong gambar Anda sebelum konversi.
           </DialogDescription>
         </DialogHeader>
 
@@ -146,7 +146,7 @@ export function EditImageDialog({ isOpen, setIsOpen, image, onUpdateImage }: Edi
                 <Image 
                   ref={imgRef}
                   src={image.originalUrl} 
-                  alt="Original Preview" 
+                  alt="Pratinjau Asli" 
                   onLoad={onImageLoad}
                   width={image.originalDimensions?.width}
                   height={image.originalDimensions?.height}
@@ -160,7 +160,7 @@ export function EditImageDialog({ isOpen, setIsOpen, image, onUpdateImage }: Edi
             <Collapsible open={resizeEnabled} onOpenChange={setResizeEnabled} asChild>
               <div className="space-y-4 p-4 border rounded-lg">
                   <div className="flex items-center justify-between">
-                      <Label htmlFor="resize-switch" className="font-bold flex items-center gap-2 cursor-pointer"><Pencil className="h-4 w-4" />Resize Image</Label>
+                      <Label htmlFor="resize-switch" className="font-bold flex items-center gap-2 cursor-pointer"><Pencil className="h-4 w-4" />Ubah Ukuran Gambar</Label>
                       <CollapsibleTrigger asChild>
                          <Switch
                           id="resize-switch"
@@ -172,12 +172,12 @@ export function EditImageDialog({ isOpen, setIsOpen, image, onUpdateImage }: Edi
                   <CollapsibleContent className={cn("space-y-4", !resizeEnabled && "opacity-50 pointer-events-none")}>
                       <div className="flex items-end gap-2">
                           <div className="grid w-full gap-1.5">
-                              <Label htmlFor="width">Width</Label>
+                              <Label htmlFor="width">Lebar</Label>
                               <Input id="width" type="number" value={width} onChange={handleWidthChange} />
                           </div>
                           <span className="pb-2 text-muted-foreground">x</span>
                           <div className="grid w-full gap-1.5">
-                              <Label htmlFor="height">Height</Label>
+                              <Label htmlFor="height">Tinggi</Label>
                               <Input id="height" type="number" value={height} onChange={handleHeightChange} />
                           </div>
                           <Button
@@ -189,7 +189,7 @@ export function EditImageDialog({ isOpen, setIsOpen, image, onUpdateImage }: Edi
                               {isLocked ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
                           </Button>
                       </div>
-                      <p className="text-xs text-muted-foreground text-center">Original: {image.originalDimensions?.width} x {image.originalDimensions?.height}</p>
+                      <p className="text-xs text-muted-foreground text-center">Asli: {image.originalDimensions?.width} x {image.originalDimensions?.height}</p>
                   </CollapsibleContent>
               </div>
             </Collapsible>
@@ -197,7 +197,7 @@ export function EditImageDialog({ isOpen, setIsOpen, image, onUpdateImage }: Edi
             <Collapsible open={cropEnabled} onOpenChange={setCropEnabled} asChild>
               <div className="space-y-4 p-4 border rounded-lg">
                   <div className="flex items-center justify-between">
-                      <Label htmlFor="crop-switch" className="font-bold flex items-center gap-2 cursor-pointer"><CropIcon className="h-4 w-4" />Crop Image</Label>
+                      <Label htmlFor="crop-switch" className="font-bold flex items-center gap-2 cursor-pointer"><CropIcon className="h-4 w-4" />Potong Gambar</Label>
                        <CollapsibleTrigger asChild>
                           <Switch
                               id="crop-switch"
@@ -207,20 +207,20 @@ export function EditImageDialog({ isOpen, setIsOpen, image, onUpdateImage }: Edi
                       </CollapsibleTrigger>
                   </div>
                   <CollapsibleContent className={cn("space-y-2", !cropEnabled && "opacity-50 pointer-events-none")}>
-                    <p className="text-xs text-muted-foreground text-center">Enable to draw a crop area on the preview image.</p>
+                    <p className="text-xs text-muted-foreground text-center">Aktifkan untuk menggambar area potong pada gambar pratinjau.</p>
                   </CollapsibleContent>
               </div>
             </Collapsible>
 
             <div className="p-4 border rounded-lg opacity-50">
-                <p className="text-center text-sm text-muted-foreground">Rotate coming soon!</p>
+                <p className="text-center text-sm text-muted-foreground">Rotasi segera hadir!</p>
             </div>
           </div>
         </div>
 
         <DialogFooter className="mt-6">
-          <Button variant="outline" onClick={() => setIsOpen(false)}>Cancel</Button>
-          <Button onClick={handleApply}>Apply Changes</Button>
+          <Button variant="outline" onClick={() => setIsOpen(false)}>Batal</Button>
+          <Button onClick={handleApply}>Terapkan Perubahan</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

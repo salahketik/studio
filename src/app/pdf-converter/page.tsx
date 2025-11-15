@@ -32,8 +32,8 @@ export default function PdfConverterPage() {
       const file = files[0];
       if (files.length > 1) {
         toast({
-            title: "One file at a time",
-            description: "PDF tools only process one file at a time. The first file was selected.",
+            title: "Satu file dalam satu waktu",
+            description: "Alat PDF hanya memproses satu file dalam satu waktu. File pertama yang dipilih.",
         })
       }
       setPdfFile({
@@ -65,16 +65,16 @@ export default function PdfConverterPage() {
             saveAs(result.docxDataUri, pdfFile.file.name.replace(/\.pdf$/, '.docx'));
             setPdfFile(prev => prev ? {...prev, status: 'converted'} : null);
             toast({
-                title: 'Conversion Successful',
-                description: 'Your PDF has been converted to a Word document.',
+                title: 'Konversi Berhasil',
+                description: 'PDF Anda telah berhasil dikonversi ke dokumen Word.',
             });
         }
     } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+        const errorMessage = error instanceof Error ? error.message : 'Terjadi kesalahan yang tidak diketahui.';
         setPdfFile(prev => prev ? {...prev, status: 'error', error: errorMessage} : null);
         toast({
             variant: 'destructive',
-            title: 'Conversion Failed',
+            title: 'Konversi Gagal',
             description: errorMessage,
         });
     }
@@ -88,13 +88,13 @@ export default function PdfConverterPage() {
               <h1 className="text-xl font-bold font-headline">WebPGator</h1>
               <nav className="flex items-center gap-2">
                 <Button variant="link" asChild className="p-0 text-muted-foreground">
-                    <Link href="/">Bulk Converter</Link>
+                    <Link href="/">Konverter Massal</Link>
                 </Button>
                 <Button variant="link" asChild className="p-0 text-muted-foreground data-[active]:text-foreground">
-                    <Link href="/pdf-converter">PDF Tools</Link>
+                    <Link href="/pdf-converter">Alat PDF</Link>
                 </Button>
                 <Button variant="link" asChild className="p-0 text-muted-foreground">
-                    <Link href="/trim">Smart Trim</Link>
+                    <Link href="/trim">Potong Cerdas</Link>
                 </Button>
               </nav>
             </div>
@@ -104,9 +104,9 @@ export default function PdfConverterPage() {
       <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8">
         <div className="max-w-4xl mx-auto flex flex-col gap-8">
             <div className="text-center">
-                <h2 className="text-3xl font-bold tracking-tight">PDF Toolkit</h2>
+                <h2 className="text-3xl font-bold tracking-tight">Perangkat PDF</h2>
                 <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">
-                    Powerful AI-driven tools to convert and edit your PDF files.
+                    Alat canggih berbasis AI untuk mengonversi dan mengedit file PDF Anda.
                 </p>
             </div>
             
@@ -121,26 +121,26 @@ export default function PdfConverterPage() {
                         </div>
                         <Button variant="destructive" size="icon" onClick={handleClear}>
                             <Trash2 className="h-4 w-4" />
-                            <span className="sr-only">Remove file</span>
+                            <span className="sr-only">Hapus file</span>
                         </Button>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <ConversionCard
-                            title="Convert to Word"
-                            description="Use AI to convert your PDF to an editable Microsoft Word (.docx) file."
+                            title="Konversi ke Word"
+                            description="Gunakan AI untuk mengubah PDF Anda menjadi file Microsoft Word (.docx) yang dapat diedit."
                             onConvert={handlePdfToWord}
                             status={pdfFile.status}
                         />
                         <ConversionCard
-                            title="Convert to Excel"
-                            description="Extract tables and data into a Microsoft Excel (.xlsx) file. (Coming Soon)"
+                            title="Konversi ke Excel"
+                            description="Ekstrak tabel dan data ke dalam file Microsoft Excel (.xlsx). (Segera Hadir)"
                             onConvert={() => {}}
                             status="disabled"
                         />
                          <ConversionCard
-                            title="Convert to PowerPoint"
-                            description="Transform PDF pages into editable PowerPoint (.pptx) slides. (Coming Soon)"
+                            title="Konversi ke PowerPoint"
+                            description="Ubah halaman PDF menjadi slide PowerPoint (.pptx) yang dapat diedit. (Segera Hadir)"
                             onConvert={() => {}}
                             status="disabled"
                         />
@@ -150,7 +150,7 @@ export default function PdfConverterPage() {
         </div>
       </main>
       <footer className="p-4 border-t border-border text-center text-sm text-muted-foreground">
-        <p>&copy; {new Date().getFullYear()} WebPGator. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} WebPGator. Hak cipta dilindungi undang-undang.</p>
       </footer>
     </div>
   );

@@ -23,8 +23,8 @@ export function PdfUploader({ onUpload }: PdfUploaderProps) {
     if (pdfFiles.length !== files.length) {
         toast({
             variant: "destructive",
-            title: "Invalid File Type",
-            description: "Only PDF files are accepted. Other files were ignored.",
+            title: "Tipe File Tidak Valid",
+            description: "Hanya file PDF yang diterima. File lain diabaikan.",
         });
     }
 
@@ -82,11 +82,11 @@ export function PdfUploader({ onUpload }: PdfUploaderProps) {
         onChange={(e) => handleFileSelect(e.target.files)}
       />
       <FileUp className="w-16 h-16 text-muted-foreground mb-4" />
-      <p className="text-lg font-semibold mb-2">Drag & drop a PDF here</p>
-      <p className="text-muted-foreground mb-4">or</p>
-      <Button onClick={onButtonClick}>Select PDF</Button>
+      <p className="text-lg font-semibold mb-2">Seret & lepas PDF di sini</p>
+      <p className="text-muted-foreground mb-4">atau</p>
+      <Button onClick={onButtonClick}>Pilih PDF</Button>
       <p className="text-xs text-muted-foreground mt-4">
-        Your file will be securely sent to our AI for conversion.
+        File Anda akan dikirim dengan aman ke AI kami untuk konversi.
       </p>
     </div>
   );

@@ -41,8 +41,8 @@ export function GlobalConversionSettings({ options, onOptionsChange, onApplyToAl
                 <div className="flex items-center gap-3">
                     <Settings className="h-6 w-6" />
                     <div>
-                        <CardTitle className="text-xl">Global Settings</CardTitle>
-                        <CardDescription>Default settings for new images. Apply to all to override existing.</CardDescription>
+                        <CardTitle className="text-xl">Pengaturan Global</CardTitle>
+                        <CardDescription>Pengaturan default untuk gambar baru. Terapkan ke semua untuk menimpa yang sudah ada.</CardDescription>
                     </div>
                 </div>
             </CardHeader>
@@ -52,7 +52,7 @@ export function GlobalConversionSettings({ options, onOptionsChange, onApplyToAl
                         <Label>Format</Label>
                         <Select value={options.format} onValueChange={(v) => handleFormatChange(v as ConversionFormat)} disabled={disabled}>
                             <SelectTrigger className="w-full mt-1">
-                                <SelectValue placeholder="Select format" />
+                                <SelectValue placeholder="Pilih format" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="image/webp">WebP</SelectItem>
@@ -65,7 +65,7 @@ export function GlobalConversionSettings({ options, onOptionsChange, onApplyToAl
                     </div>
 
                     <div className={cn('flex-grow', !showQualitySlider && 'opacity-50')}>
-                        <Label>Quality: {Math.round(options.quality * 100)}%</Label>
+                        <Label>Kualitas: {Math.round(options.quality * 100)}%</Label>
                         <Slider
                             value={[options.quality * 100]}
                             onValueChange={handleQualityChange}
@@ -78,7 +78,7 @@ export function GlobalConversionSettings({ options, onOptionsChange, onApplyToAl
                     
                     <Button onClick={onApplyToAll} disabled={disabled} className="w-full">
                         <Check className="mr-2 h-4 w-4" />
-                        Apply to All
+                        Terapkan ke Semua
                     </Button>
                 </div>
             </CardContent>

@@ -23,8 +23,8 @@ export function ImageUploader({ onUpload }: ImageUploaderProps) {
     if (imageFiles.length !== files.length) {
         toast({
             variant: "destructive",
-            title: "Invalid File Type",
-            description: "Only image files are accepted. Non-image files were ignored.",
+            title: "Tipe File Tidak Valid",
+            description: "Hanya file gambar yang diterima. File yang bukan gambar diabaikan.",
         });
     }
 
@@ -82,11 +82,11 @@ export function ImageUploader({ onUpload }: ImageUploaderProps) {
         onChange={(e) => handleFileSelect(e.target.files)}
       />
       <UploadCloud className="w-16 h-16 text-muted-foreground mb-4" />
-      <p className="text-lg font-semibold mb-2">Drag & drop images here</p>
-      <p className="text-muted-foreground mb-4">or</p>
-      <Button onClick={onButtonClick}>Select Files</Button>
+      <p className="text-lg font-semibold mb-2">Seret & lepas gambar di sini</p>
+      <p className="text-muted-foreground mb-4">atau</p>
+      <Button onClick={onButtonClick}>Pilih File</Button>
       <p className="text-xs text-muted-foreground mt-4">
-        Your images are processed directly in your browser and are never uploaded to a server for standard conversion.
+        Gambar Anda diproses langsung di browser Anda dan tidak pernah diunggah ke server untuk konversi standar.
       </p>
     </div>
   );

@@ -79,8 +79,8 @@ export function AICompressionDialog({ isOpen, setIsOpen, image, onUpdateImage }:
       if (!isMounted.current) return;
       toast({
         variant: 'destructive',
-        title: 'AI Optimization Failed',
-        description: error instanceof Error ? error.message : 'An unknown error occurred.',
+        title: 'Optimisasi AI Gagal',
+        description: error instanceof Error ? error.message : 'Terjadi kesalahan yang tidak diketahui.',
       });
     } finally {
       if (isMounted.current) {
@@ -102,8 +102,8 @@ export function AICompressionDialog({ isOpen, setIsOpen, image, onUpdateImage }:
         convertedUrl: optimizedImage.url,
      });
      toast({
-        title: "Success",
-        description: "AI optimized image has been applied.",
+        title: "Sukses",
+        description: "Gambar hasil optimisasi AI telah diterapkan.",
      })
      setIsOpen(false);
   };
@@ -125,36 +125,36 @@ export function AICompressionDialog({ isOpen, setIsOpen, image, onUpdateImage }:
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="max-w-4xl">
         <DialogHeader>
-          <DialogTitle>AI-Assisted Compression</DialogTitle>
+          <DialogTitle>Kompresi dengan Bantuan AI</DialogTitle>
           <DialogDescription>
-            Fine-tune WebP compression for '{image.file.name}' with AI.
+            Sempurnakan kompresi WebP untuk '{image.file.name}' dengan AI.
           </DialogDescription>
         </DialogHeader>
         <div className="max-h-[70vh] overflow-y-auto pr-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
               <div>
-                <Label>Original (Converted)</Label>
+                <Label>Asli (Terkonversi)</Label>
                 <div className="mt-2 relative aspect-video w-full rounded-md overflow-hidden border">
-                  <Image src={image.convertedUrl!} alt="Original" layout="fill" objectFit="contain" />
+                  <Image src={image.convertedUrl!} alt="Asli" layout="fill" objectFit="contain" />
                 </div>
-                <p className="text-sm text-muted-foreground mt-2 text-center">Size: {image.convertedSize ? (image.convertedSize / 1024).toFixed(2) : 0} KB</p>
+                <p className="text-sm text-muted-foreground mt-2 text-center">Ukuran: {image.convertedSize ? (image.convertedSize / 1024).toFixed(2) : 0} KB</p>
               </div>
               <div>
-                <Label>AI Optimized Preview</Label>
+                <Label>Pratinjau Hasil Optimisasi AI</Label>
                 <div className="mt-2 relative aspect-video w-full rounded-md overflow-hidden border bg-muted flex items-center justify-center">
                   {isOptimizing && <Loader2 className="w-8 h-8 animate-spin text-primary" />}
                   {!isOptimizing && optimizedImage && <Image src={optimizedImage.url} alt="Optimized" layout="fill" objectFit="contain" />}
                   {!isOptimizing && !optimizedImage && <Sparkles className="w-8 h-8 text-muted-foreground" />}
                 </div>
                 <p className="text-sm text-muted-foreground mt-2 text-center">
-                  {optimizedImage ? `Size: ${(optimizedImage.size / 1024).toFixed(2)} KB` : 'Run optimizer to see preview'}
+                  {optimizedImage ? `Ukuran: ${(optimizedImage.size / 1024).toFixed(2)} KB` : 'Jalankan pengoptimal untuk melihat pratinjau'}
                 </p>
               </div>
           </div>
           
           <div className="space-y-4 mt-4">
               <div>
-                <Label htmlFor="loss-slider">Information Loss Tolerance: {lossTolerance[0]}%</Label>
+                <Label htmlFor="loss-slider">Toleransi Kehilangan Informasi: {lossTolerance[0]}%</Label>
                 <Slider
                   id="loss-slider"
                   min={0}
@@ -164,21 +164,21 @@ export function AICompressionDialog({ isOpen, setIsOpen, image, onUpdateImage }:
                   onValueChange={setLossTolerance}
                   className={cn('my-2')}
                 />
-                <p className="text-xs text-muted-foreground">0% is lossless (higher quality, larger size), 100% is maximum loss (lower quality, smaller size).</p>
+                <p className="text-xs text-muted-foreground">0% adalah lossless (kualitas lebih tinggi, ukuran lebih besar), 100% adalah kehilangan maksimum (kualitas lebih rendah, ukuran lebih kecil).</p>
               </div>
               <div>
-                  <Label htmlFor="description">Image Description (Optional)</Label>
-                  <Textarea id="description" placeholder="e.g., 'A vibrant portrait for a profile picture' or 'A small, fast-loading icon for a website menu'." value={description} onChange={(e) => setDescription(e.target.value)} className="mt-2" />
+                  <Label htmlFor="description">Deskripsi Gambar (Opsional)</Label>
+                  <Textarea id="description" placeholder="cth., 'Potret cerah untuk foto profil' atau 'Ikon kecil yang cepat dimuat untuk menu situs web'." value={description} onChange={(e) => setDescription(e.target.value)} className="mt-2" />
               </div>
           </div>
         </div>
 
         <DialogFooter className="mt-6">
-          <Button variant="outline" onClick={() => setIsOpen(false)}>Cancel</Button>
+          <Button variant="outline" onClick={() => setIsOpen(false)}>Batal</Button>
           <Button onClick={handleOptimize} disabled={isOptimizing}>
-            {isOptimizing ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Optimizing...</> : <><Sparkles className="mr-2 h-4 w-4" /> Run Optimizer</>}
+            {isOptimizing ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Mengoptimalkan...</> : <><Sparkles className="mr-2 h-4 w-4" /> Jalankan Pengoptimal</>}
           </Button>
-          <Button onClick={handleApply} disabled={!optimizedImage || isOptimizing}>Apply Changes</Button>
+          <Button onClick={handleApply} disabled={!optimizedImage || isOptimizing}>Terapkan Perubahan</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
@@ -28,8 +28,8 @@ export default function TrimPage() {
       const file = files[0];
       if (files.length > 1) {
         toast({
-            title: "One image at a time",
-            description: "The Smart Trim feature only processes one image at a time. The first image was selected.",
+            title: "Satu gambar dalam satu waktu",
+            description: "Fitur Potong Cerdas hanya memproses satu gambar dalam satu waktu. Gambar pertama yang dipilih.",
         })
       }
       setOriginalImage({ file, url: URL.createObjectURL(file) });
@@ -78,8 +78,7 @@ export default function TrimPage() {
     return trimmedCanvas;
   }
 
-
-  const handleTrim = async () => {
+  const handleTrim = useCallback(async () => {
     if (!originalImage) return;
 
     setIsTrimming(true);
@@ -93,7 +92,7 @@ export default function TrimPage() {
         canvas.height = img.height;
         const ctx = canvas.getContext('2d');
         if (!ctx) {
-            toast({ variant: 'destructive', title: 'Error', description: 'Could not create canvas context.' });
+            toast({ variant: 'destructive', title: 'Kesalahan', description: 'Tidak dapat membuat konteks kanvas.' });
             setIsTrimming(false);
             return;
         }
@@ -107,20 +106,27 @@ export default function TrimPage() {
                     const url = URL.createObjectURL(blob);
                     setTrimmedImage({ url, blob });
                 } else {
-                    toast({ variant: 'destructive', title: 'Error', description: 'Failed to create trimmed image blob.' });
+                    toast({ variant: 'destructive', title: 'Kesalahan', description: 'Gagal membuat blob gambar yang dipotong.' });
                 }
                 setIsTrimming(false);
             }, originalImage.file.type);
         } else {
-            toast({ title: 'Nothing to Trim', description: 'The image appears to be empty or transparent.' });
+            toast({ title: 'Tidak Ada yang Dipotong', description: 'Gambar tampak kosong atau transparan.' });
             setIsTrimming(false);
         }
     }
     img.onerror = () => {
-        toast({ variant: 'destructive', title: 'Error', description: 'Failed to load image for processing.' });
+        toast({ variant: 'destructive', title: 'Kesalahan', description: 'Gagal memuat gambar untuk diproses.' });
         setIsTrimming(false);
     }
-  };
+  }, [originalImage, tolerance, toast]);
+
+  useEffect(() => {
+    if (originalImage) {
+        handleTrim();
+    }
+  }, [originalImage, tolerance, handleTrim]);
+
 
   const handleDownload = () => {
     if (!trimmedImage || !originalImage) return;
@@ -157,13 +163,13 @@ export default function TrimPage() {
               <h1 className="text-xl font-bold font-headline">WebPGator</h1>
               <nav className="flex items-center gap-2">
                 <Button variant="link" asChild className="p-0 text-muted-foreground">
-                    <Link href="/">Bulk Converter</Link>
+                    <Link href="/">Konverter Massal</Link>
                 </Button>
                 <Button variant="link" asChild className="p-0 text-muted-foreground">
-                    <Link href="/pdf-converter">PDF Tools</Link>
+                    <Link href="/pdf-converter">Alat PDF</Link>
                 </Button>
                 <Button variant="link" asChild className="p-0 text-muted-foreground data-[active]:text-foreground">
-                    <Link href="/trim">Smart Trim</Link>
+                    <Link href="/trim">Potong Cerdas</Link>
                 </Button>
               </nav>
             </div>
@@ -173,9 +179,9 @@ export default function TrimPage() {
       <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8">
         <div className="max-w-6xl mx-auto flex flex-col gap-8">
             <div className="text-center">
-                <h2 className="text-3xl font-bold tracking-tight">Smart Trim</h2>
+                <h2 className="text-3xl font-bold tracking-tight">Potong Cerdas</h2>
                 <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">
-                    Upload an image to automatically remove the surrounding empty or transparent space.
+                    Unggah gambar untuk secara otomatis menghapus ruang kosong atau transparan di sekitarnya.
                 </p>
             </div>
             
@@ -186,28 +192,28 @@ export default function TrimPage() {
                     <CardContent className="p-6">
                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                             <div className="flex flex-col gap-4">
-                                <h3 className="font-semibold text-lg">Original</h3>
+                                <h3 className="font-semibold text-lg">Asli</h3>
                                 <div className="relative aspect-square w-full rounded-md overflow-hidden border">
                                     <Image src={originalImage.url} alt="Original image" layout="fill" objectFit="contain" />
                                 </div>
-                                <p className="text-sm text-muted-foreground text-center">Size: {formatBytes(originalSize)}</p>
+                                <p className="text-sm text-muted-foreground text-center">Ukuran: {formatBytes(originalSize)}</p>
                             </div>
                             <div className="flex flex-col gap-4">
-                                <h3 className="font-semibold text-lg">Trimmed Result</h3>
+                                <h3 className="font-semibold text-lg">Hasil Potong</h3>
                                 <div className="relative aspect-square w-full rounded-md overflow-hidden border bg-muted flex items-center justify-center">
                                     {isTrimming && <Loader2 className="w-8 h-8 animate-spin text-primary" />}
                                     {!isTrimming && trimmedImage && <Image src={trimmedImage.url} alt="Trimmed image" layout="fill" objectFit="contain" />}
                                     {!isTrimming && !trimmedImage && <ImageIcon className="w-8 h-8 text-muted-foreground" />}
                                 </div>
                                 <p className="text-sm text-muted-foreground text-center">
-                                    {trimmedImage ? `Size: ${formatBytes(trimmedSize)}` : 'Click "Trim Image" to see the result'}
+                                    {trimmedImage ? `Ukuran: ${formatBytes(trimmedSize)}` : 'Memproses...'}
                                 </p>
                             </div>
                         </div>
 
                         <div className="max-w-sm mx-auto mt-8 space-y-4">
                             <div>
-                                <Label htmlFor="tolerance-slider">Trimming Tolerance: {tolerance[0]}</Label>
+                                <Label htmlFor="tolerance-slider">Toleransi Pemangkasan: {tolerance[0]}</Label>
                                 <Slider
                                     id="tolerance-slider"
                                     min={0}
@@ -218,22 +224,19 @@ export default function TrimPage() {
                                     className={cn('my-2')}
                                     disabled={isTrimming}
                                 />
-                                <p className="text-xs text-muted-foreground">Adjusts sensitivity. Higher values will trim more aggressively (useful for images with faint shadows).</p>
+                                <p className="text-xs text-muted-foreground">Menyesuaikan sensitivitas. Nilai yang lebih tinggi akan memotong lebih agresif (berguna untuk gambar dengan bayangan tipis).</p>
                             </div>
                         </div>
 
                         <div className="flex justify-center gap-4 mt-8">
-                            <Button onClick={handleTrim} disabled={isTrimming}>
-                                {isTrimming ? <><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Trimming...</> : <><Crop className="mr-2 h-4 w-4" /> Trim Image</>}
-                            </Button>
                             <Button onClick={handleDownload} disabled={!trimmedImage || isTrimming}>
                                 <Download className="mr-2 h-4 w-4" />
-                                Download
+                                Unduh
                             </Button>
                         </div>
                          <div className="text-center mt-6">
                             <Button variant="link" onClick={() => { setOriginalImage(null); setTrimmedImage(null); }}>
-                                Or upload a different image
+                                Atau unggah gambar lain
                             </Button>
                         </div>
                     </CardContent>
@@ -242,7 +245,7 @@ export default function TrimPage() {
         </div>
       </main>
       <footer className="p-4 border-t border-border text-center text-sm text-muted-foreground">
-        <p>&copy; {new Date().getFullYear()} WebPGator. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} WebPGator. Hak cipta dilindungi undang-undang.</p>
       </footer>
     </div>
   );

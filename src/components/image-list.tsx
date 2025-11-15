@@ -47,15 +47,15 @@ export function ImageList({
       <CardHeader>
         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
             <div>
-                <CardTitle>Conversion Queue</CardTitle>
+                <CardTitle>Antrean Konversi</CardTitle>
                 <CardDescription>
-                    {images.length} image(s) in queue. {pendingImages.length} pending.
+                    {images.length} gambar dalam antrean. {pendingImages.length} tertunda.
                 </CardDescription>
             </div>
             {pendingImages.length > 0 && (
                 <Button onClick={onConvertAll} className="w-full sm:w-auto" disabled={isConverting}>
                     <Zap className="mr-2 h-4 w-4"/>
-                    {isConverting ? 'Converting...' : `Convert All Pending (${pendingImages.length})`}
+                    {isConverting ? 'Mengonversi...' : `Konversi Semua yang Tertunda (${pendingImages.length})`}
                 </Button>
             )}
         </div>
@@ -72,7 +72,7 @@ export function ImageList({
           {isConverting && (
             <div className='space-y-2'>
                 <p className='text-sm text-muted-foreground'>
-                  Converting {Math.round(completedInBatch)} of {totalConverting} images...
+                  Mengonversi {Math.round(completedInBatch)} dari {totalConverting} gambar...
                 </p>
                 <Progress value={conversionProgress} className="w-full" />
             </div>

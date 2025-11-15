@@ -34,7 +34,7 @@ export default function Home() {
   const pendingImages = useMemo(() => images.filter(img => img.status === 'pending'), [images]);
   
   const documentTitle = pendingImages.length > 0
-    ? `(${pendingImages.length}) Pending - WebPGator`
+    ? `(${pendingImages.length}) Tertunda - WebPGator`
     : 'WebPGator';
   useDocumentTitle(documentTitle);
 
@@ -47,13 +47,13 @@ export default function Home() {
               <h1 className="text-xl font-bold font-headline">WebPGator</h1>
               <nav className="flex items-center gap-2">
                 <Button variant="link" asChild className="p-0 text-muted-foreground data-[active]:text-foreground">
-                    <Link href="/">Bulk Converter</Link>
+                    <Link href="/">Konverter Massal</Link>
                 </Button>
                 <Button variant="link" asChild className="p-0 text-muted-foreground">
-                    <Link href="/pdf-converter">PDF Tools</Link>
+                    <Link href="/pdf-converter">Alat PDF</Link>
                 </Button>
                 <Button variant="link" asChild className="p-0 text-muted-foreground">
-                    <Link href="/trim">Smart Trim</Link>
+                    <Link href="/trim">Potong Cerdas</Link>
                 </Button>
               </nav>
             </div>
@@ -68,11 +68,11 @@ export default function Home() {
             <div className="flex justify-end gap-2">
                <Button onClick={() => handleDownloadAll()} disabled={convertedImages.length === 0 || isConverting}>
                 <Download className="mr-2 h-4 w-4" />
-                Download All (.zip)
+                Unduh Semua (.zip)
               </Button>
               <Button variant="destructive" onClick={handleClearAll} disabled={isConverting}>
                 <Trash2 className="mr-2 h-4 w-4" />
-                Clear All
+                Hapus Semua
               </Button>
             </div>
           )}
@@ -91,7 +91,7 @@ export default function Home() {
         </div>
       </main>
       <footer className="p-4 border-t border-border text-center text-sm text-muted-foreground">
-        <p>&copy; {new Date().getFullYear()} WebPGator. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} WebPGator. Hak cipta dilindungi undang-undang.</p>
       </footer>
     </div>
   );

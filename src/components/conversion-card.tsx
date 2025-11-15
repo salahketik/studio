@@ -17,9 +17,9 @@ export function ConversionCard({ title, description, status, onConvert }: Conver
     const isDisabled = status === 'disabled' || isConverting;
 
     const buttonText = () => {
-        if (isConverting) return "Converting...";
-        if (status === 'disabled') return "Coming Soon";
-        return "Convert Now";
+        if (isConverting) return "Mengonversi...";
+        if (status === 'disabled') return "Segera Hadir";
+        return "Konversi Sekarang";
     }
 
     return (

@@ -46,7 +46,7 @@ export function useImageFiles() {
                     originalDimensions: dimensions,
                 };
             } catch (error) {
-                console.error("Could not read image dimensions for file:", file.name, error);
+                console.error("Tidak dapat membaca dimensi gambar untuk file:", file.name, error);
                 return null;
             }
         });
@@ -91,8 +91,8 @@ export function useImageFiles() {
     const handleDownloadAll = useCallback(async () => {
         if (convertedImages.length === 0) {
           toast({
-            title: 'No Images to Download',
-            description: 'Please convert some images first.',
+            title: 'Tidak Ada Gambar untuk Diunduh',
+            description: 'Silakan konversi beberapa gambar terlebih dahulu.',
           });
           return;
         }
@@ -114,8 +114,8 @@ export function useImageFiles() {
         } catch (error) {
           toast({
             variant: 'destructive',
-            title: 'Zip Creation Failed',
-            description: 'Could not create the zip file.',
+            title: 'Pembuatan Zip Gagal',
+            description: 'Tidak dapat membuat file zip.',
           });
         }
     }, [convertedImages, toast]);
@@ -128,8 +128,8 @@ export function useImageFiles() {
             return { ...img, conversionOptions: globalOptions, status: 'pending' };
         }));
         toast({
-            title: "Global Settings Applied",
-            description: "All pending images have been updated with the new conversion settings.",
+            title: "Pengaturan Global Diterapkan",
+            description: "Semua gambar yang tertunda telah diperbarui dengan pengaturan konversi baru.",
         })
     }, [globalOptions, toast]);
 
