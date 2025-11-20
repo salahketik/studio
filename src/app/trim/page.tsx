@@ -38,32 +38,89 @@ export default function TrimPage() {
   }, [toast]);
   
   const trimCanvas = (canvas: HTMLCanvasElement, tolerance: number) => {
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     if (!ctx) return null;
 
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const { data, width, height } = imageData;
+    
+    // Auto-detect background color from top-left pixel
+    const bgR = data[0];
+    const bgG = data[1];
+    const bgB = data[2];
+    const bgA = data[3];
 
-    let top = height, bottom = 0, left = width, right = 0;
+    let top = height, bottom = -1, left = width, right = -1;
+    const colorThreshold = 10; // To account for slight color variations
 
+    function isPixelEmpty(i: number) {
+        const r = data[i];
+        const g = data[i+1];
+        const b = data[i+2];
+        const a = data[i+3];
+
+        // Check for transparency
+        if (a < tolerance) {
+            return true;
+        }
+
+        // Check if color is very similar to background color
+        const colorDiff = Math.abs(r - bgR) + Math.abs(g - bgG) + Math.abs(b - bgB);
+        if (colorDiff < colorThreshold && a === bgA) {
+            return true;
+        }
+
+        return false;
+    }
+
+    // Find top bound
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
-            const i = (y * width + x) * 4;
-            // Check if pixel alpha is greater than the tolerance
-            if (data[i+3] > tolerance) {
-                if (y < top) top = y;
-                if (y > bottom) bottom = y;
-                if (x < left) left = x;
-                if (x > right) right = x;
+            if (!isPixelEmpty((y * width + x) * 4)) {
+                top = y;
+                break;
             }
         }
+        if (top !== height) break;
     }
 
-    // If the image is entirely blank
-    if (top > bottom) {
-        return null;
+    // Find bottom bound
+    for (let y = height - 1; y >= 0; y--) {
+        for (let x = 0; x < width; x++) {
+            if (!isPixelEmpty((y * width + x) * 4)) {
+                bottom = y;
+                break;
+            }
+        }
+        if (bottom !== -1) break;
     }
 
+    // Find left bound
+    for (let x = 0; x < width; x++) {
+        for (let y = 0; y < height; y++) {
+            if (!isPixelEmpty((y * width + x) * 4)) {
+                left = x;
+                break;
+            }
+        }
+        if (left !== width) break;
+    }
+
+    // Find right bound
+    for (let x = width - 1; x >= 0; x--) {
+        for (let y = 0; y < height; y++) {
+            if (!isPixelEmpty((y * width + x) * 4)) {
+                right = x;
+                break;
+            }
+        }
+        if (right !== -1) break;
+    }
+
+    if (top >= bottom || left >= right) {
+        return null; // Image is fully transparent or uniform color
+    }
+    
     const trimWidth = right - left + 1;
     const trimHeight = bottom - top + 1;
 
@@ -72,7 +129,7 @@ export default function TrimPage() {
     trimmedCanvas.height = trimHeight;
     const trimmedCtx = trimmedCanvas.getContext('2d');
     if (!trimmedCtx) return null;
-
+    
     trimmedCtx.drawImage(canvas, left, top, trimWidth, trimHeight, 0, 0, trimWidth, trimHeight);
 
     return trimmedCanvas;
@@ -85,11 +142,12 @@ export default function TrimPage() {
     setTrimmedImage(null);
 
     const img = document.createElement('img');
+    img.crossOrigin = "anonymous"; // Important for loading images from object URLs
     img.src = originalImage.url;
     img.onload = () => {
         const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
         const ctx = canvas.getContext('2d');
         if (!ctx) {
             toast({ variant: 'destructive', title: 'Kesalahan', description: 'Tidak dapat membuat konteks kanvas.' });
@@ -112,6 +170,7 @@ export default function TrimPage() {
             }, originalImage.file.type);
         } else {
             toast({ title: 'Tidak Ada yang Dipotong', description: 'Gambar tampak kosong atau transparan.' });
+            setTrimmedImage({ url: originalImage.url, blob: originalImage.file }); // Show original if nothing to trim
             setIsTrimming(false);
         }
     }
@@ -125,7 +184,8 @@ export default function TrimPage() {
     if (originalImage) {
         handleTrim();
     }
-  }, [originalImage, tolerance, handleTrim]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [originalImage, tolerance]);
 
 
   const handleDownload = () => {
@@ -213,7 +273,7 @@ export default function TrimPage() {
 
                         <div className="max-w-sm mx-auto mt-8 space-y-4">
                             <div>
-                                <Label htmlFor="tolerance-slider">Toleransi Pemangkasan: {tolerance[0]}</Label>
+                                <Label htmlFor="tolerance-slider">Toleransi Transparansi: {tolerance[0]}</Label>
                                 <Slider
                                     id="tolerance-slider"
                                     min={0}
@@ -224,7 +284,7 @@ export default function TrimPage() {
                                     className={cn('my-2')}
                                     disabled={isTrimming}
                                 />
-                                <p className="text-xs text-muted-foreground">Menyesuaikan sensitivitas. Nilai yang lebih tinggi akan memotong lebih agresif (berguna untuk gambar dengan bayangan tipis).</p>
+                                <p className="text-xs text-muted-foreground">Menyesuaikan sensitivitas. Nilai yang lebih rendah akan memotong lebih ketat. Algoritma juga akan memotong warna latar belakang solid (misalnya putih).</p>
                             </div>
                         </div>
 
