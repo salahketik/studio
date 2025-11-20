@@ -253,16 +253,16 @@ export default function TrimPage() {
                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                             <div className="flex flex-col gap-4">
                                 <h3 className="font-semibold text-lg">Asli</h3>
-                                <div className="relative aspect-square w-full rounded-md overflow-hidden border">
-                                    <Image src={originalImage.url} alt="Original image" layout="fill" objectFit="contain" />
+                                <div className="relative min-h-48 w-full rounded-md overflow-hidden border flex items-center justify-center">
+                                    <Image src={originalImage.url} alt="Original image" width="0" height="0" sizes="100vw" style={{ width: '100%', height: 'auto' }} />
                                 </div>
                                 <p className="text-sm text-muted-foreground text-center">Ukuran: {formatBytes(originalSize)}</p>
                             </div>
                             <div className="flex flex-col gap-4">
                                 <h3 className="font-semibold text-lg">Hasil Potong</h3>
-                                <div className="relative aspect-square w-full rounded-md overflow-hidden border bg-muted flex items-center justify-center">
+                                <div className="relative min-h-48 w-full rounded-md overflow-hidden border bg-muted flex items-center justify-center">
                                     {isTrimming && <Loader2 className="w-8 h-8 animate-spin text-primary" />}
-                                    {!isTrimming && trimmedImage && <Image src={trimmedImage.url} alt="Trimmed image" layout="fill" objectFit="contain" />}
+                                    {!isTrimming && trimmedImage && <Image src={trimmedImage.url} alt="Trimmed image" width="0" height="0" sizes="100vw" style={{ width: '100%', height: 'auto' }} />}
                                     {!isTrimming && !trimmedImage && <ImageIcon className="w-8 h-8 text-muted-foreground" />}
                                 </div>
                                 <p className="text-sm text-muted-foreground text-center">
