@@ -2,6 +2,7 @@ import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from '@/components/theme-provider';
+import { AppHeader } from '@/components/app-header';
 
 
 export const metadata: Metadata = {
@@ -28,7 +29,15 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <div className="flex flex-col h-full">
+            <AppHeader />
+            <main className="flex-grow">
+              {children}
+            </main>
+            <footer className="p-4 border-t border-border text-center text-sm text-muted-foreground">
+              <p>&copy; {new Date().getFullYear()} WebPGator. Hak cipta dilindungi undang-undang.</p>
+            </footer>
+          </div>
           <Toaster />
         </ThemeProvider>
       </body>

@@ -1,10 +1,8 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 
-import { ThemeToggle } from '@/components/theme-toggle';
 import { Button } from '@/components/ui/button';
 import { PdfUploader } from '@/components/pdf-uploader';
 import { ConversionCard } from '@/components/conversion-card';
@@ -81,77 +79,53 @@ export default function PdfConverterPage() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-background text-foreground">
-      <header className="p-4 border-b border-border">
-        <div className="container mx-auto flex justify-between items-center">
-           <div className="flex items-center gap-4">
-              <h1 className="text-xl font-bold font-headline">WebPGator</h1>
-              <nav className="flex items-center gap-2">
-                <Button variant="link" asChild className="p-0 text-muted-foreground">
-                    <Link href="/">Konverter Massal</Link>
-                </Button>
-                <Button variant="link" asChild className="p-0 text-muted-foreground data-[active]:text-foreground">
-                    <Link href="/pdf-converter">Alat PDF</Link>
-                </Button>
-                <Button variant="link" asChild className="p-0 text-muted-foreground">
-                    <Link href="/trim">Potong Cerdas</Link>
-                </Button>
-              </nav>
-            </div>
-          <ThemeToggle />
-        </div>
-      </header>
-      <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8">
-        <div className="max-w-4xl mx-auto flex flex-col gap-8">
-            <div className="text-center">
-                <h2 className="text-3xl font-bold tracking-tight">Perangkat PDF</h2>
-                <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">
-                    Alat canggih berbasis AI untuk mengonversi dan mengedit file PDF Anda.
-                </p>
-            </div>
-            
-            {!pdfFile && <PdfUploader onUpload={handlePdfUpload} />}
+    <div className="container mx-auto p-4 md:p-6 lg:p-8 h-full">
+      <div className="max-w-4xl mx-auto flex flex-col gap-8">
+          <div className="text-center">
+              <h2 className="text-3xl font-bold tracking-tight">Perangkat PDF</h2>
+              <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">
+                  Alat canggih berbasis AI untuk mengonversi dan mengedit file PDF Anda.
+              </p>
+          </div>
+          
+          {!pdfFile && <PdfUploader onUpload={handlePdfUpload} />}
 
-            {pdfFile && (
-                <div className="space-y-6">
-                    <div className="p-4 border rounded-lg bg-card flex items-center justify-between">
-                        <div className="flex items-center gap-4 min-w-0">
-                            <FileText className="h-8 w-8 text-primary" />
-                            <p className="font-semibold truncate">{pdfFile.file.name}</p>
-                        </div>
-                        <Button variant="destructive" size="icon" onClick={handleClear}>
-                            <Trash2 className="h-4 w-4" />
-                            <span className="sr-only">Hapus file</span>
-                        </Button>
-                    </div>
+          {pdfFile && (
+              <div className="space-y-6">
+                  <div className="p-4 border rounded-lg bg-card flex items-center justify-between">
+                      <div className="flex items-center gap-4 min-w-0">
+                          <FileText className="h-8 w-8 text-primary" />
+                          <p className="font-semibold truncate">{pdfFile.file.name}</p>
+                      </div>
+                      <Button variant="destructive" size="icon" onClick={handleClear}>
+                          <Trash2 className="h-4 w-4" />
+                          <span className="sr-only">Hapus file</span>
+                      </Button>
+                  </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <ConversionCard
-                            title="Konversi ke Word"
-                            description="Gunakan AI untuk mengubah PDF Anda menjadi file Microsoft Word (.docx) yang dapat diedit."
-                            onConvert={handlePdfToWord}
-                            status={pdfFile.status}
-                        />
-                        <ConversionCard
-                            title="Konversi ke Excel"
-                            description="Ekstrak tabel dan data ke dalam file Microsoft Excel (.xlsx). (Segera Hadir)"
-                            onConvert={() => {}}
-                            status="disabled"
-                        />
-                         <ConversionCard
-                            title="Konversi ke PowerPoint"
-                            description="Ubah halaman PDF menjadi slide PowerPoint (.pptx) yang dapat diedit. (Segera Hadir)"
-                            onConvert={() => {}}
-                            status="disabled"
-                        />
-                    </div>
-                </div>
-            )}
-        </div>
-      </main>
-      <footer className="p-4 border-t border-border text-center text-sm text-muted-foreground">
-        <p>&copy; {new Date().getFullYear()} WebPGator. Hak cipta dilindungi undang-undang.</p>
-      </footer>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      <ConversionCard
+                          title="Konversi ke Word"
+                          description="Gunakan AI untuk mengubah PDF Anda menjadi file Microsoft Word (.docx) yang dapat diedit."
+                          onConvert={handlePdfToWord}
+                          status={pdfFile.status}
+                      />
+                      <ConversionCard
+                          title="Konversi ke Excel"
+                          description="Ekstrak tabel dan data ke dalam file Microsoft Excel (.xlsx). (Segera Hadir)"
+                          onConvert={() => {}}
+                          status="disabled"
+                      />
+                          <ConversionCard
+                          title="Konversi ke PowerPoint"
+                          description="Ubah halaman PDF menjadi slide PowerPoint (.pptx) yang dapat diedit. (Segera Hadir)"
+                          onConvert={() => {}}
+                          status="disabled"
+                      />
+                  </div>
+              </div>
+          )}
+      </div>
     </div>
   );
 }

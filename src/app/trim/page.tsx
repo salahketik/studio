@@ -1,14 +1,12 @@
 'use client';
 
 import { useState, useCallback, useMemo, useEffect } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
 
 import { ImageUploader } from '@/components/image-uploader';
 import { Button } from '@/components/ui/button';
-import { Download, Loader2, Crop, Image as ImageIcon } from 'lucide-react';
-import { ThemeToggle } from '@/components/theme-toggle';
+import { Download, Loader2, ImageIcon } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { saveAs } from 'file-saver';
 import { Slider } from '@/components/ui/slider';
@@ -216,97 +214,73 @@ export default function TrimPage() {
 
 
   return (
-    <div className="flex flex-col h-full bg-background text-foreground">
-      <header className="p-4 border-b border-border">
-        <div className="container mx-auto flex justify-between items-center">
-           <div className="flex items-center gap-4">
-              <h1 className="text-xl font-bold font-headline">WebPGator</h1>
-              <nav className="flex items-center gap-2">
-                <Button variant="link" asChild className="p-0 text-muted-foreground">
-                    <Link href="/">Konverter Massal</Link>
-                </Button>
-                <Button variant="link" asChild className="p-0 text-muted-foreground">
-                    <Link href="/pdf-converter">Alat PDF</Link>
-                </Button>
-                <Button variant="link" asChild className="p-0 text-muted-foreground data-[active]:text-foreground">
-                    <Link href="/trim">Potong Cerdas</Link>
-                </Button>
-              </nav>
-            </div>
-          <ThemeToggle />
-        </div>
-      </header>
-      <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8">
-        <div className="max-w-6xl mx-auto flex flex-col gap-8">
-            <div className="text-center">
-                <h2 className="text-3xl font-bold tracking-tight">Potong Cerdas</h2>
-                <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">
-                    Unggah gambar untuk secara otomatis menghapus ruang kosong atau transparan di sekitarnya.
-                </p>
-            </div>
-            
-            {!originalImage && <ImageUploader onUpload={handleImageUpload} />}
+    <div className="container mx-auto p-4 md:p-6 lg:p-8 h-full">
+      <div className="max-w-6xl mx-auto flex flex-col gap-8">
+          <div className="text-center">
+              <h2 className="text-3xl font-bold tracking-tight">Potong Cerdas</h2>
+              <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">
+                  Unggah gambar untuk secara otomatis menghapus ruang kosong atau transparan di sekitarnya.
+              </p>
+          </div>
+          
+          {!originalImage && <ImageUploader onUpload={handleImageUpload} />}
 
-            {originalImage && (
-                <Card>
-                    <CardContent className="p-6">
-                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                            <div className="flex flex-col gap-4">
-                                <h3 className="font-semibold text-lg">Asli</h3>
-                                <div className="relative min-h-48 w-full rounded-md overflow-hidden border flex items-center justify-center">
-                                    <Image src={originalImage.url} alt="Original image" width="0" height="0" sizes="100vw" style={{ width: '100%', height: 'auto' }} />
-                                </div>
-                                <p className="text-sm text-muted-foreground text-center">Ukuran: {formatBytes(originalSize)}</p>
-                            </div>
-                            <div className="flex flex-col gap-4">
-                                <h3 className="font-semibold text-lg">Hasil Potong</h3>
-                                <div className="relative min-h-48 w-full rounded-md overflow-hidden border bg-muted flex items-center justify-center">
-                                    {isTrimming && <Loader2 className="w-8 h-8 animate-spin text-primary" />}
-                                    {!isTrimming && trimmedImage && <Image src={trimmedImage.url} alt="Trimmed image" width="0" height="0" sizes="100vw" style={{ width: '100%', height: 'auto' }} />}
-                                    {!isTrimming && !trimmedImage && <ImageIcon className="w-8 h-8 text-muted-foreground" />}
-                                </div>
-                                <p className="text-sm text-muted-foreground text-center">
-                                    {trimmedImage ? `Ukuran: ${formatBytes(trimmedSize)}` : 'Memproses...'}
-                                </p>
-                            </div>
-                        </div>
+          {originalImage && (
+              <Card>
+                  <CardContent className="p-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                          <div className="flex flex-col gap-4">
+                              <h3 className="font-semibold text-lg">Asli</h3>
+                              <div className="relative min-h-48 w-full rounded-md overflow-hidden border flex items-center justify-center">
+                                  <Image src={originalImage.url} alt="Original image" width="0" height="0" sizes="100vw" style={{ width: '100%', height: 'auto' }} />
+                              </div>
+                              <p className="text-sm text-muted-foreground text-center">Ukuran: {formatBytes(originalSize)}</p>
+                          </div>
+                          <div className="flex flex-col gap-4">
+                              <h3 className="font-semibold text-lg">Hasil Potong</h3>
+                              <div className="relative min-h-48 w-full rounded-md overflow-hidden border bg-muted flex items-center justify-center">
+                                  {isTrimming && <Loader2 className="w-8 h-8 animate-spin text-primary" />}
+                                  {!isTrimming && trimmedImage && <Image src={trimmedImage.url} alt="Trimmed image" width="0" height="0" sizes="100vw" style={{ width: '100%', height: 'auto' }} />}
+                                  {!isTrimming && !trimmedImage && <ImageIcon className="w-8 h-8 text-muted-foreground" />}
+                              </div>
+                              <p className="text-sm text-muted-foreground text-center">
+                                  {trimmedImage ? `Ukuran: ${formatBytes(trimmedSize)}` : 'Memproses...'}
+                              </p>
+                          </div>
+                      </div>
 
-                        <div className="max-w-sm mx-auto mt-8 space-y-4">
-                            <div>
-                                <Label htmlFor="tolerance-slider">Toleransi Transparansi: {tolerance[0]}</Label>
-                                <Slider
-                                    id="tolerance-slider"
-                                    min={0}
-                                    max={255}
-                                    step={1}
-                                    value={tolerance}
-                                    onValueChange={setTolerance}
-                                    className={cn('my-2')}
-                                    disabled={isTrimming}
-                                />
-                                <p className="text-xs text-muted-foreground">Menyesuaikan sensitivitas. Nilai yang lebih rendah akan memotong lebih ketat. Algoritma juga akan memotong warna latar belakang solid (misalnya putih).</p>
-                            </div>
-                        </div>
+                      <div className="max-w-sm mx-auto mt-8 space-y-4">
+                          <div>
+                              <Label htmlFor="tolerance-slider">Toleransi Transparansi: {tolerance[0]}</Label>
+                              <Slider
+                                  id="tolerance-slider"
+                                  min={0}
+                                  max={255}
+                                  step={1}
+                                  value={tolerance}
+                                  onValueChange={setTolerance}
+                                  className={cn('my-2')}
+                                  disabled={isTrimming}
+                              />
+                              <p className="text-xs text-muted-foreground">Menyesuaikan sensitivitas. Nilai yang lebih rendah akan memotong lebih ketat. Algoritma juga akan memotong warna latar belakang solid (misalnya putih).</p>
+                          </div>
+                      </div>
 
-                        <div className="flex justify-center gap-4 mt-8">
-                            <Button onClick={handleDownload} disabled={!trimmedImage || isTrimming}>
-                                <Download className="mr-2 h-4 w-4" />
-                                Unduh
-                            </Button>
-                        </div>
-                         <div className="text-center mt-6">
-                            <Button variant="link" onClick={() => { setOriginalImage(null); setTrimmedImage(null); }}>
-                                Atau unggah gambar lain
-                            </Button>
-                        </div>
-                    </CardContent>
-                </Card>
-            )}
-        </div>
-      </main>
-      <footer className="p-4 border-t border-border text-center text-sm text-muted-foreground">
-        <p>&copy; {new Date().getFullYear()} WebPGator. Hak cipta dilindungi undang-undang.</p>
-      </footer>
+                      <div className="flex justify-center gap-4 mt-8">
+                          <Button onClick={handleDownload} disabled={!trimmedImage || isTrimming}>
+                              <Download className="mr-2 h-4 w-4" />
+                              Unduh
+                          </Button>
+                      </div>
+                          <div className="text-center mt-6">
+                          <Button variant="link" onClick={() => { setOriginalImage(null); setTrimmedImage(null); }}>
+                              Atau unggah gambar lain
+                          </Button>
+                      </div>
+                  </CardContent>
+              </Card>
+          )}
+      </div>
     </div>
   );
 }

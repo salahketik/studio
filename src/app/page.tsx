@@ -1,7 +1,6 @@
 'use client';
 
 import { useMemo, useEffect } from 'react';
-import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 import { useImageFiles } from '@/hooks/use-image-files';
 import { useImageConverter } from '@/hooks/use-image-converter';
@@ -11,7 +10,6 @@ import { ImageUploader } from '@/components/image-uploader';
 import { ImageList } from '@/components/image-list';
 import { Button } from '@/components/ui/button';
 import { Download, Trash2 } from 'lucide-react';
-import { ThemeToggle } from '@/components/theme-toggle';
 
 
 export default function Home() {
@@ -40,59 +38,35 @@ export default function Home() {
 
 
   return (
-    <div className="flex flex-col h-full bg-background text-foreground">
-      <header className="p-4 border-b border-border">
-        <div className="container mx-auto flex justify-between items-center">
-            <div className="flex items-center gap-4">
-              <h1 className="text-xl font-bold font-headline">WebPGator</h1>
-              <nav className="flex items-center gap-2">
-                <Button variant="link" asChild className="p-0 text-muted-foreground data-[active]:text-foreground">
-                    <Link href="/">Konverter Massal</Link>
-                </Button>
-                <Button variant="link" asChild className="p-0 text-muted-foreground">
-                    <Link href="/pdf-converter">Alat PDF</Link>
-                </Button>
-                <Button variant="link" asChild className="p-0 text-muted-foreground">
-                    <Link href="/trim">Potong Cerdas</Link>
-                </Button>
-              </nav>
-            </div>
-          <ThemeToggle />
-        </div>
-      </header>
-      <main className="flex-grow container mx-auto p-4 md:p-6 lg:p-8">
-        <div className="max-w-6xl mx-auto flex flex-col gap-8">
-          <ImageUploader onUpload={handleImageUpload} />
+    <div className="container mx-auto p-4 md:p-6 lg:p-8 h-full">
+      <div className="max-w-6xl mx-auto flex flex-col gap-8">
+        <ImageUploader onUpload={handleImageUpload} />
 
-          {images.length > 0 && (
-            <div className="flex justify-end gap-2">
-               <Button onClick={() => handleDownloadAll()} disabled={convertedImages.length === 0 || isConverting}>
-                <Download className="mr-2 h-4 w-4" />
-                Unduh Semua (.zip)
-              </Button>
-              <Button variant="destructive" onClick={handleClearAll} disabled={isConverting}>
-                <Trash2 className="mr-2 h-4 w-4" />
-                Hapus Semua
-              </Button>
-            </div>
-          )}
+        {images.length > 0 && (
+          <div className="flex justify-end gap-2">
+              <Button onClick={() => handleDownloadAll()} disabled={convertedImages.length === 0 || isConverting}>
+              <Download className="mr-2 h-4 w-4" />
+              Unduh Semua (.zip)
+            </Button>
+            <Button variant="destructive" onClick={handleClearAll} disabled={isConverting}>
+              <Trash2 className="mr-2 h-4 w-4" />
+              Hapus Semua
+            </Button>
+          </div>
+        )}
 
-          <ImageList 
-            images={images} 
-            onRemove={handleRemoveImage} 
-            onUpdateImage={handleUpdateImage}
-            globalOptions={globalOptions}
-            onGlobalOptionsChange={setGlobalOptions}
-            onApplyGlobalOptions={handleApplyGlobalOptions}
-            onConvertAll={() => convertImages(pendingImages)}
-            isConverting={isConverting}
-            conversionProgress={conversionProgress}
-          />
-        </div>
-      </main>
-      <footer className="p-4 border-t border-border text-center text-sm text-muted-foreground">
-        <p>&copy; {new Date().getFullYear()} WebPGator. Hak cipta dilindungi undang-undang.</p>
-      </footer>
+        <ImageList 
+          images={images} 
+          onRemove={handleRemoveImage} 
+          onUpdateImage={handleUpdateImage}
+          globalOptions={globalOptions}
+          onGlobalOptionsChange={setGlobalOptions}
+          onApplyGlobalOptions={handleApplyGlobalOptions}
+          onConvertAll={() => convertImages(pendingImages)}
+          isConverting={isConverting}
+          conversionProgress={conversionProgress}
+        />
+      </div>
     </div>
   );
 }
