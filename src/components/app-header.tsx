@@ -32,8 +32,8 @@ export function AppHeader() {
           variant="link"
           asChild
           className={cn(
-            'p-0 text-muted-foreground',
-            pathname === href && 'text-foreground',
+            'p-0 text-muted-foreground hover:text-foreground hover:no-underline',
+            pathname === href && 'text-foreground font-semibold',
             isMobile && 'text-lg w-full justify-start'
           )}
           onClick={() => isMobile && setIsMobileMenuOpen(false)}
