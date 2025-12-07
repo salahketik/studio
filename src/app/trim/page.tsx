@@ -4,7 +4,7 @@ import { useState, useCallback, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
 
-import { ImageUploader } from '@/components/image-uploader';
+import { ImageUploader } from '@/features/smart-trim/components/image-uploader';
 import { Button } from '@/components/ui/button';
 import { Download, Loader2, ImageIcon } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';

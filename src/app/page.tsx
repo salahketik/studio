@@ -1,13 +1,13 @@
 'use client';
 
-import { useMemo, useEffect } from 'react';
+import { useMemo } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { useImageFiles } from '@/hooks/use-image-files';
-import { useImageConverter } from '@/hooks/use-image-converter';
+import { useImageFiles } from '@/features/image-converter/hooks/use-image-files';
+import { useImageConverter } from '@/features/image-converter/hooks/use-image-converter';
 import { useDocumentTitle } from '@/hooks/use-document-title';
 
-import { ImageUploader } from '@/components/image-uploader';
-import { ImageList } from '@/components/image-list';
+import { ImageUploader } from '@/features/image-converter/components/image-uploader';
+import { ImageList } from '@/features/image-converter/components/image-list';
 import { Button } from '@/components/ui/button';
 import { Download, Trash2 } from 'lucide-react';
 

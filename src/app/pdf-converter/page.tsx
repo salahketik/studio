@@ -4,9 +4,9 @@ import { useState, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 
 import { Button } from '@/components/ui/button';
-import { PdfUploader } from '@/components/pdf-uploader';
-import { ConversionCard } from '@/components/conversion-card';
-import type { PdfFile } from '@/types';
+import { PdfUploader } from '@/features/pdf-converter/components/pdf-uploader';
+import { ConversionCard } from '@/features/pdf-converter/components/conversion-card';
+import type { PdfFile } from '@/features/pdf-converter/types';
 import { runPDFToWordConversion } from '@/app/actions';
 import { saveAs } from 'file-saver';
 import { FileText, Trash2 } from 'lucide-react';

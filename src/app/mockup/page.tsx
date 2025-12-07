@@ -6,10 +6,9 @@ import { saveAs } from 'file-saver';
 import { useToast } from '@/hooks/use-toast';
 import {
   SettingsProvider,
-  useSettings,
-} from '@/context/settings-context';
-import { ControlPanel } from '@/components/mockup/control-panel';
-import { CanvasPreview } from '@/components/mockup/canvas-preview';
+} from '@/features/mockup-generator/context/settings-context';
+import { ControlPanel } from '@/features/mockup-generator/components/control-panel';
+import { CanvasPreview } from '@/features/mockup-generator/components/canvas-preview';
 import { Button } from '@/components/ui/button';
 import { Download, Copy, Loader2, Camera } from 'lucide-react';
 import { useMediaQuery } from '@/hooks/use-media-query';
