@@ -50,8 +50,8 @@ export interface PdfFile {
 export type MockupSettings = {
   padding: string;
   background: {
-    from: string;
-    to: string;
+    type: 'gradient' | 'image';
+    value: { from: string; to: string } | string;
   };
   darkMode: boolean;
   shadow: string;
@@ -61,10 +61,10 @@ export type MockupSettings = {
   position: string;
 };
 
-export const MOCKUP_PRESETS = {
+export const MOCKUP_PRESETS: Record<string, MockupSettings> = {
   "Minimalist": {
     padding: "64",
-    background: { from: "#e5e7eb", to: "#d1d5db" },
+    background: { type: 'gradient', value: { from: "#e5e7eb", to: "#d1d5db" } },
     darkMode: false,
     shadow: "2xl",
     radius: "xl",
@@ -74,7 +74,7 @@ export const MOCKUP_PRESETS = {
   },
   "Gradient Soft": {
     padding: "80",
-    background: { from: "#ec4899", to: "#f59e0b" },
+    background: { type: 'gradient', value: { from: "#ec4899", to: "#f59e0b" } },
     darkMode: true,
     shadow: "2xl",
     radius: "2xl",
@@ -84,7 +84,7 @@ export const MOCKUP_PRESETS = {
   },
   "Dark Mode Focus": {
     padding: "64",
-    background: { from: "#111827", to: "#1f2937" },
+    background: { type: 'gradient', value: { from: "#111827", to: "#1f2937" } },
     darkMode: true,
     shadow: "2xl",
     radius: "xl",

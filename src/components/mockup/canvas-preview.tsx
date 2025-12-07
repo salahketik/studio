@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef } from 'react';
+import { forwardRef, useEffect } from 'react';
 import { useSettings } from '@/context/settings-context';
 import { cn } from '@/lib/utils';
 import { BrowserFrame } from './browser-frame';
@@ -36,19 +36,27 @@ export const CanvasPreview = forwardRef<HTMLDivElement, CanvasPreviewProps>(
         'xl': 'rounded-xl',
         '2xl': 'rounded-2xl',
     };
+    
+    const backgroundStyle = () => {
+        if (settings.background.type === 'image' && settings.background.value) {
+            return { backgroundImage: `url(${settings.background.value})` };
+        }
+        // Default to gradient
+        const gradient = settings.background.value as { from: string; to: string; };
+        return { background: `linear-gradient(to bottom right, ${gradient.from}, ${gradient.to})` };
+    }
 
     return (
       <div
         ref={ref}
         className={cn(
           "canvas-container flex justify-center transition-all duration-300",
+          "bg-cover bg-center", // Add bg properties for image background
           paddingClasses[settings.padding],
           positionClasses[settings.position],
           radiusClasses[settings.radius]
         )}
-        style={{
-          background: `linear-gradient(to bottom right, ${settings.background.from}, ${settings.background.to})`,
-        }}
+        style={backgroundStyle()}
       >
         {settings.noise && <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20"></div>}
         <div className={cn("transition-all duration-300", `shadow-${settings.shadow}`)}>
