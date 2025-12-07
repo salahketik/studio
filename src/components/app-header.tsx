@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 
 const navItems = [
   { href: '/', label: 'Konverter Massal' },
+  { href: '/mockup', label: 'Mockup' },
   { href: '/pdf-converter', label: 'Alat PDF' },
   { href: '/trim', label: 'Potong Cerdas' },
 ];
