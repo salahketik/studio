@@ -18,9 +18,9 @@ import { cn } from '@/lib/utils';
 
 const navItems = [
   { href: '/', label: 'Konverter Gambar' },
-  { href: '/mockup', label: 'Generator Mockup' },
-  { href: '/pdf-converter', label: 'Perangkat PDF' },
-  { href: '/trim', label: 'Potong Otomatis' },
+  { href: '/mockup', label: 'Mockup' },
+  { href: '/pdf-converter', label: 'PDF' },
+  { href: '/trim', label: 'Potong' },
 ];
 
 export function AppHeader() {
