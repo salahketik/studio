@@ -1,7 +1,6 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useToast } from '@/hooks/use-toast';
 import { useImageFiles } from '@/features/image-converter/hooks/use-image-files';
 import { useImageConverter } from '@/features/image-converter/hooks/use-image-converter';
 import { useDocumentTitle } from '@/hooks/use-document-title';
@@ -13,7 +12,6 @@ import { Download, Trash2 } from 'lucide-react';
 
 
 export default function Home() {
-  const { toast } = useToast();
   const {
     images,
     handleImageUpload,
@@ -32,8 +30,8 @@ export default function Home() {
   const pendingImages = useMemo(() => images.filter(img => img.status === 'pending'), [images]);
   
   const documentTitle = pendingImages.length > 0
-    ? `(${pendingImages.length}) Tertunda - WebPGator`
-    : 'WebPGator - Konverter Gambar Massal';
+    ? `(${pendingImages.length}) Tertunda - Konverter Gambar`
+    : 'Konverter Gambar - Alat Kreatif';
   useDocumentTitle(documentTitle);
 
 
@@ -51,7 +49,7 @@ export default function Home() {
 
         {images.length > 0 && (
           <div className="flex flex-col sm:flex-row justify-end gap-2">
-              <Button onClick={() => handleDownloadAll()} disabled={convertedImages.length === 0 || isConverting} className="w-full sm:w-auto">
+            <Button onClick={() => handleDownloadAll()} disabled={convertedImages.length === 0 || isConverting} className="w-full sm:w-auto">
               <Download className="mr-2 h-4 w-4" />
               Unduh Semua (.zip)
             </Button>

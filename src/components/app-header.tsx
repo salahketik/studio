@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { Menu } from 'lucide-react';
+import { Menu, Layers } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
 import {
@@ -11,16 +11,16 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
   SheetDescription,
+  SheetTrigger,
 } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { href: '/', label: 'Konverter Massal' },
-  { href: '/mockup', label: 'Mockup' },
-  { href: '/pdf-converter', label: 'Alat PDF' },
-  { href: '/trim', label: 'Potong Cerdas' },
+  { href: '/', label: 'Konverter Gambar' },
+  { href: '/mockup', label: 'Generator Mockup' },
+  { href: '/pdf-converter', label: 'Perangkat PDF' },
+  { href: '/trim', label: 'Potong Otomatis' },
 ];
 
 export function AppHeader() {
@@ -57,7 +57,8 @@ export function AppHeader() {
       <div className="container flex h-14 items-center px-4 sm:px-6 md:px-8">
         <div className="mr-4 hidden md:flex items-center gap-4">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <span className="font-bold text-xl">WebPGator</span>
+            <Layers className="h-6 w-6 text-primary" />
+            <span className="font-bold text-xl">Alat Kreatif</span>
           </Link>
           <NavLinks />
         </div>
@@ -65,7 +66,8 @@ export function AppHeader() {
         {/* Mobile Header */}
         <div className="md:hidden flex flex-1 items-center justify-between">
             <Link href="/" className="flex items-center space-x-2">
-                <span className="font-bold text-xl">WebPGator</span>
+                <Layers className="h-6 w-6 text-primary" />
+                <span className="font-bold text-xl">Alat Kreatif</span>
             </Link>
         </div>
 
@@ -79,13 +81,14 @@ export function AppHeader() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left">
-                <SheetHeader className="sr-only">
-                  <SheetTitle>Menu</SheetTitle>
-                  <SheetDescription>Navigasi utama untuk aplikasi WebPGator.</SheetDescription>
+                <SheetHeader>
+                  <SheetTitle className="sr-only">Menu</SheetTitle>
+                  <SheetDescription className="sr-only">Navigasi utama untuk aplikasi.</SheetDescription>
                 </SheetHeader>
                 <div className="flex flex-col gap-8 pt-8">
                     <Link href="/" className="flex items-center space-x-2 px-4" onClick={() => setIsMobileMenuOpen(false)}>
-                        <span className="font-bold text-xl">WebPGator</span>
+                        <Layers className="h-6 w-6 text-primary" />
+                        <span className="font-bold text-xl">Alat Kreatif</span>
                     </Link>
                     <div className="px-4">
                       <NavLinks isMobile />

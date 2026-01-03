@@ -9,7 +9,7 @@ import { ConversionCard } from '@/features/pdf-converter/components/conversion-c
 import type { PdfFile } from '@/features/pdf-converter/types';
 import { runPDFToWordConversion } from '@/app/actions';
 import { saveAs } from 'file-saver';
-import { FileText, Trash2 } from 'lucide-react';
+import { FileText, Trash2, FileType, FileSpreadsheet, Presentation } from 'lucide-react';
 
 
 export default function PdfConverterPage() {
@@ -94,11 +94,14 @@ export default function PdfConverterPage() {
               <div className="space-y-6">
                   <div className="p-4 border rounded-lg bg-card flex items-center justify-between gap-4">
                       <div className="flex items-center gap-4 min-w-0">
-                          <FileText className="h-8 w-8 text-primary shrink-0" />
-                          <p className="font-semibold truncate">{pdfFile.file.name}</p>
+                          <FileText className="h-10 w-10 text-primary shrink-0" />
+                          <div className="min-w-0">
+                            <p className="font-semibold truncate">{pdfFile.file.name}</p>
+                            <p className="text-sm text-muted-foreground">{(pdfFile.file.size / 1024).toFixed(2)} KB</p>
+                          </div>
                       </div>
-                      <Button variant="destructive" size="icon" onClick={handleClear} className="shrink-0">
-                          <Trash2 className="h-4 w-4" />
+                      <Button variant="ghost" size="icon" onClick={handleClear} className="shrink-0">
+                          <Trash2 className="h-5 w-5 text-destructive" />
                           <span className="sr-only">Hapus file</span>
                       </Button>
                   </div>
@@ -109,18 +112,21 @@ export default function PdfConverterPage() {
                           description="Gunakan AI untuk mengubah PDF Anda menjadi file Microsoft Word (.docx) yang dapat diedit."
                           onConvert={handlePdfToWord}
                           status={pdfFile.status}
+                          icon={FileType}
                       />
                       <ConversionCard
                           title="Konversi ke Excel"
-                          description="Ekstrak tabel dan data ke dalam file Microsoft Excel (.xlsx). (Segera Hadir)"
+                          description="Ekstrak tabel dan data ke dalam file Microsoft Excel (.xlsx)."
                           onConvert={() => {}}
                           status="disabled"
+                          icon={FileSpreadsheet}
                       />
                           <ConversionCard
                           title="Konversi ke PowerPoint"
-                          description="Ubah halaman PDF menjadi slide PowerPoint (.pptx) yang dapat diedit. (Segera Hadir)"
+                          description="Ubah halaman PDF menjadi slide PowerPoint (.pptx) yang dapat diedit."
                           onConvert={() => {}}
                           status="disabled"
+                          icon={Presentation}
                       />
                   </div>
               </div>

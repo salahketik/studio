@@ -6,8 +6,8 @@ import { AppHeader } from '@/components/app-header';
 
 
 export const metadata: Metadata = {
-  title: 'WebPGator',
-  description: 'Konversi gambar massal ke WebP dengan optimisasi berbantuan AI.',
+  title: 'Alat Kreatif',
+  description: 'Konversi gambar, buat mockup, dan edit PDF dengan alat canggih.',
 };
 
 export default function RootLayout({
@@ -35,7 +35,7 @@ export default function RootLayout({
               {children}
             </main>
             <footer className="p-4 border-t border-border text-center text-sm text-muted-foreground">
-              <p>&copy; {new Date().getFullYear()} WebPGator. Hak cipta dilindungi undang-undang.</p>
+              <p>&copy; {new Date().getFullYear()} Alat Kreatif. Hak cipta dilindungi undang-undang.</p>
             </footer>
           </div>
           <Toaster />

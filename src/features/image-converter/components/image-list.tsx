@@ -55,7 +55,7 @@ export function ImageList({
             {pendingImages.length > 0 && (
                 <Button onClick={onConvertAll} className="w-full sm:w-auto" disabled={isConverting}>
                     <Zap className="mr-2 h-4 w-4"/>
-                    {isConverting ? 'Mengonversi...' : `Konversi Semua yang Tertunda (${pendingImages.length})`}
+                    {isConverting ? 'Mengonversi...' : `Konversi ${pendingImages.length} Gambar`}
                 </Button>
             )}
         </div>

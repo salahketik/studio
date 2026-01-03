@@ -10,7 +10,7 @@ import {
 import { ControlPanel } from '@/features/mockup-generator/components/control-panel';
 import { CanvasPreview } from '@/features/mockup-generator/components/canvas-preview';
 import { Button } from '@/components/ui/button';
-import { Download, Copy, Loader2, Camera } from 'lucide-react';
+import { Download, Copy, Loader2, Settings } from 'lucide-react';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import {
   Drawer,
@@ -105,19 +105,11 @@ function MockupGenerator() {
       <div className="flex-grow flex items-center justify-center p-4 overflow-auto">
         <CanvasPreview ref={canvasRef} imageUrl={imageUrl} setImageUrl={setImageUrl} />
       </div>
-      <div className="p-2 border-t bg-background flex justify-around">
-        <Button onClick={handleCopyToClipboard} disabled={isLoading || !imageUrl} className="flex-1 mx-1">
-          {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Copy className="mr-2 h-4 w-4" />}
-          Salin
-        </Button>
-        <Button onClick={handleDownload} disabled={isLoading || !imageUrl} className="flex-1 mx-1">
-          {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
-          Unduh
-        </Button>
-        <Drawer>
+      <div className="p-2 border-t bg-background flex justify-around gap-2">
+         <Drawer>
           <DrawerTrigger asChild>
-            <Button variant="outline" className="flex-1 mx-1">
-              <Camera className="mr-2 h-4 w-4" />
+            <Button variant="outline" className="flex-1">
+              <Settings className="mr-2 h-4 w-4" />
               Pengaturan
             </Button>
           </DrawerTrigger>
@@ -127,6 +119,14 @@ function MockupGenerator() {
             </div>
           </DrawerContent>
         </Drawer>
+        <Button onClick={handleCopyToClipboard} disabled={isLoading || !imageUrl} className="flex-1" variant="outline">
+          {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Copy className="mr-2 h-4 w-4" />}
+          Salin
+        </Button>
+        <Button onClick={handleDownload} disabled={isLoading || !imageUrl} className="flex-1">
+          {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
+          Unduh
+        </Button>
       </div>
     </div>
   );

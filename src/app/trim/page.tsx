@@ -6,7 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 
 import { ImageUploader } from '@/features/smart-trim/components/image-uploader';
 import { Button } from '@/components/ui/button';
-import { Download, Loader2, ImageIcon } from 'lucide-react';
+import { Download, Loader2, ImageIcon, UploadCloud } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { saveAs } from 'file-saver';
 import { Slider } from '@/components/ui/slider';
@@ -55,6 +55,7 @@ export default function TrimPage() {
         const g = data[i+1];
         const b = data[i+2];
         const a = data[i+3];
+        const colorThreshold = 30;
 
         // Check for transparency
         if (a < tolerance) {
@@ -63,9 +64,9 @@ export default function TrimPage() {
 
         // Check if color is very similar to background color
         if (
-            Math.abs(r - bgR) < tolerance &&
-            Math.abs(g - bgG) < tolerance &&
-            Math.abs(b - bgB) < tolerance &&
+            Math.abs(r - bgR) < colorThreshold &&
+            Math.abs(g - bgG) < colorThreshold &&
+            Math.abs(b - bgB) < colorThreshold &&
             Math.abs(a - bgA) < tolerance
         ) {
             return true;
@@ -220,7 +221,7 @@ export default function TrimPage() {
     <div className="container mx-auto p-4 sm:p-6 md:p-8 h-full">
       <div className="max-w-6xl mx-auto flex flex-col gap-8">
           <div className="text-center">
-              <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Potong Cerdas</h1>
+              <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Potong Otomatis</h1>
               <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">
                   Unggah gambar untuk secara otomatis menghapus ruang kosong atau transparan di sekitarnya.
               </p>
@@ -235,16 +236,16 @@ export default function TrimPage() {
                           <div className="flex flex-col gap-4 w-full">
                               <h3 className="font-semibold text-lg text-center">Asli</h3>
                               <div className="relative min-h-48 w-full rounded-md overflow-hidden border flex items-center justify-center p-2 bg-muted/30">
-                                  <Image src={originalImage.url} alt="Original image" width="0" height="0" sizes="100vw" style={{ width: 'auto', height: 'auto', maxHeight: '40vh', maxWidth: '100%' }} />
+                                  <Image src={originalImage.url} alt="Original image" width={0} height={0} sizes="100vw" style={{ width: 'auto', height: 'auto', maxHeight: '40vh', maxWidth: '100%' }} />
                               </div>
                               <p className="text-sm text-muted-foreground text-center">Ukuran: {formatBytes(originalSize)}</p>
                           </div>
-                           <div className="w-full md:w-px bg-border self-stretch hidden md:block"></div>
+                           <div className="w-full md:w-px bg-border self-stretch my-4 md:my-0"></div>
                           <div className="flex flex-col gap-4 w-full">
                               <h3 className="font-semibold text-lg text-center">Hasil Potong</h3>
                               <div className="relative min-h-48 w-full rounded-md overflow-hidden border bg-muted/30 flex items-center justify-center p-2">
                                   {isTrimming && <Loader2 className="w-8 h-8 animate-spin text-primary" />}
-                                  {!isTrimming && trimmedImage && <Image src={trimmedImage.url} alt="Trimmed image" width="0" height="0" sizes="100vw" style={{ width: 'auto', height: 'auto', maxHeight: '40vh', maxWidth: '100%' }} />}
+                                  {!isTrimming && trimmedImage && <Image src={trimmedImage.url} alt="Trimmed image" width={0} height={0} sizes="100vw" style={{ width: 'auto', height: 'auto', maxHeight: '40vh', maxWidth: '100%' }} />}
                                   {!isTrimming && !trimmedImage && <ImageIcon className="w-8 h-8 text-muted-foreground" />}
                               </div>
                               <p className="text-sm text-muted-foreground text-center">
@@ -270,15 +271,14 @@ export default function TrimPage() {
                           </div>
                       </div>
 
-                      <div className="flex justify-center gap-4 mt-8">
-                          <Button onClick={handleDownload} disabled={!trimmedImage || isTrimming}>
+                      <div className="flex flex-col items-center gap-4 mt-8">
+                          <Button onClick={handleDownload} disabled={!trimmedImage || isTrimming} className="w-full sm:w-auto">
                               <Download className="mr-2 h-4 w-4" />
-                              Unduh
+                              Unduh Hasil
                           </Button>
-                      </div>
-                          <div className="text-center mt-6">
                           <Button variant="link" onClick={() => { setOriginalImage(null); setTrimmedImage(null); }}>
-                              Atau unggah gambar lain
+                              <UploadCloud className="mr-2 h-4 w-4" />
+                              Unggah gambar lain
                           </Button>
                       </div>
                   </CardContent>
