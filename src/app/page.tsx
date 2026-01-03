@@ -48,29 +48,31 @@ export default function Home() {
         <ImageUploader onUpload={handleImageUpload} />
 
         {images.length > 0 && (
-          <div className="flex flex-col sm:flex-row justify-end gap-2">
-            <Button onClick={() => handleDownloadAll()} disabled={convertedImages.length === 0 || isConverting} className="w-full sm:w-auto">
-              <Download className="mr-2 h-4 w-4" />
-              Unduh Semua (.zip)
-            </Button>
-            <Button variant="destructive" onClick={handleClearAll} disabled={isConverting} className="w-full sm:w-auto">
-              <Trash2 className="mr-2 h-4 w-4" />
-              Hapus Semua
-            </Button>
-          </div>
-        )}
+          <>
+            <div className="flex flex-col sm:flex-row justify-end gap-2">
+              <Button onClick={() => handleDownloadAll()} disabled={convertedImages.length === 0 || isConverting} className="w-full sm:w-auto">
+                <Download className="mr-2 h-4 w-4" />
+                Unduh Semua (.zip)
+              </Button>
+              <Button variant="destructive" onClick={handleClearAll} disabled={isConverting} className="w-full sm:w-auto">
+                <Trash2 className="mr-2 h-4 w-4" />
+                Hapus Semua
+              </Button>
+            </div>
 
-        <ImageList 
-          images={images} 
-          onRemove={handleRemoveImage} 
-          onUpdateImage={handleUpdateImage}
-          globalOptions={globalOptions}
-          onGlobalOptionsChange={setGlobalOptions}
-          onApplyGlobalOptions={handleApplyGlobalOptions}
-          onConvertAll={() => convertImages(pendingImages)}
-          isConverting={isConverting}
-          conversionProgress={conversionProgress}
-        />
+            <ImageList 
+              images={images} 
+              onRemove={handleRemoveImage} 
+              onUpdateImage={handleUpdateImage}
+              globalOptions={globalOptions}
+              onGlobalOptionsChange={setGlobalOptions}
+              onApplyGlobalOptions={handleApplyGlobalOptions}
+              onConvertAll={() => convertImages(pendingImages)}
+              isConverting={isConverting}
+              conversionProgress={conversionProgress}
+            />
+          </>
+        )}
       </div>
     </div>
   );
