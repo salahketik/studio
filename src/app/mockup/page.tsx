@@ -35,7 +35,7 @@ function MockupGenerator() {
       return;
     }
     setIsLoading(true);
-    toPng(canvasRef.current, { cacheBust: true })
+    toPng(canvasRef.current, { cacheBust: true, skipFonts: true })
       .then((dataUrl) => {
         saveAs(dataUrl, 'mockup.png');
       })
@@ -61,12 +61,15 @@ function MockupGenerator() {
       return;
     }
     setIsLoading(true);
-    toPng(canvasRef.current, { cacheBust: true })
+    toPng(canvasRef.current, { cacheBust: true, skipFonts: true })
       .then((dataUrl) => {
         // Convert data URL to blob
         fetch(dataUrl)
           .then(res => res.blob())
           .then(blob => {
+            if (!blob) {
+                throw new Error("Gagal membuat blob gambar.");
+            }
             navigator.clipboard.write([
               new ClipboardItem({ 'image/png': blob })
             ]);
