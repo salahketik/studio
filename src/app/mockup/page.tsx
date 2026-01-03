@@ -15,6 +15,9 @@ import { useMediaQuery } from '@/hooks/use-media-query';
 import {
   Drawer,
   DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerDescription,
   DrawerTrigger,
 } from '@/components/ui/drawer';
 
@@ -117,6 +120,10 @@ function MockupGenerator() {
             </Button>
           </DrawerTrigger>
           <DrawerContent>
+            <DrawerHeader className="sr-only">
+              <DrawerTitle>Pengaturan Mockup</DrawerTitle>
+              <DrawerDescription>Sesuaikan tampilan mockup Anda dari panel ini.</DrawerDescription>
+            </DrawerHeader>
             <div className="p-4 h-[70vh] overflow-y-auto">
               <ControlPanel />
             </div>
