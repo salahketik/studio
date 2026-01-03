@@ -49,7 +49,6 @@ export default function TrimPage() {
     const bgA = data[3];
 
     let top = height, bottom = -1, left = width, right = -1;
-    const colorThreshold = 10; // To account for slight color variations
 
     function isPixelEmpty(i: number) {
         const r = data[i];
@@ -63,8 +62,12 @@ export default function TrimPage() {
         }
 
         // Check if color is very similar to background color
-        const colorDiff = Math.abs(r - bgR) + Math.abs(g - bgG) + Math.abs(b - bgB);
-        if (colorDiff < colorThreshold && a === bgA) {
+        if (
+            Math.abs(r - bgR) < tolerance &&
+            Math.abs(g - bgG) < tolerance &&
+            Math.abs(b - bgB) < tolerance &&
+            Math.abs(a - bgA) < tolerance
+        ) {
             return true;
         }
 
@@ -214,10 +217,10 @@ export default function TrimPage() {
 
 
   return (
-    <div className="container mx-auto p-4 md:p-6 lg:p-8 h-full">
+    <div className="container mx-auto p-4 sm:p-6 md:p-8 h-full">
       <div className="max-w-6xl mx-auto flex flex-col gap-8">
           <div className="text-center">
-              <h2 className="text-3xl font-bold tracking-tight">Potong Cerdas</h2>
+              <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Potong Cerdas</h1>
               <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">
                   Unggah gambar untuk secara otomatis menghapus ruang kosong atau transparan di sekitarnya.
               </p>
@@ -227,20 +230,21 @@ export default function TrimPage() {
 
           {originalImage && (
               <Card>
-                  <CardContent className="p-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                          <div className="flex flex-col gap-4">
-                              <h3 className="font-semibold text-lg">Asli</h3>
-                              <div className="relative min-h-48 w-full rounded-md overflow-hidden border flex items-center justify-center">
-                                  <Image src={originalImage.url} alt="Original image" width="0" height="0" sizes="100vw" style={{ width: '100%', height: 'auto' }} />
+                  <CardContent className="p-4 sm:p-6">
+                        <div className="flex flex-col md:flex-row gap-6 items-start">
+                          <div className="flex flex-col gap-4 w-full">
+                              <h3 className="font-semibold text-lg text-center">Asli</h3>
+                              <div className="relative min-h-48 w-full rounded-md overflow-hidden border flex items-center justify-center p-2 bg-muted/30">
+                                  <Image src={originalImage.url} alt="Original image" width="0" height="0" sizes="100vw" style={{ width: 'auto', height: 'auto', maxHeight: '40vh', maxWidth: '100%' }} />
                               </div>
                               <p className="text-sm text-muted-foreground text-center">Ukuran: {formatBytes(originalSize)}</p>
                           </div>
-                          <div className="flex flex-col gap-4">
-                              <h3 className="font-semibold text-lg">Hasil Potong</h3>
-                              <div className="relative min-h-48 w-full rounded-md overflow-hidden border bg-muted flex items-center justify-center">
+                           <div className="w-full md:w-px bg-border self-stretch hidden md:block"></div>
+                          <div className="flex flex-col gap-4 w-full">
+                              <h3 className="font-semibold text-lg text-center">Hasil Potong</h3>
+                              <div className="relative min-h-48 w-full rounded-md overflow-hidden border bg-muted/30 flex items-center justify-center p-2">
                                   {isTrimming && <Loader2 className="w-8 h-8 animate-spin text-primary" />}
-                                  {!isTrimming && trimmedImage && <Image src={trimmedImage.url} alt="Trimmed image" width="0" height="0" sizes="100vw" style={{ width: '100%', height: 'auto' }} />}
+                                  {!isTrimming && trimmedImage && <Image src={trimmedImage.url} alt="Trimmed image" width="0" height="0" sizes="100vw" style={{ width: 'auto', height: 'auto', maxHeight: '40vh', maxWidth: '100%' }} />}
                                   {!isTrimming && !trimmedImage && <ImageIcon className="w-8 h-8 text-muted-foreground" />}
                               </div>
                               <p className="text-sm text-muted-foreground text-center">
@@ -251,7 +255,7 @@ export default function TrimPage() {
 
                       <div className="max-w-sm mx-auto mt-8 space-y-4">
                           <div>
-                              <Label htmlFor="tolerance-slider">Toleransi Transparansi: {tolerance[0]}</Label>
+                              <Label htmlFor="tolerance-slider">Toleransi: {tolerance[0]}</Label>
                               <Slider
                                   id="tolerance-slider"
                                   min={0}
@@ -262,7 +266,7 @@ export default function TrimPage() {
                                   className={cn('my-2')}
                                   disabled={isTrimming}
                               />
-                              <p className="text-xs text-muted-foreground">Menyesuaikan sensitivitas. Nilai yang lebih rendah akan memotong lebih ketat. Algoritma juga akan memotong warna latar belakang solid (misalnya putih).</p>
+                              <p className="text-xs text-muted-foreground">Menyesuaikan sensitivitas. Nilai yang lebih rendah memotong lebih ketat. Algoritma memotong transparansi dan warna latar belakang solid.</p>
                           </div>
                       </div>
 

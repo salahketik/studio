@@ -47,7 +47,7 @@ export function GlobalConversionSettings({ options, onOptionsChange, onApplyToAl
                 </div>
             </CardHeader>
             <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 items-end gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-3 items-end gap-4">
                     <div className='flex-grow'>
                         <Label>Format</Label>
                         <Select value={options.format} onValueChange={(v) => handleFormatChange(v as ConversionFormat)} disabled={disabled}>

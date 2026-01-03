@@ -57,11 +57,10 @@ export function ControlPanel() {
   
   const handleGradientColorChange = (colorType: 'from' | 'to', value: string) => {
     setSettings(prev => {
-        const currentGradient = prev.background.value as { from: string, to: string };
+        const currentGradient = prev.background.type === 'gradient' ? prev.background.value as { from: string, to: string } : { from: '#000000', to: '#ffffff' };
         return {
             ...prev,
             background: {
-                ...prev.background,
                 type: 'gradient',
                 value: {
                     ...currentGradient,
@@ -151,7 +150,7 @@ export function ControlPanel() {
                     onChange={handleBackgroundImageUpload}
                 />
                 <Button variant="outline" className="w-full" onClick={() => fileInputRef.current?.click()}>
-                    <ImageIcon className="mr-2 h-4 w-4" /> Pilih Gambar
+                    <ImageIcon className="mr-2 h-4 w-4" /> Pilih Gambar Latar
                 </Button>
             </TabsContent>
             <div className="flex items-center justify-between pt-4 border-t mt-4">
@@ -250,13 +249,11 @@ export function ControlPanel() {
         <div className="space-y-4">
             <div className="flex items-center justify-between">
                 <Label>Mode Browser</Label>
-                <div className="flex items-center">
-                    <Switch
-                        id="dark-mode-switch"
-                        checked={settings.darkMode}
-                        onCheckedChange={(val) => handleSettingChange('darkMode', val)}
-                    />
-                </div>
+                <Switch
+                    id="dark-mode-switch"
+                    checked={settings.darkMode}
+                    onCheckedChange={(val) => handleSettingChange('darkMode', val)}
+                />
             </div>
              <div className="flex items-center justify-between">
             <Label>Sudut Gambar</Label>

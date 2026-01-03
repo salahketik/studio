@@ -1,6 +1,6 @@
 'use client';
 
-import type { ImageFile } from '@/features/image-converter/types';
+import type { ImageFile, ConversionOptions } from '@/features/image-converter/types';
 import { ImageListItem } from './image-list-item';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,7 +8,6 @@ import { Zap } from 'lucide-react';
 import { GlobalConversionSettings } from './global-conversion-settings';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Progress } from '@/components/ui/progress';
-import { ConversionOptions } from '../types';
 
 
 interface ImageListProps {
@@ -79,8 +78,8 @@ export function ImageList({
             </div>
           )}
 
-          <ScrollArea className="h-[45vh] pr-4">
-            <div className="space-y-4">
+          <ScrollArea className="h-[45vh] pr-4 -mr-4">
+            <div className="space-y-4 pr-4">
               {images.map((image) => (
                 <ImageListItem 
                   key={image.id} 

@@ -3,10 +3,17 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+  SheetDescription,
+} from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -47,7 +54,7 @@ export function AppHeader() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center">
+      <div className="container flex h-14 items-center px-4 sm:px-6 md:px-8">
         <div className="mr-4 hidden md:flex items-center gap-4">
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <span className="font-bold text-xl">WebPGator</span>
@@ -72,11 +79,17 @@ export function AppHeader() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left">
+                <SheetHeader className="sr-only">
+                  <SheetTitle>Menu</SheetTitle>
+                  <SheetDescription>Navigasi utama untuk aplikasi WebPGator.</SheetDescription>
+                </SheetHeader>
                 <div className="flex flex-col gap-8 pt-8">
-                    <Link href="/" className="flex items-center space-x-2" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Link href="/" className="flex items-center space-x-2 px-4" onClick={() => setIsMobileMenuOpen(false)}>
                         <span className="font-bold text-xl">WebPGator</span>
                     </Link>
-                    <NavLinks isMobile />
+                    <div className="px-4">
+                      <NavLinks isMobile />
+                    </div>
                 </div>
             </SheetContent>
           </Sheet>

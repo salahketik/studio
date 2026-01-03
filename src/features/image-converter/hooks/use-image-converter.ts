@@ -22,12 +22,13 @@ export function useImageConverter(
     }, [onUpdateImage, toast]);
 
     const convertImage = useCallback((image: ImageFile, onComplete: () => void) => {
-        onUpdateImage(image.id, { status: 'converting' });
+        onUpdateImage(image.id, { status: 'converting', progress: 0 });
 
         const reader = new FileReader();
         reader.onload = (e) => {
             const imgElement = document.createElement('img');
             imgElement.onload = () => {
+                onUpdateImage(image.id, { progress: 25 });
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
                 if (!ctx) {
@@ -55,6 +56,8 @@ export function useImageConverter(
                     sourceWidth = crop.width;
                     sourceHeight = crop.height;
                 }
+                
+                onUpdateImage(image.id, { progress: 50 });
 
                 if (isResizeEnabled) {
                     destWidth = image.resize!.width;
@@ -81,6 +84,8 @@ export function useImageConverter(
                     destWidth,
                     destHeight
                 );
+                
+                onUpdateImage(image.id, { progress: 75 });
 
                 let blobFormat = image.conversionOptions.format;
                 if (isIcoFormat) {
@@ -99,11 +104,18 @@ export function useImageConverter(
                             onComplete();
                             return;
                         }
+                        
+                        // Revoke old URL if it exists
+                        if (image.convertedUrl) {
+                            URL.revokeObjectURL(image.convertedUrl);
+                        }
+
                         onUpdateImage(image.id, {
                             status: 'converted',
                             convertedFile: blob,
                             convertedSize: blob.size,
                             convertedUrl: URL.createObjectURL(blob),
+                            progress: 100,
                         });
                         onComplete();
                     },

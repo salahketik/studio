@@ -57,7 +57,10 @@ export function AICompressionDialog({ isOpen, setIsOpen, image, onUpdateImage }:
     onUpdateImage(image.id, { status: 'ai_optimizing', progress: 50 });
 
     try {
-      const imageUri = await fileToDataUri(image.convertedFile!);
+      if (!image.convertedFile) {
+        throw new Error('File terkonversi tidak ditemukan.');
+      }
+      const imageUri = await fileToDataUri(image.convertedFile);
       const result = await runAIOptimization({
         imageUri,
         informationLossTolerance: lossTolerance[0],
@@ -70,7 +73,11 @@ export function AICompressionDialog({ isOpen, setIsOpen, image, onUpdateImage }:
         throw new Error(result.error);
       }
       
-      const res = await fetch(result.optimizedImageUri!);
+      if (!result.optimizedImageUri) {
+        throw new Error('AI tidak mengembalikan gambar yang dioptimalkan.');
+      }
+
+      const res = await fetch(result.optimizedImageUri);
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       setOptimizedImage({ url, size: blob.size });
@@ -96,6 +103,11 @@ export function AICompressionDialog({ isOpen, setIsOpen, image, onUpdateImage }:
      const res = await fetch(optimizedImage.url);
      const blob = await res.blob();
      
+     // Revoke old converted URL if it exists
+     if (image.convertedUrl) {
+       URL.revokeObjectURL(image.convertedUrl);
+     }
+     
      onUpdateImage(image.id, {
         convertedFile: blob,
         convertedSize: blob.size,
@@ -112,14 +124,17 @@ export function AICompressionDialog({ isOpen, setIsOpen, image, onUpdateImage }:
     if (!isOpen) {
         setOptimizedImage(null);
     }
+  }, [isOpen]);
 
-    // Cleanup object URLs
+  // Cleanup effect
+  useEffect(() => {
+    let currentOptimizedUrl = optimizedImage?.url;
     return () => {
-        if (optimizedImage) {
-            URL.revokeObjectURL(optimizedImage.url);
+        if (currentOptimizedUrl) {
+            URL.revokeObjectURL(currentOptimizedUrl);
         }
     }
-  }, [isOpen, optimizedImage]);
+  }, [optimizedImage]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -135,7 +150,7 @@ export function AICompressionDialog({ isOpen, setIsOpen, image, onUpdateImage }:
               <div>
                 <Label>Asli (Terkonversi)</Label>
                 <div className="mt-2 relative aspect-video w-full rounded-md overflow-hidden border">
-                  <Image src={image.convertedUrl!} alt="Asli" layout="fill" objectFit="contain" />
+                  {image.convertedUrl ? <Image src={image.convertedUrl} alt="Asli" fill objectFit="contain" /> : <div className="flex items-center justify-center h-full bg-muted">Gambar tidak tersedia</div>}
                 </div>
                 <p className="text-sm text-muted-foreground mt-2 text-center">Ukuran: {image.convertedSize ? (image.convertedSize / 1024).toFixed(2) : 0} KB</p>
               </div>
@@ -143,7 +158,7 @@ export function AICompressionDialog({ isOpen, setIsOpen, image, onUpdateImage }:
                 <Label>Pratinjau Hasil Optimisasi AI</Label>
                 <div className="mt-2 relative aspect-video w-full rounded-md overflow-hidden border bg-muted flex items-center justify-center">
                   {isOptimizing && <Loader2 className="w-8 h-8 animate-spin text-primary" />}
-                  {!isOptimizing && optimizedImage && <Image src={optimizedImage.url} alt="Optimized" layout="fill" objectFit="contain" />}
+                  {!isOptimizing && optimizedImage && <Image src={optimizedImage.url} alt="Optimized" fill objectFit="contain" />}
                   {!isOptimizing && !optimizedImage && <Sparkles className="w-8 h-8 text-muted-foreground" />}
                 </div>
                 <p className="text-sm text-muted-foreground mt-2 text-center">

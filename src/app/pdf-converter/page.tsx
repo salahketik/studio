@@ -79,10 +79,10 @@ export default function PdfConverterPage() {
   };
 
   return (
-    <div className="container mx-auto p-4 md:p-6 lg:p-8 h-full">
+    <div className="container mx-auto p-4 sm:p-6 md:p-8 h-full">
       <div className="max-w-4xl mx-auto flex flex-col gap-8">
           <div className="text-center">
-              <h2 className="text-3xl font-bold tracking-tight">Perangkat PDF</h2>
+              <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Perangkat PDF</h1>
               <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">
                   Alat canggih berbasis AI untuk mengonversi dan mengedit file PDF Anda.
               </p>
@@ -92,18 +92,18 @@ export default function PdfConverterPage() {
 
           {pdfFile && (
               <div className="space-y-6">
-                  <div className="p-4 border rounded-lg bg-card flex items-center justify-between">
+                  <div className="p-4 border rounded-lg bg-card flex items-center justify-between gap-4">
                       <div className="flex items-center gap-4 min-w-0">
-                          <FileText className="h-8 w-8 text-primary" />
+                          <FileText className="h-8 w-8 text-primary shrink-0" />
                           <p className="font-semibold truncate">{pdfFile.file.name}</p>
                       </div>
-                      <Button variant="destructive" size="icon" onClick={handleClear}>
+                      <Button variant="destructive" size="icon" onClick={handleClear} className="shrink-0">
                           <Trash2 className="h-4 w-4" />
                           <span className="sr-only">Hapus file</span>
                       </Button>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       <ConversionCard
                           title="Konversi ke Word"
                           description="Gunakan AI untuk mengubah PDF Anda menjadi file Microsoft Word (.docx) yang dapat diedit."

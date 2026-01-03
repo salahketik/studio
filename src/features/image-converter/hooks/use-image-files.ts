@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import type { ImageFile, ConversionOptions } from '@/features/image-converter/types';
@@ -47,6 +47,11 @@ export function useImageFiles() {
                 };
             } catch (error) {
                 console.error("Tidak dapat membaca dimensi gambar untuk file:", file.name, error);
+                toast({
+                    variant: 'destructive',
+                    title: 'Gagal Memuat Gambar',
+                    description: `Tidak dapat memproses file ${file.name}. Mungkin file tersebut rusak.`
+                });
                 return null;
             }
         });
@@ -61,7 +66,7 @@ export function useImageFiles() {
             );
             return [...prev, ...uniqueNewImages];
         });
-    }, [globalOptions]);
+    }, [globalOptions, toast]);
 
     const handleRemoveImage = useCallback((id: string) => {
         setImages((prev) => {
@@ -80,6 +85,16 @@ export function useImageFiles() {
             if (img.convertedUrl) URL.revokeObjectURL(img.convertedUrl);
         });
         setImages([]);
+    }, [images]);
+
+    // Cleanup all object URLs on component unmount
+    useEffect(() => {
+      return () => {
+        images.forEach(img => {
+            if (img.originalUrl) URL.revokeObjectURL(img.originalUrl);
+            if (img.convertedUrl) URL.revokeObjectURL(img.convertedUrl);
+        });
+      }
     }, [images]);
 
     const handleUpdateImage = useCallback((id: string, newImageData: Partial<ImageFile>) => {

@@ -48,7 +48,7 @@ export function ImageUploader({ onUpload }: ImageUploaderProps) {
   const onDragOver = useCallback((e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsDragging(true); // Keep highlighting when dragging over
+    setIsDragging(true); // Keep dragging over
   }, []);
 
   const onDrop = useCallback((e: DragEvent<HTMLDivElement>) => {
@@ -76,7 +76,7 @@ export function ImageUploader({ onUpload }: ImageUploaderProps) {
       <input
         ref={fileInputRef}
         type="file"
-        multiple
+        multiple={false} // Only allow single file for trim tool
         accept="image/*"
         className="hidden"
         onChange={(e) => handleFileSelect(e.target.files)}
@@ -84,7 +84,7 @@ export function ImageUploader({ onUpload }: ImageUploaderProps) {
       <UploadCloud className="w-16 h-16 text-muted-foreground mb-4" />
       <p className="text-lg font-semibold mb-2">Seret & lepas gambar di sini</p>
       <p className="text-muted-foreground mb-4">atau</p>
-      <Button onClick={onButtonClick}>Pilih File</Button>
+      <Button onClick={onButtonClick}>Pilih Gambar</Button>
     </div>
   );
 }

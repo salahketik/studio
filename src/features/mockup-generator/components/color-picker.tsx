@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import {
   Popover,
   PopoverContent,
@@ -23,7 +22,7 @@ export function ColorPicker({ background, setBackground, className }: ColorPicke
         <Button
           variant={"outline"}
           className={cn(
-            "w-[100px] justify-start text-left font-normal",
+            "w-[120px] justify-start text-left font-normal",
             !background && "text-muted-foreground",
             className
           )}

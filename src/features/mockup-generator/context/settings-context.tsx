@@ -30,30 +30,29 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
 export function SettingsProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<MockupSettings>(defaultSettings);
 
-  const resetSettings = () => {
-    // Clean up old object URL if resetting from an image background
-    if (settings.background.type === 'image' && typeof settings.background.value === 'string') {
-      URL.revokeObjectURL(settings.background.value);
+  const cleanupBackgroundImage = (currentSettings: MockupSettings) => {
+    if (currentSettings.background.type === 'image' && typeof currentSettings.background.value === 'string' && currentSettings.background.value.startsWith('blob:')) {
+      URL.revokeObjectURL(currentSettings.background.value);
     }
+  };
+
+  const resetSettings = () => {
+    cleanupBackgroundImage(settings);
     setSettings(defaultSettings);
   };
   
   const applyPreset = (presetName: keyof typeof MOCKUP_PRESETS) => {
-    // Clean up old object URL if applying preset over an image background
-    if (settings.background.type === 'image' && typeof settings.background.value === 'string') {
-      URL.revokeObjectURL(settings.background.value);
-    }
+    cleanupBackgroundImage(settings);
     setSettings(MOCKUP_PRESETS[presetName]);
   };
 
-  // Effect to clean up object URL on unmount
+  // Effect to clean up object URL on unmount or when settings change
   useEffect(() => {
+    const currentSettings = settings;
     return () => {
-      if (settings.background.type === 'image' && typeof settings.background.value === 'string') {
-        URL.revokeObjectURL(settings.background.value);
-      }
+      cleanupBackgroundImage(currentSettings);
     };
-  }, [settings.background]);
+  }, [settings]);
 
 
   return (

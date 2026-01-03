@@ -39,9 +39,13 @@ export function ImageUploader({ onImageReady }: ImageUploaderProps) {
   const handleUrlSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!urlInput) return;
-    // Simple URL validation
-    if (!urlInput.match(/\.(jpeg|jpg|gif|png|webp|svg)$/)) {
-        toast({ variant: 'destructive', title: 'URL tidak valid', description: 'Pastikan URL mengarah langsung ke sebuah gambar.' });
+    
+    // A simple regex to check for image extensions. 
+    // NOTE: This doesn't guarantee the URL is a valid image,
+    // but it's a good first-pass client-side check.
+    // We'll rely on the browser's ability to render it.
+    if (!/\.(jpeg|jpg|gif|png|webp|svg)$/i.test(urlInput)) {
+        toast({ variant: 'destructive', title: 'URL tidak valid', description: 'Pastikan URL mengarah langsung ke sebuah gambar (berakhir dengan .png, .jpg, dll.).' });
         return;
     }
     onImageReady(urlInput);
@@ -81,7 +85,7 @@ export function ImageUploader({ onImageReady }: ImageUploaderProps) {
       onDragOver={onDragOver}
       onDrop={onDrop}
       className={cn(
-        'p-6 border-2 border-dashed rounded-lg transition-colors w-full max-w-lg mx-auto flex flex-col items-center justify-center text-center',
+        'p-6 border-2 border-dashed rounded-lg transition-colors w-[400px] max-w-full mx-auto flex flex-col items-center justify-center text-center',
         isDragging ? 'border-primary bg-primary/10' : 'border-border'
       )}
     >
@@ -101,13 +105,13 @@ export function ImageUploader({ onImageReady }: ImageUploaderProps) {
         <p className="text-sm text-muted-foreground mb-2">Atau tempel URL gambar</p>
         <form onSubmit={handleUrlSubmit} className="flex gap-2">
             <Input
-                type="text"
+                type="url"
                 placeholder="https://example.com/image.png"
                 value={urlInput}
                 onChange={(e) => setUrlInput(e.target.value)}
                 className="flex-grow"
             />
-            <Button type="submit" variant="outline">Pratinjau</Button>
+            <Button type="submit" variant="outline">Muat</Button>
         </form>
       </div>
     </div>

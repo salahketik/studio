@@ -39,7 +39,7 @@ export const CanvasPreview = forwardRef<HTMLDivElement, CanvasPreviewProps>(
     
     const backgroundStyle = () => {
         if (settings.background.type === 'image' && settings.background.value) {
-            return { backgroundImage: `url(${settings.background.value})` };
+            return { backgroundImage: `url(${settings.background.value as string})` };
         }
         // Default to gradient
         const gradient = settings.background.value as { from: string; to: string; };
@@ -50,22 +50,21 @@ export const CanvasPreview = forwardRef<HTMLDivElement, CanvasPreviewProps>(
       <div
         ref={ref}
         className={cn(
-          "canvas-container flex justify-center transition-all duration-300",
+          "canvas-container flex justify-center transition-all duration-300 w-full h-full",
           "bg-cover bg-center", // Add bg properties for image background
           paddingClasses[settings.padding],
-          positionClasses[settings.position],
-          radiusClasses[settings.radius]
+          positionClasses[settings.position]
         )}
         style={backgroundStyle()}
       >
-        {settings.noise && <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20"></div>}
-        <div className={cn("transition-all duration-300", `shadow-${settings.shadow}`)}>
+        {settings.noise && <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 pointer-events-none"></div>}
+        <div className={cn("transition-all duration-300 w-auto h-auto", `shadow-${settings.shadow}`, radiusClasses[settings.radius])}>
             <BrowserFrame darkMode={settings.darkMode} radius={settings.radius}>
                 {imageUrl ? (
                     <img
                         src={imageUrl}
                         alt="Screenshot preview"
-                        className={cn("w-full h-auto object-cover", radiusClasses[settings.screenshotRadius])}
+                        className={cn("w-full h-auto object-cover block", radiusClasses[settings.screenshotRadius])}
                     />
                 ) : (
                     <ImageUploader onImageReady={setImageUrl} />

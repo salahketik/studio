@@ -58,7 +58,7 @@ export function ImageListItem({ image, onRemove, onUpdateImage }: ImageListItemP
     return image.convertedUrl || image.originalUrl;
   }, [image.originalUrl, image.convertedUrl]);
 
-  const sizeReduction = image.convertedSize
+  const sizeReduction = image.convertedSize && image.originalSize > 0
     ? ((image.originalSize - image.convertedSize) / image.originalSize) * 100
     : 0;
 
@@ -92,7 +92,7 @@ export function ImageListItem({ image, onRemove, onUpdateImage }: ImageListItemP
     a.href = image.convertedUrl;
     a.download = image.file.name.replace(/\.[^/.]+$/, `.${extension}`);
     document.body.appendChild(a);
-a.click();
+    a.click();
     document.body.removeChild(a);
   };
 
@@ -115,7 +115,7 @@ a.click();
       <div className="flex items-center gap-4">
           <div className="flex-shrink-0 w-16 h-16 relative bg-muted rounded-md overflow-hidden">
             {imageUrl ? (
-              <Image src={imageUrl} alt={image.file.name} layout="fill" objectFit="cover" />
+              <Image src={imageUrl} alt={image.file.name} fill objectFit="cover" />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
                 <Loader2 className="animate-spin text-muted-foreground" />
@@ -127,7 +127,7 @@ a.click();
             <p className="font-semibold truncate" title={image.file.name}>{image.file.name}</p>
             <div className="text-sm text-muted-foreground flex items-center gap-2 flex-wrap">
               <span>{formatBytes(image.originalSize)}</span>
-              {image.convertedSize && image.status === 'converted' && (
+              {image.convertedSize != null && image.status === 'converted' && (
                 <>
                   <span>&rarr;</span>
                   <span className="font-medium text-foreground">{formatBytes(image.convertedSize)}</span>
@@ -160,7 +160,7 @@ a.click();
           </div>
       </div>
       
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pl-20">
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] items-end gap-4 md:pl-20">
         <div className='flex-grow grid grid-cols-1 sm:grid-cols-2 gap-4 items-center'>
           <div>
             <Label>Format</Label>
@@ -195,7 +195,7 @@ a.click();
           </div>
         </div>
         
-        <div className="flex gap-2 self-end sm:self-center pt-4">
+        <div className="flex gap-2 justify-end">
            <Button
               size="sm"
               variant="outline"

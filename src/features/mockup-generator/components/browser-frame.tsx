@@ -21,12 +21,12 @@ export function BrowserFrame({ children, darkMode, radius }: BrowserFrameProps) 
     };
 
   return (
-    <div className={cn("overflow-hidden", radius, `rounded-${radius}`)}>
+    <div className={cn("overflow-hidden", `rounded-${radius}`)}>
       <div
         className={cn(
           "h-8 flex items-center gap-1.5 px-3",
           radiusClasses[radius],
-          darkMode ? 'bg-gray-800' : 'bg-gray-100'
+          darkMode ? 'bg-gray-800' : 'bg-gray-200'
         )}
       >
         <div className="w-3 h-3 rounded-full bg-red-500"></div>
