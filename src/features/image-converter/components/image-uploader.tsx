@@ -58,7 +58,7 @@ export function ImageUploader({ onUpload }: ImageUploaderProps) {
     handleFileSelect(e.dataTransfer.files);
   }, [handleFileSelect]);
 
-  const onButtonClick = () => {
+  const onUploaderClick = () => {
     fileInputRef.current?.click();
   };
 
@@ -68,9 +68,10 @@ export function ImageUploader({ onUpload }: ImageUploaderProps) {
       onDragLeave={onDragLeave}
       onDragOver={onDragOver}
       onDrop={onDrop}
+      onClick={onUploaderClick}
       className={cn(
-        'w-full p-6 border-2 border-dashed rounded-lg transition-colors duration-300 flex flex-col items-center justify-center text-center',
-        isDragging ? 'border-primary bg-primary/10' : 'border-border bg-background'
+        'w-full p-6 border-2 border-dashed rounded-lg transition-colors duration-300 flex flex-col items-center justify-center text-center cursor-pointer',
+        isDragging ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/50'
       )}
     >
       <input
@@ -82,9 +83,9 @@ export function ImageUploader({ onUpload }: ImageUploaderProps) {
         onChange={(e) => handleFileSelect(e.target.files)}
       />
       <UploadCloud className="w-12 h-12 text-muted-foreground mb-4" />
-      <p className="text-md font-semibold mb-2">Seret & lepas gambar di sini, atau klik untuk memilih</p>
+      <p className="text-md font-semibold mb-2">Seret & lepas gambar, atau klik untuk memilih</p>
       <p className="text-xs text-muted-foreground max-w-sm">
-        Gambar Anda diproses langsung di browser Anda dan tidak pernah diunggah ke server untuk konversi standar.
+        Gambar Anda diproses langsung di browser dan tidak pernah diunggah ke server untuk konversi standar.
       </p>
     </div>
   );
