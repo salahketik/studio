@@ -142,7 +142,7 @@ function MockupGenerator() {
   );
 
   return (
-    <div className="flex h-[calc(100vh-3.5rem-1px)] w-full">
+    <div className="flex h-full w-full">
       {isDesktop ? <DesktopLayout /> : <MobileLayout />}
     </div>
   );
