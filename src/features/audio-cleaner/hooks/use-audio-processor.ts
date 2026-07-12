@@ -23,7 +23,7 @@ export function useAudioProcessor() {
   }, []);
 
   const createDistortionCurve = (amount: number) => {
-    const k = typeof amount === 'number' ? amount : 50;
+    const k = amount > 0 ? amount : 0;
     const n_samples = 44100;
     const curve = new Float32Array(n_samples);
     const deg = Math.PI / 180;
@@ -59,52 +59,95 @@ export function useAudioProcessor() {
     profileFilter.type = 'peaking';
     profileFilter2.type = 'peaking';
 
-    // Apply Profile Effects
+    let distortionAmount = settings.distortion;
+    let echoAmount = settings.echo;
+    let compressionRatio = settings.compression || 12;
+
+    // Advanced Profile Effects Mapping
     switch (settings.profile) {
+      case 'studio':
+        hpFilter.frequency.value = 80;
+        profileFilter.type = 'peaking';
+        profileFilter.frequency.value = 3000;
+        profileFilter.gain.value = 3;
+        compressionRatio = 4;
+        break;
+      case 'podcast':
+        hpFilter.frequency.value = 100;
+        profileFilter.type = 'peaking';
+        profileFilter.frequency.value = 200;
+        profileFilter.gain.value = 5;
+        compressionRatio = 18;
+        break;
       case 'telephone':
         hpFilter.frequency.value = 400;
         profileFilter.type = 'lowpass';
         profileFilter.frequency.value = 3500;
+        distortionAmount += 10;
         break;
       case 'vintage_tv':
         hpFilter.frequency.value = 600;
         profileFilter.type = 'bandpass';
         profileFilter.frequency.value = 1500;
         profileFilter.Q.value = 1;
+        distortionAmount += 20;
         break;
       case 'megaphone':
         profileFilter.type = 'peaking';
         profileFilter.frequency.value = 2000;
         profileFilter.gain.value = 15;
-        profileFilter.Q.value = 2;
+        distortionAmount += 40;
         break;
       case 'underwater':
         profileFilter.type = 'lowpass';
         profileFilter.frequency.value = 600;
+        echoAmount = 0.3;
+        break;
+      case 'robot':
+        profileFilter.type = 'peaking';
+        profileFilter.frequency.value = 1000;
+        profileFilter.Q.value = 20;
+        profileFilter.gain.value = 20;
+        distortionAmount += 50;
+        break;
+      case 'cave':
+        echoAmount = 0.6;
+        profileFilter.type = 'allpass';
         break;
       case 'mega_bass':
         profileFilter.type = 'lowshelf';
         profileFilter.frequency.value = 200;
         profileFilter.gain.value = 20;
         break;
+      case 'whisper':
+        hpFilter.frequency.value = 5000;
+        compressionRatio = 20;
+        break;
+      case 'radio':
+        hpFilter.frequency.value = 200;
+        profileFilter.type = 'highshelf';
+        profileFilter.frequency.value = 4000;
+        profileFilter.gain.value = -10;
+        distortionAmount += 5;
+        break;
     }
 
     const distortionNode = offlineCtx.createWaveShaper();
-    if (settings.distortion > 0) {
-      distortionNode.curve = createDistortionCurve(settings.distortion);
+    if (distortionAmount > 0) {
+      distortionNode.curve = createDistortionCurve(distortionAmount);
       distortionNode.oversample = '4x';
     }
 
     const compressor = offlineCtx.createDynamicsCompressor();
     compressor.threshold.setValueAtTime(-24, offlineCtx.currentTime);
-    compressor.ratio.setValueAtTime(settings.compression || 12, offlineCtx.currentTime);
+    compressor.ratio.setValueAtTime(compressionRatio, offlineCtx.currentTime);
 
     const delayNode = offlineCtx.createDelay();
     const feedback = offlineCtx.createGain();
     const delayGain = offlineCtx.createGain();
 
-    if (settings.echo > 0) {
-      delayNode.delayTime.value = settings.echo;
+    if (echoAmount > 0) {
+      delayNode.delayTime.value = echoAmount > 1 ? 0.5 : echoAmount * 0.5; // Max 0.5s for echo
       feedback.gain.value = 0.4;
       delayGain.gain.value = 0.4;
       delayNode.connect(feedback);

@@ -10,12 +10,54 @@ import {
   Sparkles, 
   Zap, 
   Repeat,
-  LayoutGrid
+  LayoutGrid,
+  Mic2,
+  Music,
+  Headphones,
+  Radio,
+  Phone,
+  Tv,
+  VolumeX,
+  Mountain,
+  Bot,
+  Speaker,
+  Disc,
+  Film,
+  Users,
+  Home,
+  Newspaper,
+  Mic,
+  Cpu,
+  Dumbbell
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { voiceProfiles, type AudioSettings, type VoiceProfileId } from '../types';
+import { voiceProfiles, type AudioSettings } from '../types';
 import { cn } from '@/lib/utils';
-import * as Icons from 'lucide-react';
+
+// Specific icon mapping to avoid heavy 'import *'
+const iconMap: Record<string, any> = {
+  Mic2,
+  Music,
+  Headphones,
+  Radio,
+  Phone,
+  Tv,
+  VolumeX,
+  Zap,
+  Waves,
+  Mountain,
+  Bot,
+  Speaker,
+  Disc,
+  Film,
+  Users,
+  Home,
+  Newspaper,
+  Mic,
+  Cpu,
+  Wind,
+  Dumbbell
+};
 
 interface AudioControlsProps {
   settings: AudioSettings;
@@ -50,7 +92,7 @@ export function AudioControls({ settings, onSettingsChange, disabled }: AudioCon
           <TabsContent value="profiles" className="p-4 m-0">
             <div className="grid grid-cols-2 gap-2 h-[400px] overflow-y-auto pr-2 custom-scrollbar">
               {voiceProfiles.map((profile) => {
-                const Icon = (Icons as any)[profile.icon] || Icons.Mic2;
+                const Icon = iconMap[profile.icon] || Mic2;
                 const isActive = settings.profile === profile.id;
                 return (
                   <button
