@@ -4,6 +4,8 @@ import { optimizeWebpCompression } from '@/ai/flows/optimize-webp-compression';
 import type { OptimizeWebpCompressionInput } from '@/ai/flows/optimize-webp-compression';
 import { convertPdfToWord } from '@/ai/flows/convert-pdf-to-word';
 import type { ConvertPdfToWordInput } from '@/ai/flows/convert-pdf-to-word';
+import { generateBackground } from '@/ai/flows/generate-background';
+import type { GenerateBackgroundInput } from '@/ai/flows/generate-background';
 
 interface AIResult {
     optimizedImageUri?: string;
@@ -53,6 +55,25 @@ export async function runPDFToWordConversion(
         console.error('PDF to Word Conversion Error:', error);
         return {
             error: error instanceof Error ? error.message : 'An unknown error occurred during PDF conversion.',
+        };
+    }
+}
+
+interface AIImageResult {
+    imageUrl?: string;
+    error?: string;
+}
+
+export async function runAIGenerateBackground(
+    input: GenerateBackgroundInput
+): Promise<AIImageResult> {
+    try {
+        const result = await generateBackground(input);
+        return { imageUrl: result.imageUrl };
+    } catch (error) {
+        console.error('AI Background Error:', error);
+        return {
+            error: error instanceof Error ? error.message : 'Gagal menghasilkan latar belakang AI.',
         };
     }
 }
