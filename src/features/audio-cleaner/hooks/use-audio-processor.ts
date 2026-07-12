@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
-import type { AudioSettings, VoiceProfileId } from '../types';
+import type { AudioSettings } from '../types';
 
 export function useAudioProcessor() {
   const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null);
@@ -35,34 +35,31 @@ export function useAudioProcessor() {
   };
 
   const processAudio = useCallback(async (settings: AudioSettings) => {
-    if (!audioBuffer || !audioCtxRef.current) return;
+    if (!audioBuffer) return;
     
     setIsProcessing(true);
     
+    const sampleRate = audioBuffer.sampleRate;
     const offlineCtx = new OfflineAudioContext(
       audioBuffer.numberOfChannels,
       audioBuffer.length,
-      audioBuffer.sampleRate
+      sampleRate
     );
 
     const source = offlineCtx.createBufferSource();
     source.buffer = audioBuffer;
 
     // --- DSP CHAIN ---
-
-    // 1. Pre-EQ (High Pass)
     const hpFilter = offlineCtx.createBiquadFilter();
     hpFilter.type = 'highpass';
     hpFilter.frequency.value = settings.highPass;
 
-    // 2. Profile Specific Filters
     const profileFilter = offlineCtx.createBiquadFilter();
     const profileFilter2 = offlineCtx.createBiquadFilter();
-    
-    // Default values
     profileFilter.type = 'peaking';
     profileFilter2.type = 'peaking';
 
+    // Apply Profile Effects
     switch (settings.profile) {
       case 'telephone':
         hpFilter.frequency.value = 400;
@@ -90,49 +87,32 @@ export function useAudioProcessor() {
         profileFilter.frequency.value = 200;
         profileFilter.gain.value = 20;
         break;
-      case 'robot':
-        profileFilter.type = 'peaking';
-        profileFilter.frequency.value = 1000;
-        profileFilter.Q.value = 20;
-        profileFilter.gain.value = 10;
-        break;
-      case 'whisper':
-        profileFilter.type = 'highshelf';
-        profileFilter.frequency.value = 3000;
-        profileFilter.gain.value = 15;
-        break;
     }
 
-    // 3. Distortion (WaveShaper)
     const distortionNode = offlineCtx.createWaveShaper();
-    if (settings.distortion > 0 || ['telephone', 'walkie_talkie', 'digital_glitch'].includes(settings.profile)) {
-      const amount = settings.distortion || (settings.profile === 'walkie_talkie' ? 80 : 20);
-      distortionNode.curve = createDistortionCurve(amount);
+    if (settings.distortion > 0) {
+      distortionNode.curve = createDistortionCurve(settings.distortion);
       distortionNode.oversample = '4x';
     }
 
-    // 4. Compressor
     const compressor = offlineCtx.createDynamicsCompressor();
-    compressor.threshold.setValueAtTime(settings.profile === 'podcast' ? -30 : -24, offlineCtx.currentTime);
-    compressor.ratio.setValueAtTime(settings.compression, offlineCtx.currentTime);
+    compressor.threshold.setValueAtTime(-24, offlineCtx.currentTime);
+    compressor.ratio.setValueAtTime(settings.compression || 12, offlineCtx.currentTime);
 
-    // 5. Echo / Delay Simulation
     const delayNode = offlineCtx.createDelay();
     const feedback = offlineCtx.createGain();
     const delayGain = offlineCtx.createGain();
 
-    if (settings.echo > 0 || ['cave', 'stadium'].includes(settings.profile)) {
-      delayNode.delayTime.value = settings.profile === 'cave' ? 0.4 : (settings.echo || 0.3);
-      feedback.gain.value = settings.profile === 'cave' ? 0.5 : 0.3;
+    if (settings.echo > 0) {
+      delayNode.delayTime.value = settings.echo;
+      feedback.gain.value = 0.4;
       delayGain.gain.value = 0.4;
-      
       delayNode.connect(feedback);
       feedback.connect(delayNode);
     } else {
       delayGain.gain.value = 0;
     }
 
-    // 6. Final Gain
     const lpFilter = offlineCtx.createBiquadFilter();
     lpFilter.type = 'lowpass';
     lpFilter.frequency.value = settings.lowPass;
@@ -140,18 +120,16 @@ export function useAudioProcessor() {
     const gainNode = offlineCtx.createGain();
     gainNode.gain.value = settings.gain;
 
-    // --- CONNECTION ---
+    // Connect nodes
     source.connect(hpFilter);
     hpFilter.connect(profileFilter);
     profileFilter.connect(profileFilter2);
     profileFilter2.connect(distortionNode);
     distortionNode.connect(compressor);
     
-    // Echo path
     compressor.connect(delayNode);
     delayNode.connect(delayGain);
     
-    // Main path + Echo sum
     compressor.connect(lpFilter);
     delayGain.connect(lpFilter);
     
@@ -160,10 +138,21 @@ export function useAudioProcessor() {
 
     source.start(0);
     
-    const renderedBuffer = await offlineCtx.startRendering();
-    setProcessedBuffer(renderedBuffer);
-    setIsProcessing(false);
+    try {
+      const renderedBuffer = await offlineCtx.startRendering();
+      setProcessedBuffer(renderedBuffer);
+    } catch (e) {
+      console.error("Rendering failed", e);
+    } finally {
+      setIsProcessing(false);
+    }
   }, [audioBuffer]);
+
+  const reset = useCallback(() => {
+    setAudioBuffer(null);
+    setProcessedBuffer(null);
+    setDuration(0);
+  }, []);
 
   const exportAudio = useCallback((buffer: AudioBuffer): Blob => {
     const numOfChan = buffer.numberOfChannels;
@@ -200,5 +189,5 @@ export function useAudioProcessor() {
     return new Blob([bufferArray], { type: 'audio/wav' });
   }, []);
 
-  return { loadAudio, processAudio, exportAudio, audioBuffer, processedBuffer, isProcessing, duration };
+  return { loadAudio, processAudio, exportAudio, reset, audioBuffer, processedBuffer, isProcessing, duration };
 }
