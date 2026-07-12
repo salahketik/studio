@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { Menu, Layers, Zap } from 'lucide-react';
+import { Menu, Layers } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
 import {
@@ -75,10 +75,6 @@ export function AppHeader() {
         </div>
 
         <div className="flex flex-1 items-center justify-end gap-3">
-          <Button variant="outline" size="sm" className="hidden sm:flex rounded-full gap-2 border-primary/30">
-            <Zap className="w-3.5 h-3.5 text-accent" />
-            Go Pro
-          </Button>
           <ThemeToggle />
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild className="md:hidden">

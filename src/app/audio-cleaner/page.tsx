@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useAudioProcessor } from '@/features/audio-cleaner/hooks/use-audio-processor';
 import { AudioUploader } from '@/features/audio-cleaner/components/audio-uploader';
 import { StudioVisualizer } from '@/features/audio-cleaner/components/studio-visualizer';
@@ -49,7 +49,10 @@ export default function AudioCleanerPage() {
   };
 
   const handleProcess = async () => {
-    if (!audioBuffer) return;
+    if (!audioBuffer) {
+      toast({ variant: 'destructive', title: 'Belum Ada Audio', description: 'Silakan unggah file audio terlebih dahulu.' });
+      return;
+    }
     await processAudio(settings);
     toast({ title: 'Proses Selesai', description: 'Efek studio telah diterapkan pada audio.' });
   };

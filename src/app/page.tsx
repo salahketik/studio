@@ -26,7 +26,7 @@ const tools = [
     href: '/image-converter',
     icon: FileImage,
     color: 'bg-blue-500/10 text-blue-600',
-    badge: 'Cerdas'
+    badge: 'Optimasi AI'
   },
   {
     title: 'Generator Mockup',
@@ -34,15 +34,15 @@ const tools = [
     href: '/mockup',
     icon: Monitor,
     color: 'bg-purple-500/10 text-purple-600',
-    badge: 'Gen-AI'
+    badge: 'Imagen AI'
   },
   {
-    title: 'Audio Cleaner',
-    description: 'Restorasi audio profesional untuk vokal yang jernih dan bebas noise.',
+    title: 'Audio FX Studio',
+    description: 'Transformasi suara dengan 20 profil studio dan visualizer reaktif.',
     href: '/audio-cleaner',
     icon: Volume2,
     color: 'bg-orange-500/10 text-orange-600',
-    badge: 'Pro DSP'
+    badge: 'Studio DSP'
   },
   {
     title: 'Perangkat PDF',
@@ -69,18 +69,18 @@ export default function DashboardPage() {
         <div className="flex flex-col items-center text-center space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-1000">
           <Badge variant="outline" className="px-6 py-1.5 text-primary border-primary/30 bg-primary/10 rounded-full shadow-sm">
             <Sparkles className="w-4 h-4 mr-2" />
-            Empowering Creativity with AI
+            Gratis & Tanpa Batas Selamanya
           </Badge>
           
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight">
             Workstation Digital <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-primary animate-gradient-x">
-              Masa Depan.
+              Kreativitas AI.
             </span>
           </h1>
           
           <p className="text-muted-foreground text-lg md:text-2xl max-w-3xl mx-auto leading-relaxed">
-            Satu ekosistem alat kreatif yang dirancang untuk mempercepat alur kerja Anda dengan presisi AI dan performa tanpa kompromi.
+            Satu ekosistem alat kreatif profesional yang dirancang untuk mempercepat alur kerja Anda dengan presisi AI tanpa biaya langganan.
           </p>
 
           <div className="flex gap-4 pt-4">
@@ -95,7 +95,7 @@ export default function DashboardPage() {
 
         {/* Tools Grid */}
         <div id="tools" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {tools.map((tool, index) => (
+          {tools.map((tool) => (
             <Link key={tool.title} href={tool.href} className="group">
               <Card className="tool-card h-full">
                 <CardHeader>
@@ -135,21 +135,21 @@ export default function DashboardPage() {
                 <div className="p-4 bg-primary/20 rounded-2xl shadow-inner"><LayoutGrid className="w-8 h-8 text-accent" /></div>
                 <div className="space-y-2">
                     <h4 className="text-xl font-bold">Terpadu</h4>
-                    <p className="text-muted-foreground">Semua alat yang Anda butuhkan dalam satu antarmuka yang kohesif.</p>
+                    <p className="text-muted-foreground">Semua alat kreatif canggih dalam satu antarmuka yang bersih.</p>
                 </div>
             </div>
             <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
                 <div className="p-4 bg-primary/20 rounded-2xl shadow-inner"><ShieldCheck className="w-8 h-8 text-accent" /></div>
                 <div className="space-y-2">
-                    <h4 className="text-xl font-bold">Privasi Utama</h4>
-                    <p className="text-muted-foreground">Pemrosesan lokal yang menjaga data Anda tetap menjadi milik Anda.</p>
+                    <h4 className="text-xl font-bold">Bebas Biaya</h4>
+                    <p className="text-muted-foreground">Semua fitur terbuka sepenuhnya untuk mendukung kreativitas Anda.</p>
                 </div>
             </div>
             <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
                 <div className="p-4 bg-primary/20 rounded-2xl shadow-inner"><Globe className="w-8 h-8 text-accent" /></div>
                 <div className="space-y-2">
-                    <h4 className="text-xl font-bold">Tanpa Batas</h4>
-                    <p className="text-muted-foreground">Akses instan dari perangkat apa pun, kapan pun kreativitas muncul.</p>
+                    <h4 className="text-xl font-bold">Akses Instan</h4>
+                    <p className="text-muted-foreground">Tanpa login, tanpa pendaftaran. Langsung kerjakan proyek Anda.</p>
                 </div>
             </div>
         </div>
