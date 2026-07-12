@@ -10,20 +10,20 @@
     --card-foreground: 224 71.4% 4.1%;
     --popover: 0 0% 100%;
     --popover-foreground: 224 71.4% 4.1%;
-    --primary: 195 53% 79%; /* Light blue */
+    --primary: 195 53% 79%;
     --primary-foreground: 224 71.4% 4.1%;
     --secondary: 220 14.3% 95.9%;
     --secondary-foreground: 220 9.1% 45.1%;
     --muted: 220 14.3% 95.9%;
     --muted-foreground: 220 8.9% 46.1%;
-    --accent: 180 100% 25%; /* Teal */
+    --accent: 180 100% 25%;
     --accent-foreground: 210 20% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 20% 98%;
     --border: 220 13% 91%;
     --input: 220 13% 91%;
     --ring: 180 100% 25%;
-    --radius: 0.75rem;
+    --radius: 1rem;
   }
   .dark {
     --background: 240 10% 3.9%;
@@ -53,19 +53,28 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-body antialiased;
   }
 }
 
-/* Custom Glassmorphism Classes */
-.glass {
-  @apply bg-white/40 dark:bg-black/40 backdrop-blur-md border border-white/20 dark:border-white/10;
+.glass-panel {
+  @apply bg-white/60 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-2xl;
 }
 
-.glass-card {
-  @apply bg-card/60 backdrop-blur-lg border border-border/50 shadow-xl;
+.hero-gradient {
+  background: radial-gradient(circle at top right, hsl(var(--primary) / 0.15), transparent),
+              radial-gradient(circle at bottom left, hsl(var(--accent) / 0.1), transparent);
 }
 
-.nav-active {
-  @apply text-primary font-bold after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[2px] after:bg-primary;
+.tool-card {
+  @apply relative overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 border-border/40 bg-card/40 backdrop-blur-md;
+}
+
+.tool-card::before {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 transition-opacity duration-500;
+}
+
+.tool-card:hover::before {
+  @apply opacity-100;
 }

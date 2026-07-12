@@ -1,10 +1,9 @@
-
 'use client';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { Menu, Layers } from 'lucide-react';
+import { Menu, Layers, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
 import {
@@ -18,7 +17,8 @@ import {
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { href: '/', label: 'Gambar' },
+  { href: '/', label: 'Dashboard' },
+  { href: '/image-converter', label: 'Gambar' },
   { href: '/mockup', label: 'Mockup' },
   { href: '/audio-cleaner', label: 'Audio' },
   { href: '/pdf-converter', label: 'PDF' },
@@ -30,21 +30,18 @@ export function AppHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const NavLinks = ({ isMobile = false }: { isMobile?: boolean }) => (
-    <nav
-      className={cn(
-        'flex items-center gap-2',
-        isMobile && 'flex-col items-start gap-4'
-      )}
-    >
+    <nav className={cn('flex items-center gap-1', isMobile && 'flex-col items-start gap-4')}>
       {navItems.map(({ href, label }) => (
         <Button
           key={href}
-          variant="link"
+          variant="ghost"
           asChild
           className={cn(
-            'p-0 text-muted-foreground hover:text-foreground hover:no-underline px-2',
-            pathname === href && 'text-foreground font-semibold',
-            isMobile && 'text-lg w-full justify-start'
+            'px-4 py-2 rounded-full text-sm font-medium transition-all duration-300',
+            pathname === href 
+              ? 'bg-primary/20 text-foreground shadow-sm' 
+              : 'text-muted-foreground hover:bg-accent/10 hover:text-foreground',
+            isMobile && 'w-full justify-start text-lg'
           )}
           onClick={() => isMobile && setIsMobileMenuOpen(false)}
         >
@@ -55,44 +52,52 @@ export function AppHeader() {
   );
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center px-4 sm:px-6 md:px-8">
-        <div className="mr-4 hidden md:flex items-center gap-4">
-          <Link href="/" className="mr-6 flex items-center space-x-2">
-            <Layers className="h-6 w-6 text-primary" />
-            <span className="font-bold text-xl">Alat Kreatif</span>
+    <header className="sticky top-0 z-50 w-full border-b border-border/20 bg-background/80 backdrop-blur-xl transition-all">
+      <div className="container mx-auto flex h-16 items-center px-6">
+        <div className="mr-8 hidden md:flex items-center gap-8">
+          <Link href="/" className="flex items-center space-x-3 group">
+            <div className="bg-accent p-2 rounded-lg transition-transform group-hover:scale-110 shadow-lg shadow-accent/20">
+              <Layers className="h-5 w-5 text-white" />
+            </div>
+            <span className="font-bold text-xl tracking-tight">Alat Kreatif</span>
           </Link>
           <NavLinks />
         </div>
         
         {/* Mobile Header */}
         <div className="md:hidden flex flex-1 items-center justify-between">
-            <Link href="/" className="flex items-center space-x-2">
-                <Layers className="h-6 w-6 text-primary" />
-                <span className="font-bold text-xl">Alat Kreatif</span>
+            <Link href="/" className="flex items-center space-x-3">
+                <div className="bg-accent p-2 rounded-lg shadow-lg shadow-accent/20">
+                    <Layers className="h-5 w-5 text-white" />
+                </div>
+                <span className="font-bold text-xl tracking-tight">Alat Kreatif</span>
             </Link>
         </div>
 
-        <div className="flex flex-1 items-center justify-end gap-2">
+        <div className="flex flex-1 items-center justify-end gap-3">
+          <Button variant="outline" size="sm" className="hidden sm:flex rounded-full gap-2 border-primary/30">
+            <Zap className="w-3.5 h-3.5 text-accent" />
+            Go Pro
+          </Button>
           <ThemeToggle />
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild className="md:hidden">
-              <Button variant="ghost" size="icon">
-                <Menu className="h-5 w-5" />
-                <span className="sr-only">Buka Menu</span>
+              <Button variant="ghost" size="icon" className="rounded-full">
+                <Menu className="h-6 w-6" />
+                <span className="sr-only">Menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left">
+            <SheetContent side="left" className="w-[300px] sm:w-[350px]">
                 <SheetHeader>
-                  <SheetTitle className="sr-only">Menu</SheetTitle>
-                  <SheetDescription className="sr-only">Navigasi utama untuk aplikasi.</SheetDescription>
+                  <SheetTitle className="sr-only">Navigasi Utama</SheetTitle>
+                  <SheetDescription className="sr-only">Menu utama aplikasi Alat Kreatif</SheetDescription>
                 </SheetHeader>
-                <div className="flex flex-col gap-8 pt-8">
-                    <Link href="/" className="flex items-center space-x-2 px-4" onClick={() => setIsMobileMenuOpen(false)}>
-                        <Layers className="h-6 w-6 text-primary" />
-                        <span className="font-bold text-xl">Alat Kreatif</span>
+                <div className="flex flex-col gap-10 pt-10">
+                    <Link href="/" className="flex items-center space-x-3 px-4" onClick={() => setIsMobileMenuOpen(false)}>
+                        <Layers className="h-8 w-8 text-accent" />
+                        <span className="font-bold text-2xl tracking-tight">Alat Kreatif</span>
                     </Link>
-                    <div className="px-4">
+                    <div className="px-2">
                       <NavLinks isMobile />
                     </div>
                 </div>
