@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAudioProcessor } from '@/features/audio-cleaner/hooks/use-audio-processor';
 import { AudioUploader } from '@/features/audio-cleaner/components/audio-uploader';
 import { StudioVisualizer } from '@/features/audio-cleaner/components/studio-visualizer';
@@ -16,9 +16,6 @@ import {
   Sparkles, 
   Loader2, 
   Settings2,
-  Music4,
-  Layers,
-  Layout,
   ChevronLeft,
   MousePointer2
 } from 'lucide-react';
@@ -39,6 +36,9 @@ export default function AudioCleanerPage() {
   const [audioStream, setAudioStream] = useState<MediaStream | null>(null);
   const [audioFile, setAudioFile] = useState<File | null>(null);
 
+  // Persistent Audio Context to prevent instability
+  const audioCtxRef = useRef<AudioContext | null>(null);
+
   const handleUpload = async (file: File) => {
     setAudioFile(file);
     try {
@@ -53,6 +53,11 @@ export default function AudioCleanerPage() {
     if (!audioBuffer) {
       toast({ variant: 'destructive', title: 'Belum Ada Audio', description: 'Silakan unggah file audio terlebih dahulu.' });
       return;
+    }
+    // Stop playback if processing new effects
+    if (isPlaying) {
+      audioSource?.stop();
+      setIsPlaying(false);
     }
     await processAudio(settings);
     toast({ title: 'Proses Selesai', description: 'Efek studio telah diterapkan pada audio.' });
@@ -74,13 +79,19 @@ export default function AudioCleanerPage() {
         return;
       }
       
-      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      // Initialize or resume AudioContext
+      if (!audioCtxRef.current) {
+        audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      }
+      const ctx = audioCtxRef.current;
       if (ctx.state === 'suspended') {
         await ctx.resume();
       }
 
+      // Create stable routing: Source -> Analyser -> (Destination & MediaStream)
       const nodeAnalyser = ctx.createAnalyser();
       nodeAnalyser.fftSize = 512;
+      nodeAnalyser.smoothingTimeConstant = 0.82; // Balanced smoothing
       
       const source = ctx.createBufferSource();
       source.buffer = processedBuffer;
@@ -108,6 +119,9 @@ export default function AudioCleanerPage() {
   useEffect(() => {
     return () => {
       audioSource?.stop();
+      if (audioCtxRef.current?.state !== 'closed') {
+        audioCtxRef.current?.close();
+      }
     };
   }, [audioSource]);
 
@@ -220,8 +234,10 @@ export default function AudioCleanerPage() {
                 </div>
                 <div className="bg-orange-500/5 border border-orange-500/20 rounded-2xl p-5 flex items-start gap-4">
                   <div className="p-2.5 bg-orange-500/20 rounded-xl shrink-0"><Download className="w-5 h-5 text-orange-600" /></div>
-                  <h4 className="font-bold text-sm">Langkah 3</h4>
-                  <p className="text-[10px] text-muted-foreground leading-relaxed">Klik "Rekam Visual" di monitor saat memutar untuk mengunduh video visualisasi.</p>
+                  <div className="space-y-1">
+                    <h4 className="font-bold text-sm">Langkah 3</h4>
+                    <p className="text-[10px] text-muted-foreground leading-relaxed">Klik "Rekam Visual" di monitor saat memutar untuk mengunduh video visualisasi.</p>
+                  </div>
                 </div>
               </div>
             </div>

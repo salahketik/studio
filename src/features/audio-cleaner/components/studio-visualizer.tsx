@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { VisualizerMode } from '../types';
 import { Button } from '@/components/ui/button';
-import { Video, StopCircle, Download, Monitor, Sparkles } from 'lucide-react';
+import { Video, StopCircle, Download, Monitor } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
@@ -33,8 +33,10 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream }: Stu
     setVideoBlob(null);
     chunksRef.current = [];
 
+    // Capture visual stream from canvas
     const canvasStream = canvasRef.current.captureStream(60);
     
+    // Combine with current audio stream for high-fidelity video
     const combinedStream = new MediaStream([
       ...canvasStream.getVideoTracks(),
       ...audioStream.getAudioTracks()
@@ -87,7 +89,8 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream }: Stu
     const width = canvas.width;
     const height = canvas.height;
 
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+    // Stable background fade for tail effect
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.18)';
     ctx.fillRect(0, 0, width, height);
 
     const accentColor = 'rgba(20, 255, 236, 1)';
@@ -96,13 +99,13 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream }: Stu
       const barWidth = (width / (bufferLength * 0.4)) * 2.5;
       let x = 0;
       for (let i = 0; i < bufferLength * 0.4; i++) {
-        const barHeight = (dataArray[i] / 255) * height * 0.8;
+        const barHeight = (dataArray[i] / 255) * height * 0.85;
         const gradient = ctx.createLinearGradient(0, height, 0, height - barHeight);
         gradient.addColorStop(0, 'rgba(20, 255, 236, 0.1)');
         gradient.addColorStop(1, accentColor);
         
         ctx.fillStyle = gradient;
-        ctx.shadowBlur = 15;
+        ctx.shadowBlur = 10;
         ctx.shadowColor = accentColor;
         ctx.fillRect(x, height - barHeight, barWidth - 4, barHeight);
         ctx.shadowBlur = 0;
@@ -111,18 +114,23 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream }: Stu
     } else if (mode === 'circle') {
       const centerX = width / 2;
       const centerY = height / 2;
-      const radius = Math.min(width, height) / 4;
+      const radius = Math.min(width, height) / 4.5;
+
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+      ctx.strokeStyle = 'rgba(20, 255, 236, 0.2)';
+      ctx.stroke();
 
       for (let i = 0; i < bufferLength; i += 4) {
         const value = dataArray[i] / 255;
         const angle = (i / (bufferLength * 0.8)) * 2 * Math.PI;
         const x1 = centerX + Math.cos(angle) * radius;
         const y1 = centerY + Math.sin(angle) * radius;
-        const x2 = centerX + Math.cos(angle) * (radius + value * 250);
-        const y2 = centerY + Math.sin(angle) * (radius + value * 250);
+        const x2 = centerX + Math.cos(angle) * (radius + value * 280);
+        const y2 = centerY + Math.sin(angle) * (radius + value * 280);
 
         ctx.strokeStyle = accentColor;
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 2 + value * 4;
         ctx.beginPath();
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
@@ -132,20 +140,20 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream }: Stu
       const value = dataArray.reduce((a, b) => a + b) / bufferLength / 255;
       const centerX = width / 2;
       const centerY = height / 2;
-      const baseRadius = Math.min(width, height) / 3;
+      const baseRadius = Math.min(width, height) / 3.5;
       
       ctx.beginPath();
-      ctx.arc(centerX, centerY, baseRadius * (1 + value * 0.7), 0, 2 * Math.PI);
-      ctx.fillStyle = `rgba(20, 255, 236, ${0.05 + value * 0.2})`;
+      ctx.arc(centerX, centerY, baseRadius * (1 + value * 0.8), 0, 2 * Math.PI);
+      ctx.fillStyle = `rgba(20, 255, 236, ${0.05 + value * 0.3})`;
       ctx.fill();
       ctx.strokeStyle = accentColor;
-      ctx.lineWidth = 10 * value;
+      ctx.lineWidth = 1 + 15 * value;
       ctx.stroke();
     } else if (mode === 'wave') {
       const waveArray = new Uint8Array(bufferLength);
       analyser.getByteTimeDomainData(waveArray);
       
-      ctx.lineWidth = 4;
+      ctx.lineWidth = 3;
       ctx.strokeStyle = accentColor;
       ctx.beginPath();
       const sliceWidth = width / bufferLength;
@@ -165,7 +173,9 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream }: Stu
   };
 
   useEffect(() => {
+    // Only run draw loop if active
     if (isPlaying && analyser) {
+      if (requestRef.current) cancelAnimationFrame(requestRef.current);
       requestRef.current = requestAnimationFrame(draw);
     } else {
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
@@ -184,7 +194,6 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream }: Stu
         className="w-full h-full object-cover"
       />
       
-      {/* Recording UI Overlay - Always visible when applicable for better UX */}
       <div className="absolute top-4 right-4 flex flex-wrap justify-end gap-2 z-10 pointer-events-auto">
         {!isRecording ? (
           <Button 
