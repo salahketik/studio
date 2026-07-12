@@ -38,7 +38,12 @@ function MockupGenerator() {
       return;
     }
     setIsLoading(true);
-    toPng(canvasRef.current, { cacheBust: true, skipFonts: true })
+    // Fix for CSS rules error and font loading
+    toPng(canvasRef.current, { 
+        cacheBust: true, 
+        skipFonts: true,
+        style: { transform: 'scale(1)', transformOrigin: 'top left' }
+    })
       .then((dataUrl) => {
         saveAs(dataUrl, 'mockup.png');
       })
@@ -66,13 +71,10 @@ function MockupGenerator() {
     setIsLoading(true);
     toPng(canvasRef.current, { cacheBust: true, skipFonts: true })
       .then((dataUrl) => {
-        // Convert data URL to blob
         fetch(dataUrl)
           .then(res => res.blob())
           .then(blob => {
-            if (!blob) {
-                throw new Error("Gagal membuat blob gambar.");
-            }
+            if (!blob) throw new Error("Gagal membuat blob gambar.");
             navigator.clipboard.write([
               new ClipboardItem({ 'image/png': blob })
             ]);
@@ -120,6 +122,7 @@ function MockupGenerator() {
             </Button>
           </DrawerTrigger>
           <DrawerContent>
+            {/* Fix for accessibility warning */}
             <DrawerHeader className="sr-only">
               <DrawerTitle>Pengaturan Mockup</DrawerTitle>
               <DrawerDescription>Sesuaikan tampilan mockup Anda dari panel ini.</DrawerDescription>

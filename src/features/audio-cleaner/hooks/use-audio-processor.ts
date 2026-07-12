@@ -23,7 +23,7 @@ export function useAudioProcessor() {
   }, []);
 
   const createDistortionCurve = (amount: number) => {
-    const k = amount > 0 ? amount : 0;
+    const k = amount;
     const n_samples = 44100;
     const curve = new Float32Array(n_samples);
     const deg = Math.PI / 180;
@@ -49,134 +49,154 @@ export function useAudioProcessor() {
     const source = offlineCtx.createBufferSource();
     source.buffer = audioBuffer;
 
-    // --- DSP CHAIN ---
+    // Standard Filters
     const hpFilter = offlineCtx.createBiquadFilter();
     hpFilter.type = 'highpass';
     hpFilter.frequency.value = settings.highPass;
 
+    const lpFilter = offlineCtx.createBiquadFilter();
+    lpFilter.type = 'lowpass';
+    lpFilter.frequency.value = settings.lowPass;
+
+    // Dynamic Nodes for Profiles
     const profileFilter = offlineCtx.createBiquadFilter();
-    const profileFilter2 = offlineCtx.createBiquadFilter();
-    profileFilter.type = 'peaking';
-    profileFilter2.type = 'peaking';
-
-    let distortionAmount = settings.distortion;
-    let echoAmount = settings.echo;
-    let compressionRatio = settings.compression || 12;
-
-    // Advanced Profile Effects Mapping
-    switch (settings.profile) {
-      case 'studio':
-        hpFilter.frequency.value = 80;
-        profileFilter.type = 'peaking';
-        profileFilter.frequency.value = 3000;
-        profileFilter.gain.value = 3;
-        compressionRatio = 4;
-        break;
-      case 'podcast':
-        hpFilter.frequency.value = 100;
-        profileFilter.type = 'peaking';
-        profileFilter.frequency.value = 200;
-        profileFilter.gain.value = 5;
-        compressionRatio = 18;
-        break;
-      case 'telephone':
-        hpFilter.frequency.value = 400;
-        profileFilter.type = 'lowpass';
-        profileFilter.frequency.value = 3500;
-        distortionAmount += 10;
-        break;
-      case 'vintage_tv':
-        hpFilter.frequency.value = 600;
-        profileFilter.type = 'bandpass';
-        profileFilter.frequency.value = 1500;
-        profileFilter.Q.value = 1;
-        distortionAmount += 20;
-        break;
-      case 'megaphone':
-        profileFilter.type = 'peaking';
-        profileFilter.frequency.value = 2000;
-        profileFilter.gain.value = 15;
-        distortionAmount += 40;
-        break;
-      case 'underwater':
-        profileFilter.type = 'lowpass';
-        profileFilter.frequency.value = 600;
-        echoAmount = 0.3;
-        break;
-      case 'robot':
-        profileFilter.type = 'peaking';
-        profileFilter.frequency.value = 1000;
-        profileFilter.Q.value = 20;
-        profileFilter.gain.value = 20;
-        distortionAmount += 50;
-        break;
-      case 'cave':
-        echoAmount = 0.6;
-        profileFilter.type = 'allpass';
-        break;
-      case 'mega_bass':
-        profileFilter.type = 'lowshelf';
-        profileFilter.frequency.value = 200;
-        profileFilter.gain.value = 20;
-        break;
-      case 'whisper':
-        hpFilter.frequency.value = 5000;
-        compressionRatio = 20;
-        break;
-      case 'radio':
-        hpFilter.frequency.value = 200;
-        profileFilter.type = 'highshelf';
-        profileFilter.frequency.value = 4000;
-        profileFilter.gain.value = -10;
-        distortionAmount += 5;
-        break;
-    }
-
     const distortionNode = offlineCtx.createWaveShaper();
-    if (distortionAmount > 0) {
-      distortionNode.curve = createDistortionCurve(distortionAmount);
-      distortionNode.oversample = '4x';
-    }
-
     const compressor = offlineCtx.createDynamicsCompressor();
-    compressor.threshold.setValueAtTime(-24, offlineCtx.currentTime);
-    compressor.ratio.setValueAtTime(compressionRatio, offlineCtx.currentTime);
-
     const delayNode = offlineCtx.createDelay();
     const feedback = offlineCtx.createGain();
     const delayGain = offlineCtx.createGain();
+    const gainNode = offlineCtx.createGain();
 
-    if (echoAmount > 0) {
-      delayNode.delayTime.value = echoAmount > 1 ? 0.5 : echoAmount * 0.5; // Max 0.5s for echo
-      feedback.gain.value = 0.4;
-      delayGain.gain.value = 0.4;
+    // Default Profile Values
+    let distAmount = settings.distortion;
+    let echoVal = settings.echo;
+    profileFilter.type = 'peaking';
+    profileFilter.gain.value = 0;
+    compressor.ratio.value = 4;
+
+    // Advanced 20 Profile Logic
+    switch (settings.profile) {
+      case 'studio':
+        hpFilter.frequency.value = 80;
+        profileFilter.frequency.value = 3500;
+        profileFilter.gain.value = 3;
+        compressor.threshold.value = -18;
+        break;
+      case 'podcast':
+        hpFilter.frequency.value = 120;
+        profileFilter.frequency.value = 250;
+        profileFilter.gain.value = 6;
+        compressor.threshold.value = -24;
+        compressor.ratio.value = 12;
+        break;
+      case 'telephone':
+        hpFilter.frequency.value = 400;
+        lpFilter.frequency.value = 3500;
+        distAmount += 15;
+        break;
+      case 'vintage_tv':
+        hpFilter.frequency.value = 500;
+        lpFilter.frequency.value = 2500;
+        profileFilter.type = 'notch';
+        profileFilter.frequency.value = 1000;
+        distAmount += 25;
+        break;
+      case 'megaphone':
+        profileFilter.frequency.value = 2000;
+        profileFilter.gain.value = 18;
+        distAmount += 45;
+        break;
+      case 'robot':
+        profileFilter.type = 'allpass';
+        profileFilter.frequency.value = 1000;
+        distAmount += 60;
+        break;
+      case 'underwater':
+        lpFilter.frequency.value = 500;
+        echoVal = 0.4;
+        break;
+      case 'cave':
+        echoVal = 0.7;
+        profileFilter.type = 'highshelf';
+        profileFilter.gain.value = -10;
+        break;
+      case 'mega_bass':
+        profileFilter.type = 'lowshelf';
+        profileFilter.frequency.value = 150;
+        profileFilter.gain.value = 25;
+        break;
+      case 'whisper':
+        hpFilter.frequency.value = 4000;
+        compressor.threshold.value = -40;
+        break;
+      case 'cinema':
+        profileFilter.type = 'lowshelf';
+        profileFilter.gain.value = 8;
+        compressor.threshold.value = -30;
+        compressor.ratio.value = 20;
+        break;
+      case 'radio':
+        hpFilter.frequency.value = 150;
+        profileFilter.frequency.value = 5000;
+        profileFilter.gain.value = 10;
+        distAmount += 5;
+        break;
+      case 'walkie_talkie':
+        hpFilter.frequency.value = 800;
+        lpFilter.frequency.value = 3000;
+        distAmount += 40;
+        break;
+      case 'stadium':
+        echoVal = 0.9;
+        profileFilter.frequency.value = 3000;
+        profileFilter.gain.value = -15;
+        break;
+      case 'vinyl':
+        hpFilter.frequency.value = 300;
+        distAmount += 10;
+        profileFilter.frequency.value = 10000;
+        profileFilter.gain.value = -20;
+        break;
+      case 'digital_glitch':
+        distAmount += 90;
+        profileFilter.type = 'bandpass';
+        profileFilter.frequency.value = 800;
+        break;
+    }
+
+    // Apply Distortion
+    if (distAmount > 0) {
+      distortionNode.curve = createDistortionCurve(distAmount);
+      distortionNode.oversample = '4x';
+    }
+
+    // Apply Echo
+    if (echoVal > 0) {
+      delayNode.delayTime.value = Math.min(echoVal, 1.0);
+      feedback.gain.value = 0.45;
+      delayGain.gain.value = 0.45;
       delayNode.connect(feedback);
       feedback.connect(delayNode);
     } else {
       delayGain.gain.value = 0;
     }
 
-    const lpFilter = offlineCtx.createBiquadFilter();
-    lpFilter.type = 'lowpass';
-    lpFilter.frequency.value = settings.lowPass;
-
-    const gainNode = offlineCtx.createGain();
     gainNode.gain.value = settings.gain;
 
-    // Connect nodes
+    // Chain: Source -> HPF -> LPF -> ProfileFilter -> Distortion -> Compressor -> Delay (Split) -> Gain -> Dest
     source.connect(hpFilter);
-    hpFilter.connect(profileFilter);
-    profileFilter.connect(profileFilter2);
-    profileFilter2.connect(distortionNode);
+    hpFilter.connect(lpFilter);
+    lpFilter.connect(profileFilter);
+    profileFilter.connect(distortionNode);
     distortionNode.connect(compressor);
     
+    // Echo Split
     compressor.connect(delayNode);
     delayNode.connect(delayGain);
     
-    compressor.connect(lpFilter);
-    delayGain.connect(lpFilter);
+    compressor.connect(gainNode);
+    delayGain.connect(gainNode);
     
-    lpFilter.connect(gainNode);
     gainNode.connect(offlineCtx.destination);
 
     source.start(0);
@@ -185,7 +205,7 @@ export function useAudioProcessor() {
       const renderedBuffer = await offlineCtx.startRendering();
       setProcessedBuffer(renderedBuffer);
     } catch (e) {
-      console.error("Rendering failed", e);
+      console.error("DSP Processing Error:", e);
     } finally {
       setIsProcessing(false);
     }

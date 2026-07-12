@@ -30,10 +30,10 @@ import {
   Mic,
   Cpu,
   Dumbbell,
-  Info,
   Monitor,
   ImageIcon,
-  Activity
+  Activity,
+  Info
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';

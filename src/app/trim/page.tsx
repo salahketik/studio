@@ -6,12 +6,13 @@ import { useToast } from '@/hooks/use-toast';
 
 import { ImageUploader } from '@/features/smart-trim/components/image-uploader';
 import { Button } from '@/components/ui/button';
-import { Download, Loader2, ImageIcon, UploadCloud } from 'lucide-react';
+import { Download, Loader2, ImageIcon, UploadCloud, ChevronLeft, Scissors } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { saveAs } from 'file-saver';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
 
 export default function TrimPage() {
@@ -24,16 +25,10 @@ export default function TrimPage() {
   const handleImageUpload = useCallback((files: File[]) => {
     if (files.length > 0) {
       const file = files[0];
-      if (files.length > 1) {
-        toast({
-            title: "Satu gambar dalam satu waktu",
-            description: "Fitur Potong Cerdas hanya memproses satu gambar dalam satu waktu. Gambar pertama yang dipilih.",
-        })
-      }
       setOriginalImage({ file, url: URL.createObjectURL(file) });
-      setTrimmedImage(null); // Reset trimmed image on new upload
+      setTrimmedImage(null);
     }
-  }, [toast]);
+  }, []);
   
   const trimCanvas = (canvas: HTMLCanvasElement, tolerance: number) => {
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
@@ -42,86 +37,49 @@ export default function TrimPage() {
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const { data, width, height } = imageData;
     
-    // Auto-detect background color from top-left pixel
-    const bgR = data[0];
-    const bgG = data[1];
-    const bgB = data[2];
-    const bgA = data[3];
+    const bgR = data[0], bgG = data[1], bgB = data[2], bgA = data[3];
 
     let top = height, bottom = -1, left = width, right = -1;
 
     function isPixelEmpty(i: number) {
-        const r = data[i];
-        const g = data[i+1];
-        const b = data[i+2];
-        const a = data[i+3];
+        const r = data[i], g = data[i+1], b = data[i+2], a = data[i+3];
         const colorThreshold = 30;
-
-        // Check for transparency
-        if (a < tolerance) {
-            return true;
-        }
-
-        // Check if color is very similar to background color
+        if (a < tolerance) return true;
         if (
             Math.abs(r - bgR) < colorThreshold &&
             Math.abs(g - bgG) < colorThreshold &&
             Math.abs(b - bgB) < colorThreshold &&
             Math.abs(a - bgA) < tolerance
-        ) {
-            return true;
-        }
-
+        ) return true;
         return false;
     }
 
-    // Find top bound
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
-            if (!isPixelEmpty((y * width + x) * 4)) {
-                top = y;
-                break;
-            }
+            if (!isPixelEmpty((y * width + x) * 4)) { top = y; break; }
         }
         if (top !== height) break;
     }
-
-    // Find bottom bound
     for (let y = height - 1; y >= 0; y--) {
         for (let x = 0; x < width; x++) {
-            if (!isPixelEmpty((y * width + x) * 4)) {
-                bottom = y;
-                break;
-            }
+            if (!isPixelEmpty((y * width + x) * 4)) { bottom = y; break; }
         }
         if (bottom !== -1) break;
     }
-
-    // Find left bound
     for (let x = 0; x < width; x++) {
         for (let y = 0; y < height; y++) {
-            if (!isPixelEmpty((y * width + x) * 4)) {
-                left = x;
-                break;
-            }
+            if (!isPixelEmpty((y * width + x) * 4)) { left = x; break; }
         }
         if (left !== width) break;
     }
-
-    // Find right bound
     for (let x = width - 1; x >= 0; x--) {
         for (let y = 0; y < height; y++) {
-            if (!isPixelEmpty((y * width + x) * 4)) {
-                right = x;
-                break;
-            }
+            if (!isPixelEmpty((y * width + x) * 4)) { right = x; break; }
         }
         if (right !== -1) break;
     }
 
-    if (top >= bottom || left >= right) {
-        return null; // Image is fully transparent or uniform color
-    }
+    if (top >= bottom || left >= right) return null;
     
     const trimWidth = right - left + 1;
     const trimHeight = bottom - top + 1;
@@ -133,18 +91,16 @@ export default function TrimPage() {
     if (!trimmedCtx) return null;
     
     trimmedCtx.drawImage(canvas, left, top, trimWidth, trimHeight, 0, 0, trimWidth, trimHeight);
-
     return trimmedCanvas;
   }
 
   const handleTrim = useCallback(async () => {
     if (!originalImage) return;
-
     setIsTrimming(true);
     setTrimmedImage(null);
 
     const img = document.createElement('img');
-    img.crossOrigin = "anonymous"; // Important for loading images from object URLs
+    img.crossOrigin = "anonymous";
     img.src = originalImage.url;
     img.onload = () => {
         const canvas = document.createElement('canvas');
@@ -152,42 +108,26 @@ export default function TrimPage() {
         canvas.height = img.naturalHeight;
         const ctx = canvas.getContext('2d');
         if (!ctx) {
-            toast({ variant: 'destructive', title: 'Kesalahan', description: 'Tidak dapat membuat konteks kanvas.' });
             setIsTrimming(false);
             return;
         }
         ctx.drawImage(img, 0, 0);
-
         const trimmedCanvas = trimCanvas(canvas, tolerance[0]);
-
         if (trimmedCanvas) {
             trimmedCanvas.toBlob(blob => {
-                if (blob) {
-                    const url = URL.createObjectURL(blob);
-                    setTrimmedImage({ url, blob });
-                } else {
-                    toast({ variant: 'destructive', title: 'Kesalahan', description: 'Gagal membuat blob gambar yang dipotong.' });
-                }
+                if (blob) setTrimmedImage({ url: URL.createObjectURL(blob), blob });
                 setIsTrimming(false);
             }, originalImage.file.type);
         } else {
-            toast({ title: 'Tidak Ada yang Dipotong', description: 'Gambar tampak kosong atau transparan.' });
-            setTrimmedImage({ url: originalImage.url, blob: originalImage.file }); // Show original if nothing to trim
+            setTrimmedImage({ url: originalImage.url, blob: originalImage.file });
             setIsTrimming(false);
         }
     }
-    img.onerror = () => {
-        toast({ variant: 'destructive', title: 'Kesalahan', description: 'Gagal memuat gambar untuk diproses.' });
-        setIsTrimming(false);
-    }
-  }, [originalImage, tolerance, toast]);
+  }, [originalImage, tolerance]);
 
   useEffect(() => {
-    if (originalImage) {
-        handleTrim();
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [originalImage, tolerance]);
+    if (originalImage) handleTrim();
+  }, [originalImage, tolerance, handleTrim]);
 
 
   const handleDownload = () => {
@@ -197,92 +137,100 @@ export default function TrimPage() {
     saveAs(trimmedImage.blob, newName);
   }
 
-  const originalSize = useMemo(() => {
-    if (!originalImage) return 0;
-    return originalImage.file.size;
-  }, [originalImage]);
-
-  const trimmedSize = useMemo(() => {
-    if (!trimmedImage) return 0;
-    return trimmedImage.blob.size;
-  }, [trimmedImage]);
-  
-  function formatBytes(bytes: number, decimals = 2) {
+  const formatBytes = (bytes: number) => {
     if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const dm = decimals < 0 ? 0 : decimals;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+    return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + ['Bytes', 'KB', 'MB', 'GB'][i];
   }
 
-
   return (
-    <div className="container mx-auto p-4 sm:p-6 md:p-8 h-full">
+    <div className="container mx-auto p-4 sm:p-8 h-full bg-background/50">
       <div className="max-w-6xl mx-auto flex flex-col gap-8">
-          <div className="text-center">
-              <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Potong Otomatis</h1>
-              <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">
-                  Unggah gambar untuk secara otomatis menghapus ruang kosong atau transparan di sekitarnya.
-              </p>
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                  <Button variant="ghost" size="icon" asChild className="rounded-full">
+                      <Link href="/"><ChevronLeft className="h-6 w-6" /></Link>
+                  </Button>
+                  <div>
+                    <h1 className="text-3xl font-bold tracking-tight">Potong Cerdas</h1>
+                    <p className="text-muted-foreground text-sm">Hapus area kosong atau transparan secara otomatis.</p>
+                  </div>
+              </div>
+              {originalImage && (
+                  <Button variant="outline" onClick={() => { setOriginalImage(null); setTrimmedImage(null); }}>
+                      <UploadCloud className="mr-2 h-4 w-4" /> Ganti Gambar
+                  </Button>
+              )}
           </div>
           
           {!originalImage && <ImageUploader onUpload={handleImageUpload} />}
 
           {originalImage && (
-              <Card>
-                  <CardContent className="p-4 sm:p-6">
-                        <div className="flex flex-col md:flex-row gap-6 items-start">
-                          <div className="flex flex-col gap-4 w-full">
-                              <h3 className="font-semibold text-lg text-center">Asli</h3>
-                              <div className="relative min-h-48 w-full rounded-md overflow-hidden border flex items-center justify-center p-2 bg-muted/30">
-                                  <Image src={originalImage.url} alt="Original image" width={0} height={0} sizes="100vw" style={{ width: 'auto', height: 'auto', maxHeight: '40vh', maxWidth: '100%' }} />
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 animate-in fade-in duration-500">
+                  <Card className="lg:col-span-3 overflow-hidden rounded-3xl border-none shadow-2xl glass-panel">
+                      <CardContent className="p-0">
+                        <div className="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x border-b">
+                          <div className="flex-1 p-6 space-y-4">
+                              <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Original</h3>
+                              <div className="aspect-square relative rounded-2xl overflow-hidden border bg-muted/20 flex items-center justify-center p-4">
+                                  <Image src={originalImage.url} alt="Original" width={0} height={0} sizes="100vw" className="w-auto h-auto max-h-full max-w-full object-contain" />
                               </div>
-                              <p className="text-sm text-muted-foreground text-center">Ukuran: {formatBytes(originalSize)}</p>
+                              <p className="text-center text-xs font-mono">{formatBytes(originalImage.file.size)}</p>
                           </div>
-                           <div className="w-full md:w-px bg-border self-stretch my-4 md:my-0"></div>
-                          <div className="flex flex-col gap-4 w-full">
-                              <h3 className="font-semibold text-lg text-center">Hasil Potong</h3>
-                              <div className="relative min-h-48 w-full rounded-md overflow-hidden border bg-muted/30 flex items-center justify-center p-2">
-                                  {isTrimming && <Loader2 className="w-8 h-8 animate-spin text-primary" />}
-                                  {!isTrimming && trimmedImage && <Image src={trimmedImage.url} alt="Trimmed image" width={0} height={0} sizes="100vw" style={{ width: 'auto', height: 'auto', maxHeight: '40vh', maxWidth: '100%' }} />}
-                                  {!isTrimming && !trimmedImage && <ImageIcon className="w-8 h-8 text-muted-foreground" />}
+                          <div className="flex-1 p-6 space-y-4">
+                              <h3 className="text-xs font-bold uppercase tracking-widest text-accent">Trimmed Result</h3>
+                              <div className="aspect-square relative rounded-2xl overflow-hidden border bg-accent/5 flex items-center justify-center p-4">
+                                  {isTrimming ? (
+                                      <Loader2 className="w-8 h-8 animate-spin text-accent" />
+                                  ) : trimmedImage ? (
+                                      <Image src={trimmedImage.url} alt="Trimmed" width={0} height={0} sizes="100vw" className="w-auto h-auto max-h-full max-w-full object-contain" />
+                                  ) : (
+                                      <ImageIcon className="w-8 h-8 text-muted-foreground" />
+                                  )}
                               </div>
-                              <p className="text-sm text-muted-foreground text-center">
-                                  {trimmedImage ? `Ukuran: ${formatBytes(trimmedSize)}` : 'Memproses...'}
+                              <p className="text-center text-xs font-mono text-accent">
+                                  {trimmedImage ? formatBytes(trimmedImage.blob.size) : 'Processing...'}
                               </p>
                           </div>
-                      </div>
+                        </div>
+                      </CardContent>
+                  </Card>
 
-                      <div className="max-w-sm mx-auto mt-8 space-y-4">
-                          <div>
-                              <Label htmlFor="tolerance-slider">Toleransi: {tolerance[0]}</Label>
-                              <Slider
-                                  id="tolerance-slider"
-                                  min={0}
-                                  max={255}
-                                  step={1}
-                                  value={tolerance}
-                                  onValueChange={setTolerance}
-                                  className={cn('my-2')}
-                                  disabled={isTrimming}
-                              />
-                              <p className="text-xs text-muted-foreground">Menyesuaikan sensitivitas. Nilai yang lebih rendah memotong lebih ketat. Algoritma memotong transparansi dan warna latar belakang solid.</p>
-                          </div>
+                  <div className="space-y-6">
+                      <Card className="rounded-3xl border-none shadow-xl">
+                          <CardContent className="p-6 space-y-6">
+                              <div className="space-y-4">
+                                  <Label className="text-sm font-bold flex items-center gap-2">
+                                      <Scissors className="h-4 w-4 text-accent" /> Toleransi: {tolerance[0]}
+                                  </Label>
+                                  <Slider
+                                      min={0} max={255} step={1}
+                                      value={tolerance}
+                                      onValueChange={setTolerance}
+                                      disabled={isTrimming}
+                                  />
+                                  <p className="text-[10px] text-muted-foreground leading-relaxed">
+                                      Gunakan toleransi lebih tinggi jika latar belakang tidak sepenuhnya bersih. Nilai 0 hanya memotong piksel yang identik.
+                                  </p>
+                              </div>
+                              <Button 
+                                onClick={handleDownload} 
+                                disabled={!trimmedImage || isTrimming} 
+                                className="w-full h-14 rounded-2xl bg-accent hover:bg-accent/90 shadow-lg text-lg font-bold"
+                              >
+                                  <Download className="mr-2 h-5 w-5" /> Unduh Hasil
+                              </Button>
+                          </CardContent>
+                      </Card>
+                      
+                      <div className="bg-primary/5 p-6 rounded-3xl border border-primary/20 space-y-2">
+                          <h4 className="text-xs font-bold uppercase tracking-widest text-primary">Pro Tip</h4>
+                          <p className="text-[11px] text-muted-foreground">
+                              Alat ini sangat berguna untuk memotong asset game atau logo yang memiliki margin transparan terlalu besar.
+                          </p>
                       </div>
-
-                      <div className="flex flex-col items-center gap-4 mt-8">
-                          <Button onClick={handleDownload} disabled={!trimmedImage || isTrimming} className="w-full sm:w-auto">
-                              <Download className="mr-2 h-4 w-4" />
-                              Unduh Hasil
-                          </Button>
-                          <Button variant="link" onClick={() => { setOriginalImage(null); setTrimmedImage(null); }}>
-                              <UploadCloud className="mr-2 h-4 w-4" />
-                              Unggah gambar lain
-                          </Button>
-                      </div>
-                  </CardContent>
-              </Card>
+                  </div>
+              </div>
           )}
       </div>
     </div>
