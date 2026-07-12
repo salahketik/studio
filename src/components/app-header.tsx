@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -17,8 +18,9 @@ import {
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { href: '/', label: 'Konverter Gambar' },
+  { href: '/', label: 'Gambar' },
   { href: '/mockup', label: 'Mockup' },
+  { href: '/audio-cleaner', label: 'Audio' },
   { href: '/pdf-converter', label: 'PDF' },
   { href: '/trim', label: 'Potong' },
 ];
@@ -40,7 +42,7 @@ export function AppHeader() {
           variant="link"
           asChild
           className={cn(
-            'p-0 text-muted-foreground hover:text-foreground hover:no-underline',
+            'p-0 text-muted-foreground hover:text-foreground hover:no-underline px-2',
             pathname === href && 'text-foreground font-semibold',
             isMobile && 'text-lg w-full justify-start'
           )}
