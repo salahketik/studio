@@ -19,7 +19,8 @@ import {
   Music4,
   Layers,
   Layout,
-  ChevronLeft
+  ChevronLeft,
+  MousePointer2
 } from 'lucide-react';
 import { defaultAudioSettings, type AudioSettings, type VisualizerMode } from '@/features/audio-cleaner/types';
 import { Card, CardContent } from '@/components/ui/card';
@@ -42,7 +43,7 @@ export default function AudioCleanerPage() {
     setAudioFile(file);
     try {
       await loadAudio(file);
-      toast({ title: 'Audio Siap', description: 'Gunakan profil studio dan visualizer untuk memproses audio Anda.' });
+      toast({ title: 'Audio Siap', description: 'Gunakan profil studio untuk memproses suara Anda.' });
     } catch (e) {
       toast({ variant: 'destructive', title: 'Kesalahan', description: 'Gagal memuat file audio.' });
     }
@@ -68,7 +69,10 @@ export default function AudioCleanerPage() {
       audioSource?.stop();
       setIsPlaying(false);
     } else {
-      if (!processedBuffer) return;
+      if (!processedBuffer) {
+        toast({ title: "Belum Diproses", description: "Klik 'Terapkan Efek Studio' terlebih dahulu." });
+        return;
+      }
       
       const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
       if (ctx.state === 'suspended') {
@@ -147,14 +151,17 @@ export default function AudioCleanerPage() {
                       <div className="flex items-center gap-6">
                         <Button 
                           size="lg" 
-                          className="h-16 w-16 md:h-20 md:w-20 rounded-full shadow-2xl bg-accent hover:bg-accent/90 transition-transform active:scale-95" 
+                          className={cn(
+                            "h-16 w-16 md:h-20 md:w-20 rounded-full shadow-2xl transition-all active:scale-95",
+                            processedBuffer ? "bg-accent hover:bg-accent/90" : "bg-muted cursor-not-allowed"
+                          )} 
                           onClick={togglePlay}
                           disabled={isProcessing}
                         >
                           {isPlaying ? <Pause className="h-8 w-8" /> : <Play className="h-8 w-8 ml-1" />}
                         </Button>
                         <div className="space-y-1">
-                          <p className="font-bold text-lg md:text-xl">Playback Monitor</p>
+                          <p className="font-bold text-lg md:text-xl">Monitor Kontrol</p>
                           <div className="flex items-center gap-3">
                             <span className="text-sm font-mono text-muted-foreground">{duration.toFixed(2)}s</span>
                             <Badge variant="secondary" className="bg-accent/10 text-accent border-none uppercase text-[10px] tracking-widest px-2">
@@ -197,26 +204,24 @@ export default function AudioCleanerPage() {
               </Card>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-accent/5 border border-accent/20 rounded-2xl p-6 flex flex-col items-center text-center gap-3">
-                  <div className="p-3 bg-accent/20 rounded-full"><Layout className="w-6 h-6 text-accent" /></div>
-                  <h4 className="font-bold text-accent">Video Render</h4>
-                  <p className="text-[11px] text-muted-foreground leading-relaxed">
-                    Klik <strong>Rekam Video</strong> saat memutar audio untuk mengunduh visualisasi sebagai file video (.webm).
-                  </p>
+                <div className="bg-accent/5 border border-accent/20 rounded-2xl p-5 flex items-start gap-4">
+                  <div className="p-2.5 bg-accent/20 rounded-xl shrink-0"><MousePointer2 className="w-5 h-5 text-accent" /></div>
+                  <div className="space-y-1">
+                    <h4 className="font-bold text-sm">Langkah 1</h4>
+                    <p className="text-[10px] text-muted-foreground leading-relaxed">Pilih profil suara di panel kanan, lalu klik "Terapkan Efek Studio".</p>
+                  </div>
                 </div>
-                <div className="bg-primary/5 border border-primary/20 rounded-2xl p-6 flex flex-col items-center text-center gap-3">
-                  <div className="p-3 bg-primary/20 rounded-full"><Layers className="w-6 h-6 text-primary" /></div>
-                  <h4 className="font-bold text-primary">DSP Engine</h4>
-                  <p className="text-[11px] text-muted-foreground leading-relaxed">
-                    Setiap profil menggunakan rantai filter unik: HighPass, Distortion, Compression, dan Echo.
-                  </p>
+                <div className="bg-primary/5 border border-primary/20 rounded-2xl p-5 flex items-start gap-4">
+                  <div className="p-2.5 bg-primary/20 rounded-xl shrink-0"><Play className="w-5 h-5 text-primary" /></div>
+                  <div className="space-y-1">
+                    <h4 className="font-bold text-sm">Langkah 2</h4>
+                    <p className="text-[10px] text-muted-foreground leading-relaxed">Klik tombol Play besar di monitor untuk mulai memutar dan melihat visualizer.</p>
+                  </div>
                 </div>
-                <div className="bg-orange-500/5 border border-orange-500/20 rounded-2xl p-6 flex flex-col items-center text-center gap-3">
-                  <div className="p-3 bg-orange-500/20 rounded-full"><Music4 className="w-6 h-6 text-orange-600" /></div>
-                  <h4 className="font-bold text-orange-600">Audio Fidelity</h4>
-                  <p className="text-[11px] text-muted-foreground leading-relaxed">
-                    Pemrosesan offline memastikan kualitas suara tetap murni tanpa degradasi sinyal digital.
-                  </p>
+                <div className="bg-orange-500/5 border border-orange-500/20 rounded-2xl p-5 flex items-start gap-4">
+                  <div className="p-2.5 bg-orange-500/20 rounded-xl shrink-0"><Download className="w-5 h-5 text-orange-600" /></div>
+                  <h4 className="font-bold text-sm">Langkah 3</h4>
+                  <p className="text-[10px] text-muted-foreground leading-relaxed">Klik "Rekam Visual" di monitor saat memutar untuk mengunduh video visualisasi.</p>
                 </div>
               </div>
             </div>

@@ -28,35 +28,17 @@ import {
   Newspaper,
   Mic,
   Cpu,
-  Dumbbell
+  Dumbbell,
+  Info
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { voiceProfiles, type AudioSettings } from '../types';
 import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
 
-// Specific icon mapping to avoid heavy 'import *'
 const iconMap: Record<string, any> = {
-  Mic2,
-  Music,
-  Headphones,
-  Radio,
-  Phone,
-  Tv,
-  VolumeX,
-  Zap,
-  Waves,
-  Mountain,
-  Bot,
-  Speaker,
-  Disc,
-  Film,
-  Users,
-  Home,
-  Newspaper,
-  Mic,
-  Cpu,
-  Wind,
-  Dumbbell
+  Mic2, Music, Headphones, Radio, Phone, Tv, VolumeX, Zap, Waves, Mountain, Bot, Speaker, Disc, Film, Users, Home, Newspaper, Mic, Cpu, Wind, Dumbbell
 };
 
 interface AudioControlsProps {
@@ -71,124 +53,90 @@ export function AudioControls({ settings, onSettingsChange, disabled }: AudioCon
   };
 
   return (
-    <Card className="glass-panel border-none shadow-xl overflow-hidden">
-      <CardHeader className="bg-primary/10 border-b border-primary/20">
-        <CardTitle className="text-lg flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-accent" />
-          Master FX Control
-        </CardTitle>
+    <Card className="glass-panel border-none shadow-2xl overflow-hidden flex flex-col h-[550px]">
+      <CardHeader className="bg-accent/10 border-b border-accent/20 py-3">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-sm flex items-center gap-2">
+            <Zap className="h-4 w-4 text-accent" />
+            FX Workstation
+          </CardTitle>
+          <Badge variant="outline" className="text-[9px] uppercase border-accent/30 text-accent">Master Engine</Badge>
+        </div>
       </CardHeader>
-      <CardContent className="p-0">
-        <Tabs defaultValue="profiles" className="w-full">
-          <TabsList className="w-full rounded-none h-12 bg-muted/30 border-b">
-            <TabsTrigger value="profiles" className="flex-1 gap-2">
-              <LayoutGrid className="w-4 h-4" /> Profil
+      <CardContent className="p-0 flex-grow overflow-hidden">
+        <Tabs defaultValue="profiles" className="w-full h-full flex flex-col">
+          <TabsList className="w-full rounded-none h-10 bg-muted/50 border-b">
+            <TabsTrigger value="profiles" className="flex-1 text-xs gap-1.5">
+              <LayoutGrid className="w-3.5 h-3.5" /> Profil
             </TabsTrigger>
-            <TabsTrigger value="manual" className="flex-1 gap-2">
-              <Zap className="w-4 h-4" /> Manual
+            <TabsTrigger value="manual" className="flex-1 text-xs gap-1.5">
+              <Sparkles className="w-3.5 h-3.5" /> Manual
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="profiles" className="p-4 m-0">
-            <div className="grid grid-cols-2 gap-2 h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-              {voiceProfiles.map((profile) => {
-                const Icon = iconMap[profile.icon] || Mic2;
-                const isActive = settings.profile === profile.id;
-                return (
-                  <button
-                    key={profile.id}
-                    onClick={() => updateSetting('profile', profile.id)}
-                    disabled={disabled}
-                    className={cn(
-                      "flex flex-col items-center justify-center p-3 rounded-xl border transition-all text-center gap-2",
-                      isActive 
-                        ? "bg-accent border-accent text-white shadow-lg scale-95" 
-                        : "bg-background/50 border-border hover:border-accent/50 hover:bg-accent/5"
-                    )}
-                  >
-                    <Icon className={cn("w-6 h-6", isActive ? "text-white" : "text-accent")} />
-                    <div className="space-y-0.5">
-                      <p className="text-xs font-bold leading-tight">{profile.label}</p>
-                      <p className={cn("text-[9px] leading-tight", isActive ? "text-white/80" : "text-muted-foreground")}>
-                        {profile.description}
-                      </p>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
+          <TabsContent value="profiles" className="flex-grow m-0 p-0 overflow-hidden">
+            <ScrollArea className="h-[430px] p-4">
+              <div className="grid grid-cols-2 gap-2 pb-4">
+                {voiceProfiles.map((profile) => {
+                  const Icon = iconMap[profile.icon] || Mic2;
+                  const isActive = settings.profile === profile.id;
+                  return (
+                    <button
+                      key={profile.id}
+                      onClick={() => updateSetting('profile', profile.id)}
+                      disabled={disabled}
+                      className={cn(
+                        "flex flex-col items-center justify-center p-2.5 rounded-xl border transition-all text-center gap-1.5 min-h-[85px]",
+                        isActive 
+                          ? "bg-accent border-accent text-white shadow-lg ring-2 ring-accent/20" 
+                          : "bg-background/50 border-border hover:border-accent/50 hover:bg-accent/5"
+                      )}
+                    >
+                      <Icon className={cn("w-5 h-5", isActive ? "text-white" : "text-accent")} />
+                      <div className="space-y-0.5">
+                        <p className="text-[10px] font-bold leading-tight">{profile.label}</p>
+                        <p className={cn("text-[8px] leading-tight opacity-70", isActive ? "text-white" : "text-muted-foreground")}>
+                          {profile.description}
+                        </p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </ScrollArea>
           </TabsContent>
 
-          <TabsContent value="manual" className="p-6 m-0 space-y-6">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <Label className="flex items-center gap-2 text-xs">
-                  <Wind className="h-3 w-3" /> High-Pass (Rumble)
-                </Label>
-                <span className="text-[10px] font-mono">{settings.highPass}Hz</span>
-              </div>
-              <Slider
-                value={[settings.highPass]}
-                onValueChange={(v) => updateSetting('highPass', v[0])}
-                min={0} max={800} step={10} disabled={disabled}
-              />
-            </div>
+          <TabsContent value="manual" className="p-5 m-0 space-y-5 overflow-y-auto h-[430px]">
+             <div className="bg-muted/30 p-3 rounded-lg flex gap-3 items-start">
+               <Info className="w-4 h-4 text-accent shrink-0 mt-0.5" />
+               <p className="text-[10px] text-muted-foreground leading-normal">
+                 Gunakan kontrol manual untuk tuning halus setelah memilih profil.
+               </p>
+             </div>
 
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <Label className="flex items-center gap-2 text-xs">
-                  <Waves className="h-3 w-3" /> Low-Pass (Hiss)
-                </Label>
-                <span className="text-[10px] font-mono">{settings.lowPass}Hz</span>
+            {[
+              { label: 'High-Pass', icon: Wind, key: 'highPass', min: 0, max: 800, step: 10, suffix: 'Hz' },
+              { label: 'Low-Pass', icon: Waves, key: 'lowPass', min: 1000, max: 20000, step: 100, suffix: 'Hz' },
+              { label: 'Distortion', icon: Zap, key: 'distortion', min: 0, max: 100, step: 1, suffix: '%' },
+              { label: 'Echo', icon: Repeat, key: 'echo', min: 0, max: 100, step: 1, suffix: '%', multiplier: 100 },
+              { label: 'Gain', icon: Volume2, key: 'gain', min: 0.1, max: 3, step: 0.1, suffix: 'x' },
+            ].map((slider) => (
+              <div key={slider.key} className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label className="flex items-center gap-2 text-[11px] font-semibold">
+                    <slider.icon className="h-3.5 w-3.5 text-accent" /> {slider.label}
+                  </Label>
+                  <span className="text-[10px] font-mono bg-accent/10 px-1.5 py-0.5 rounded text-accent">
+                    {slider.multiplier ? Math.round(settings[slider.key as keyof AudioSettings] as number * slider.multiplier) : settings[slider.key as keyof AudioSettings]}{slider.suffix}
+                  </span>
+                </div>
+                <Slider
+                  value={[slider.multiplier ? (settings[slider.key as keyof AudioSettings] as number * slider.multiplier) : (settings[slider.key as keyof AudioSettings] as number)]}
+                  onValueChange={(v) => updateSetting(slider.key as keyof AudioSettings, slider.multiplier ? v[0] / slider.multiplier : v[0])}
+                  min={slider.min} max={slider.max} step={slider.step} disabled={disabled}
+                />
               </div>
-              <Slider
-                value={[settings.lowPass]}
-                onValueChange={(v) => updateSetting('lowPass', v[0])}
-                min={1000} max={20000} step={100} disabled={disabled}
-              />
-            </div>
-
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <Label className="flex items-center gap-2 text-xs">
-                  <Zap className="h-3 w-3" /> Distortion
-                </Label>
-                <span className="text-[10px] font-mono">{settings.distortion}%</span>
-              </div>
-              <Slider
-                value={[settings.distortion]}
-                onValueChange={(v) => updateSetting('distortion', v[0])}
-                min={0} max={100} step={1} disabled={disabled}
-              />
-            </div>
-
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <Label className="flex items-center gap-2 text-xs">
-                  <Repeat className="h-3 w-3" /> Echo Intensity
-                </Label>
-                <span className="text-[10px] font-mono">{Math.round(settings.echo * 100)}%</span>
-              </div>
-              <Slider
-                value={[settings.echo * 100]}
-                onValueChange={(v) => updateSetting('echo', v[0] / 100)}
-                min={0} max={100} step={1} disabled={disabled}
-              />
-            </div>
-
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <Label className="flex items-center gap-2 text-xs">
-                  <Volume2 className="h-3 w-3" /> Master Gain
-                </Label>
-                <span className="text-[10px] font-mono">{settings.gain.toFixed(1)}x</span>
-              </div>
-              <Slider
-                value={[settings.gain]}
-                onValueChange={(v) => updateSetting('gain', v[0])}
-                min={0.1} max={3} step={0.1} disabled={disabled}
-              />
-            </div>
+            ))}
           </TabsContent>
         </Tabs>
       </CardContent>
