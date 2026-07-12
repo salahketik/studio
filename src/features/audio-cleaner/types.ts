@@ -24,6 +24,8 @@ export interface AudioSettings {
   echo: number;
   profile: VoiceProfileId;
   visualMode: VisualizerMode;
+  visualSensitivity: number;
+  bgImageUrl?: string;
 }
 
 export const voiceProfiles: VoiceProfile[] = [
@@ -59,4 +61,5 @@ export const defaultAudioSettings: AudioSettings = {
   echo: 0,
   profile: 'studio',
   visualMode: 'bars',
+  visualSensitivity: 1.5,
 };

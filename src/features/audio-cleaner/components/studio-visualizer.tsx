@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { VisualizerMode } from '../types';
 import { Button } from '@/components/ui/button';
-import { Video, StopCircle, Download, Monitor } from 'lucide-react';
+import { Video, StopCircle, Download, Monitor, ImageIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
@@ -12,9 +12,11 @@ interface StudioVisualizerProps {
   mode: VisualizerMode;
   isPlaying: boolean;
   audioStream?: MediaStream;
+  sensitivity: number;
+  bgImageUrl?: string;
 }
 
-export function StudioVisualizer({ analyser, mode, isPlaying, audioStream }: StudioVisualizerProps) {
+export function StudioVisualizer({ analyser, mode, isPlaying, audioStream, sensitivity, bgImageUrl }: StudioVisualizerProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const requestRef = useRef<number>();
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -22,6 +24,21 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream }: Stu
   const [isRecording, setIsRecording] = useState(false);
   const [videoBlob, setVideoBlob] = useState<Blob | null>(null);
   const { toast } = useToast();
+  
+  const bgImgRef = useRef<HTMLImageElement | null>(null);
+
+  useEffect(() => {
+    if (bgImageUrl) {
+        const img = new Image();
+        img.src = bgImageUrl;
+        img.crossOrigin = "anonymous";
+        img.onload = () => {
+            bgImgRef.current = img;
+        };
+    } else {
+        bgImgRef.current = null;
+    }
+  }, [bgImageUrl]);
 
   const startRecording = () => {
     if (!canvasRef.current || !audioStream) {
@@ -33,10 +50,7 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream }: Stu
     setVideoBlob(null);
     chunksRef.current = [];
 
-    // Capture visual stream from canvas
     const canvasStream = canvasRef.current.captureStream(60);
-    
-    // Combine with current audio stream for high-fidelity video
     const combinedStream = new MediaStream([
       ...canvasStream.getVideoTracks(),
       ...audioStream.getAudioTracks()
@@ -70,7 +84,7 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream }: Stu
     const url = URL.createObjectURL(videoBlob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `creative_visualizer_${Date.now()}.webm`;
+    a.download = `studio_visual_${Date.now()}.webm`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -89,26 +103,31 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream }: Stu
     const width = canvas.width;
     const height = canvas.height;
 
-    // Stable background fade for tail effect
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.18)';
-    ctx.fillRect(0, 0, width, height);
+    // Draw Background
+    if (bgImgRef.current) {
+        ctx.drawImage(bgImgRef.current, 0, 0, width, height);
+        // Add a dark overlay to make visuals pop
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+        ctx.fillRect(0, 0, width, height);
+    } else {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        ctx.fillRect(0, 0, width, height);
+    }
 
     const accentColor = 'rgba(20, 255, 236, 1)';
+    const sens = sensitivity || 1.5;
 
     if (mode === 'bars') {
       const barWidth = (width / (bufferLength * 0.4)) * 2.5;
       let x = 0;
       for (let i = 0; i < bufferLength * 0.4; i++) {
-        const barHeight = (dataArray[i] / 255) * height * 0.85;
+        const barHeight = (dataArray[i] / 255) * height * 0.8 * sens;
         const gradient = ctx.createLinearGradient(0, height, 0, height - barHeight);
-        gradient.addColorStop(0, 'rgba(20, 255, 236, 0.1)');
+        gradient.addColorStop(0, 'rgba(20, 255, 236, 0.05)');
         gradient.addColorStop(1, accentColor);
         
         ctx.fillStyle = gradient;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = accentColor;
         ctx.fillRect(x, height - barHeight, barWidth - 4, barHeight);
-        ctx.shadowBlur = 0;
         x += barWidth;
       }
     } else if (mode === 'circle') {
@@ -116,13 +135,8 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream }: Stu
       const centerY = height / 2;
       const radius = Math.min(width, height) / 4.5;
 
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-      ctx.strokeStyle = 'rgba(20, 255, 236, 0.2)';
-      ctx.stroke();
-
       for (let i = 0; i < bufferLength; i += 4) {
-        const value = dataArray[i] / 255;
+        const value = (dataArray[i] / 255) * sens;
         const angle = (i / (bufferLength * 0.8)) * 2 * Math.PI;
         const x1 = centerX + Math.cos(angle) * radius;
         const y1 = centerY + Math.sin(angle) * radius;
@@ -137,29 +151,30 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream }: Stu
         ctx.stroke();
       }
     } else if (mode === 'pulse') {
-      const value = dataArray.reduce((a, b) => a + b) / bufferLength / 255;
+      const avg = dataArray.reduce((a, b) => a + b) / bufferLength / 255;
+      const value = avg * sens;
       const centerX = width / 2;
       const centerY = height / 2;
       const baseRadius = Math.min(width, height) / 3.5;
       
       ctx.beginPath();
       ctx.arc(centerX, centerY, baseRadius * (1 + value * 0.8), 0, 2 * Math.PI);
-      ctx.fillStyle = `rgba(20, 255, 236, ${0.05 + value * 0.3})`;
+      ctx.fillStyle = `rgba(20, 255, 236, ${0.1 + value * 0.4})`;
       ctx.fill();
       ctx.strokeStyle = accentColor;
-      ctx.lineWidth = 1 + 15 * value;
+      ctx.lineWidth = 2 + 20 * value;
       ctx.stroke();
     } else if (mode === 'wave') {
       const waveArray = new Uint8Array(bufferLength);
       analyser.getByteTimeDomainData(waveArray);
       
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 4;
       ctx.strokeStyle = accentColor;
       ctx.beginPath();
       const sliceWidth = width / bufferLength;
       let x = 0;
       for (let i = 0; i < bufferLength; i++) {
-        const v = waveArray[i] / 128.0;
+        const v = (waveArray[i] / 128.0 - 1) * sens + 1;
         const y = (v * height) / 2;
         if (i === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
@@ -173,7 +188,6 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream }: Stu
   };
 
   useEffect(() => {
-    // Only run draw loop if active
     if (isPlaying && analyser) {
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
       requestRef.current = requestAnimationFrame(draw);
@@ -183,30 +197,30 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream }: Stu
     return () => {
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
     };
-  }, [isPlaying, analyser, mode]);
+  }, [isPlaying, analyser, mode, sensitivity]);
 
   return (
-    <div className="relative w-full aspect-video bg-black rounded-2xl overflow-hidden border border-accent/20 shadow-2xl group">
+    <div className="relative w-full aspect-video bg-black rounded-2xl overflow-hidden border border-accent/20 shadow-2xl">
       <canvas
         ref={canvasRef}
-        width={1280}
-        height={720}
+        width={1920}
+        height={1080}
         className="w-full h-full object-cover"
       />
       
-      <div className="absolute top-4 right-4 flex flex-wrap justify-end gap-2 z-10 pointer-events-auto">
+      <div className="absolute top-4 right-4 flex flex-wrap justify-end gap-2 z-10">
         {!isRecording ? (
           <Button 
             size="sm" 
             variant="secondary" 
             className={cn(
-              "bg-black/70 text-white border-none backdrop-blur-md transition-all hover:bg-red-600",
-              !isPlaying && "opacity-50 cursor-not-allowed"
+              "bg-black/80 text-white border-none backdrop-blur-md hover:bg-red-600 transition-colors",
+              !isPlaying && "opacity-50"
             )}
             onClick={startRecording}
             disabled={!isPlaying}
           >
-            <Video className="w-4 h-4 mr-2" /> Rekam Visual
+            <Video className="w-4 h-4 mr-2" /> Rekam Musik Video
           </Button>
         ) : (
           <Button 
@@ -215,7 +229,7 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream }: Stu
             className="animate-pulse shadow-lg shadow-red-500/50"
             onClick={stopRecording}
           >
-            <StopCircle className="w-4 h-4 mr-2" /> Hentikan & Simpan
+            <StopCircle className="w-4 h-4 mr-2" /> Hentikan Rekaman
           </Button>
         )}
         
@@ -223,10 +237,10 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream }: Stu
           <Button 
             size="sm" 
             variant="secondary" 
-            className="bg-accent text-white border-none shadow-lg shadow-accent/50 animate-bounce"
+            className="bg-accent text-white border-none shadow-xl animate-bounce"
             onClick={downloadVideo}
           >
-            <Download className="w-4 h-4 mr-2" /> Unduh Video (.webm)
+            <Download className="w-4 h-4 mr-2" /> Simpan Video (.webm)
           </Button>
         )}
       </div>
@@ -234,20 +248,20 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream }: Stu
       <div className="absolute top-4 left-4 pointer-events-none">
         {isRecording && (
           <div className="flex items-center gap-2 bg-red-600 px-3 py-1 rounded-full text-[10px] font-bold text-white uppercase tracking-tighter animate-pulse">
-            <span className="w-2 h-2 rounded-full bg-white"></span> Recording Live
+            <span className="w-2 h-2 rounded-full bg-white"></span> Live Recording
           </div>
         )}
       </div>
 
       {!isPlaying && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
-          <div className="text-center space-y-3 animate-in fade-in zoom-in duration-500">
-            <div className="p-4 bg-accent/20 rounded-full inline-block border border-accent/30">
-               <Monitor className="w-10 h-10 text-accent" />
+        <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="text-center space-y-4 animate-in fade-in zoom-in duration-700">
+            <div className="p-5 bg-accent/20 rounded-3xl inline-block border border-accent/30 shadow-2xl">
+               <Monitor className="w-12 h-12 text-accent" />
             </div>
-            <div>
-              <p className="text-accent font-mono text-sm tracking-widest uppercase font-bold">Monitor Standby</p>
-              <p className="text-muted-foreground text-[10px]">Klik Play untuk memulai visualisasi</p>
+            <div className="space-y-1">
+              <p className="text-accent font-bold text-lg tracking-widest uppercase">Visual Station Ready</p>
+              <p className="text-muted-foreground text-xs font-mono">Input Audio Detected • Press Play to Start</p>
             </div>
           </div>
         </div>

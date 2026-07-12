@@ -3,6 +3,8 @@
 import { optimizeWebpCompression } from '@/ai/flows/optimize-webp-compression';
 import type { OptimizeWebpCompressionInput } from '@/ai/flows/optimize-webp-compression';
 import { convertPdfToWord } from '@/ai/flows/convert-pdf-to-word';
+import { convertPdfToExcel } from '@/ai/flows/convert-pdf-to-excel';
+import { convertPdfToPpt } from '@/ai/flows/convert-pdf-to-ppt';
 import type { ConvertPdfToWordInput } from '@/ai/flows/convert-pdf-to-word';
 import { generateBackground } from '@/ai/flows/generate-background';
 import type { GenerateBackgroundInput } from '@/ai/flows/generate-background';
@@ -36,7 +38,7 @@ export async function runAIOptimization(
 }
 
 interface PDFResult {
-    docxDataUri?: string;
+    dataUri?: string;
     error?: string;
 }
 
@@ -45,17 +47,34 @@ export async function runPDFToWordConversion(
 ): Promise<PDFResult> {
     try {
         const result = await convertPdfToWord(input);
-        if (!result || !result.docxDataUri) {
-            return { error: 'AI model did not return a Word document.'};
-        }
-        return {
-            docxDataUri: result.docxDataUri
-        };
+        return { dataUri: result.docxDataUri };
     } catch (error) {
-        console.error('PDF to Word Conversion Error:', error);
-        return {
-            error: error instanceof Error ? error.message : 'An unknown error occurred during PDF conversion.',
-        };
+        console.error('PDF to Word Error:', error);
+        return { error: error instanceof Error ? error.message : 'Gagal konversi ke Word.' };
+    }
+}
+
+export async function runPDFToExcelConversion(
+    input: { pdfDataUri: string }
+): Promise<PDFResult> {
+    try {
+        const result = await convertPdfToExcel(input);
+        return { dataUri: result.excelDataUri };
+    } catch (error) {
+        console.error('PDF to Excel Error:', error);
+        return { error: error instanceof Error ? error.message : 'Gagal konversi ke Excel.' };
+    }
+}
+
+export async function runPDFToPptConversion(
+    input: { pdfDataUri: string }
+): Promise<PDFResult> {
+    try {
+        const result = await convertPdfToPpt(input);
+        return { dataUri: result.pptDataUri };
+    } catch (error) {
+        console.error('PDF to PPT Error:', error);
+        return { error: error instanceof Error ? error.message : 'Gagal konversi ke PowerPoint.' };
     }
 }
 
