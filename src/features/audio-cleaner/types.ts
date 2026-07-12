@@ -6,6 +6,8 @@ export type VoiceProfileId =
   | 'robot' | 'intercom' | 'vinyl' | 'cinema' | 'stadium' 
   | 'small_room' | 'news' | 'retro_radio' | 'digital_glitch' | 'whisper' | 'mega_bass';
 
+export type VisualizerMode = 'bars' | 'circle' | 'pulse' | 'wave';
+
 export interface VoiceProfile {
   id: VoiceProfileId;
   label: string;
@@ -21,6 +23,7 @@ export interface AudioSettings {
   distortion: number;
   echo: number;
   profile: VoiceProfileId;
+  visualMode: VisualizerMode;
 }
 
 export const voiceProfiles: VoiceProfile[] = [
@@ -55,4 +58,5 @@ export const defaultAudioSettings: AudioSettings = {
   distortion: 0,
   echo: 0,
   profile: 'studio',
+  visualMode: 'bars',
 };
