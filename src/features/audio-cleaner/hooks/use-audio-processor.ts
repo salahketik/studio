@@ -7,19 +7,28 @@ export function useAudioProcessor() {
   const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null);
   const [processedBuffer, setProcessedBuffer] = useState<AudioBuffer | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [duration, setDuration] = useState(0);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
 
   const loadAudio = useCallback(async (file: File) => {
-    if (!audioCtxRef.current) {
-      audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+    setIsLoading(true);
+    try {
+      if (!audioCtxRef.current) {
+        audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      }
+      const arrayBuffer = await file.arrayBuffer();
+      const decodedBuffer = await audioCtxRef.current.decodeAudioData(arrayBuffer);
+      setAudioBuffer(decodedBuffer);
+      setProcessedBuffer(null);
+      setDuration(decodedBuffer.duration);
+    } catch (e) {
+      console.error('Decoding failed', e);
+      throw e;
+    } finally {
+      setIsLoading(false);
     }
-    const arrayBuffer = await file.arrayBuffer();
-    const decodedBuffer = await audioCtxRef.current.decodeAudioData(arrayBuffer);
-    setAudioBuffer(decodedBuffer);
-    setProcessedBuffer(null); // Reset processed when new audio loaded
-    setDuration(decodedBuffer.duration);
   }, []);
 
   const createDistortionCurve = (amount: number) => {
@@ -131,13 +140,11 @@ export function useAudioProcessor() {
         break;
     }
 
-    // Manual Overrides if set
     if (settings.echo > 0) {
         delayNode.delayTime.value = settings.echo;
         feedbackNode.gain.value = 0.4;
     }
 
-    // Connect Chain: Source -> HPF -> LPF -> Presence -> Warmth -> Distortion -> Compressor -> Delay/Gain -> Output
     source.connect(hpFilter);
     hpFilter.connect(lpFilter);
     lpFilter.connect(presenceFilter);
@@ -145,13 +152,12 @@ export function useAudioProcessor() {
     warmthFilter.connect(distortionNode);
     distortionNode.connect(compressor);
     
-    // Echo circuit
     compressor.connect(delayNode);
     delayNode.connect(feedbackNode);
     feedbackNode.connect(delayNode);
     delayNode.connect(outputGain);
     
-    compressor.connect(outputGain); // Primary path
+    compressor.connect(outputGain); 
     outputGain.connect(offlineCtx.destination);
 
     outputGain.gain.value = settings.gain;
@@ -175,6 +181,8 @@ export function useAudioProcessor() {
     setAudioBuffer(null);
     setProcessedBuffer(null);
     setDuration(0);
+    setIsLoading(false);
+    setIsProcessing(false);
   }, []);
 
   const exportAudio = useCallback((buffer: AudioBuffer): Blob => {
@@ -207,5 +215,5 @@ export function useAudioProcessor() {
     return new Blob([bufferArray], { type: 'audio/wav' });
   }, []);
 
-  return { loadAudio, processAudio, exportAudio, reset, audioBuffer, processedBuffer, isProcessing, duration };
+  return { loadAudio, processAudio, exportAudio, reset, audioBuffer, processedBuffer, isProcessing, isLoading, duration };
 }

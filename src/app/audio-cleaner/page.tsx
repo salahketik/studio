@@ -17,11 +17,11 @@ import {
   Loader2, 
   Settings2,
   ChevronLeft,
-  MonitorPlay,
   Music,
   Video,
   CheckCircle2,
-  Info
+  Info,
+  Waves
 } from 'lucide-react';
 import { defaultAudioSettings, type AudioSettings, type VisualizerMode } from '@/features/audio-cleaner/types';
 import { Card, CardContent } from '@/components/ui/card';
@@ -32,7 +32,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function AudioCleanerPage() {
   const { toast } = useToast();
-  const { loadAudio, processAudio, exportAudio, reset, audioBuffer, processedBuffer, isProcessing, duration } = useAudioProcessor();
+  const { loadAudio, processAudio, exportAudio, reset, audioBuffer, processedBuffer, isProcessing, isLoading, duration } = useAudioProcessor();
   
   const [settings, setSettings] = useState<AudioSettings>(defaultAudioSettings);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -143,10 +143,23 @@ export default function AudioCleanerPage() {
           </p>
         </div>
 
-        {!audioBuffer ? (
+        {!audioBuffer && !isLoading ? (
           <div className="max-w-3xl mx-auto">
             <AudioUploader onUpload={handleUpload} />
           </div>
+        ) : isLoading ? (
+          <Card className="max-w-3xl mx-auto border-2 border-dashed border-accent/20 animate-pulse bg-accent/5">
+            <CardContent className="flex flex-col items-center justify-center p-20 space-y-6 text-center">
+              <div className="relative">
+                <Loader2 className="h-16 w-16 text-accent animate-spin" />
+                <Waves className="h-6 w-6 text-accent absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-2xl font-black uppercase tracking-tighter text-accent">Menganalisis Audio...</h3>
+                <p className="text-muted-foreground text-sm">Harap tunggu sebentar, sistem sedang melakukan decoding waveform digital.</p>
+              </div>
+            </CardContent>
+          </Card>
         ) : (
           <div className="grid grid-cols-1 xl:grid-cols-4 gap-8 animate-in fade-in slide-in-from-bottom-6 duration-700">
             <div className="xl:col-span-3">
@@ -169,7 +182,7 @@ export default function AudioCleanerPage() {
                             size="lg" 
                             className="h-24 w-24 rounded-full shadow-2xl transition-all active:scale-90 border-4 border-white/20 bg-accent hover:bg-accent/90" 
                             onClick={togglePlay}
-                            disabled={isProcessing}
+                            disabled={isProcessing || isLoading}
                           >
                             {isPlaying ? <Pause className="h-10 w-10" /> : <Play className="h-10 w-10 ml-1" />}
                           </Button>
@@ -226,7 +239,7 @@ export default function AudioCleanerPage() {
                               size="icon" 
                               className="h-14 w-14 rounded-full bg-accent" 
                               onClick={togglePlay}
-                              disabled={isProcessing}
+                              disabled={isProcessing || isLoading}
                             >
                               {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6 ml-0.5" />}
                             </Button>
@@ -259,8 +272,8 @@ export default function AudioCleanerPage() {
             </div>
 
             <div className="space-y-6">
-              <AudioControls settings={settings} onSettingsChange={setSettings} disabled={isProcessing} />
-              <Button onClick={handleProcess} className="w-full h-20 text-xl font-extrabold shadow-2xl rounded-3xl group relative overflow-hidden bg-accent hover:bg-accent/90 transition-all hover:scale-[1.02]" disabled={isProcessing}>
+              <AudioControls settings={settings} onSettingsChange={setSettings} disabled={isProcessing || isLoading} />
+              <Button onClick={handleProcess} className="w-full h-20 text-xl font-extrabold shadow-2xl rounded-3xl group relative overflow-hidden bg-accent hover:bg-accent/90 transition-all hover:scale-[1.02]" disabled={isProcessing || isLoading}>
                 {isProcessing ? (
                   <><Loader2 className="mr-3 h-8 w-8 animate-spin" /> Rendering...</>
                 ) : (
