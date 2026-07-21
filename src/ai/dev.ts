@@ -9,3 +9,4 @@ import '@/ai/flows/convert-pdf-to-word.ts';
 import '@/ai/flows/convert-pdf-to-excel.ts';
 import '@/ai/flows/convert-pdf-to-ppt.ts';
 import '@/ai/flows/generate-background.ts';
+import '@/ai/flows/voice-to-srt.ts';

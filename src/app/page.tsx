@@ -16,7 +16,8 @@ import {
   TimerOff,
   Music4,
   Palette,
-  Briefcase
+  Briefcase,
+  Captions
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -37,6 +38,14 @@ const categories = [
         icon: Volume2,
         color: 'bg-orange-500/10 text-orange-600',
         badge: 'Studio DSP'
+      },
+      {
+        title: 'Voice to Subtitle',
+        description: 'Transkripsi suara otomatis ke format subtitle SRT menggunakan Gemini AI.',
+        href: '/voice-to-srt',
+        icon: Captions,
+        color: 'bg-purple-500/10 text-purple-600',
+        badge: 'Smart Transcribe'
       },
       {
         title: 'Hapus Bagian Diam',

@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from 'next/link';
@@ -22,6 +21,7 @@ const navItems = [
   { href: '/', label: 'Dashboard' },
   { href: '/image-converter', label: 'Visual & Gambar' },
   { href: '/audio-cleaner', label: 'Audio & Suara' },
+  { href: '/voice-to-srt', label: 'Voice to SRT' },
   { href: '/pdf-converter', label: 'PDF Suite' },
   { href: '/trim', label: 'Potong Cerdas' },
 ];
