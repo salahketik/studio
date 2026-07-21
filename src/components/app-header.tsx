@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -64,7 +65,6 @@ export function AppHeader() {
           <NavLinks />
         </div>
         
-        {/* Mobile Header */}
         <div className="md:hidden flex flex-1 items-center justify-between">
             <Link href="/" className="flex items-center space-x-3">
                 <div className="bg-accent p-2 rounded-lg shadow-lg shadow-accent/20">
