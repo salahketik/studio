@@ -56,6 +56,8 @@ export function useAudioProcessor() {
     const warmthFilter = offlineCtx.createBiquadFilter();
     const compressor = offlineCtx.createDynamicsCompressor();
     const distortionNode = offlineCtx.createWaveShaper();
+    const delayNode = offlineCtx.createDelay();
+    const feedbackNode = offlineCtx.createGain();
     const gainNode = offlineCtx.createGain();
 
     // Reset Defaults
@@ -63,16 +65,19 @@ export function useAudioProcessor() {
     lpFilter.type = 'lowpass'; lpFilter.frequency.value = settings.lowPass;
     presenceFilter.type = 'peaking'; presenceFilter.gain.value = 0;
     warmthFilter.type = 'lowshelf'; warmthFilter.gain.value = 0;
+    
     compressor.threshold.value = -24;
     compressor.knee.value = 30;
     compressor.ratio.value = 4;
     compressor.attack.value = 0.003;
     compressor.release.value = 0.25;
 
+    delayNode.delayTime.value = settings.echo;
+    feedbackNode.gain.value = settings.echo > 0 ? 0.4 : 0;
+
     // Profile Specific Logic
     switch (settings.profile) {
       case 'voice_enhance':
-        // Boost 3.5kHz for presence, 200Hz for warmth
         presenceFilter.frequency.value = 3500;
         presenceFilter.gain.value = 6;
         presenceFilter.Q.value = 1.2;
@@ -83,7 +88,6 @@ export function useAudioProcessor() {
         hpFilter.frequency.value = 90;
         break;
       case 'noise_reduction':
-        // Aggressive filtering and tighter compression to "gate" noise
         hpFilter.frequency.value = 140;
         lpFilter.frequency.value = 8500;
         compressor.threshold.value = -35;
@@ -104,13 +108,35 @@ export function useAudioProcessor() {
       case 'telephone':
         hpFilter.frequency.value = 450;
         lpFilter.frequency.value = 3200;
+        gainNode.gain.value *= 1.5;
+        break;
+      case 'vintage_tv':
+        hpFilter.frequency.value = 400;
+        lpFilter.frequency.value = 4000;
+        distortionNode.curve = createDistortionCurve(30);
+        break;
+      case 'megaphone':
+        hpFilter.frequency.value = 600;
+        lpFilter.frequency.value = 2500;
+        distortionNode.curve = createDistortionCurve(100);
         break;
       case 'robot':
         presenceFilter.type = 'allpass';
         presenceFilter.frequency.value = 800;
         distortionNode.curve = createDistortionCurve(60);
         break;
-      // ... other profiles from previous implementation ...
+      case 'cave':
+        delayNode.delayTime.value = 0.3;
+        feedbackNode.gain.value = 0.5;
+        break;
+      case 'underwater':
+        lpFilter.frequency.value = 600;
+        warmthFilter.gain.value = 10;
+        break;
+      case 'mega_bass':
+        warmthFilter.frequency.value = 80;
+        warmthFilter.gain.value = 15;
+        break;
       default:
         break;
     }
@@ -122,7 +148,11 @@ export function useAudioProcessor() {
     presenceFilter.connect(warmthFilter);
     warmthFilter.connect(distortionNode);
     distortionNode.connect(compressor);
-    compressor.connect(gainNode);
+    compressor.connect(delayNode);
+    delayNode.connect(feedbackNode);
+    feedbackNode.connect(delayNode);
+    delayNode.connect(gainNode);
+    compressor.connect(gainNode); // Mix with dry signal for delay
     gainNode.connect(offlineCtx.destination);
 
     gainNode.gain.value = settings.gain;
@@ -136,7 +166,7 @@ export function useAudioProcessor() {
       const renderedBuffer = await offlineCtx.startRendering();
       setProcessedBuffer(renderedBuffer);
     } catch (e) {
-      throw e; // Caught by global error handler
+      throw e;
     } finally {
       setIsProcessing(false);
     }
