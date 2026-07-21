@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { Menu, Layers, X } from 'lucide-react';
+import { Menu, Layers } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
 import {
@@ -19,11 +19,10 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 
 const navItems = [
   { href: '/', label: 'Dashboard' },
-  { href: '/image-converter', label: 'Gambar' },
-  { href: '/mockup', label: 'Mockup' },
-  { href: '/audio-cleaner', label: 'Studio Audio' },
-  { href: '/dead-air-remover', label: 'Dead Air' },
-  { href: '/pdf-converter', label: 'PDF' },
+  { href: '/image-converter', label: 'Visual & Gambar' },
+  { href: '/audio-cleaner', label: 'Audio & Suara' },
+  { href: '/pdf-converter', label: 'PDF Suite' },
+  { href: '/trim', label: 'Potong Cerdas' },
 ];
 
 export function AppHeader() {
@@ -106,7 +105,7 @@ export function AppHeader() {
                 
                 <div className="p-6 border-t border-border/10 bg-muted/30">
                     <p className="text-[10px] text-muted-foreground text-center font-medium uppercase tracking-widest">
-                        Digital Workstation v1.0
+                        Digital Workstation v1.1
                     </p>
                 </div>
             </SheetContent>
