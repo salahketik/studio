@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { VisualizerMode } from '../types';
 import { Button } from '@/components/ui/button';
-import { Video, StopCircle, Download, Monitor, ImageIcon } from 'lucide-react';
+import { Video, StopCircle, Download, Monitor, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
@@ -68,7 +68,7 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream, sensi
       const blob = new Blob(chunksRef.current, { type: 'video/webm' });
       setVideoBlob(blob);
       setIsRecording(false);
-      toast({ title: 'Perekaman Selesai', description: 'Video siap untuk diunduh.' });
+      toast({ title: 'Rekaman Siap', description: 'Klik tombol unduh untuk menyimpan video.' });
     };
 
     recorder.start();
@@ -84,7 +84,7 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream, sensi
     const url = URL.createObjectURL(videoBlob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `studio_visual_${Date.now()}.webm`;
+    a.download = `music_video_${Date.now()}.webm`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -106,11 +106,10 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream, sensi
     // Draw Background
     if (bgImgRef.current) {
         ctx.drawImage(bgImgRef.current, 0, 0, width, height);
-        // Add a dark overlay to make visuals pop
         ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
         ctx.fillRect(0, 0, width, height);
     } else {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        ctx.fillStyle = 'rgba(10, 10, 12, 1)';
         ctx.fillRect(0, 0, width, height);
     }
 
@@ -123,7 +122,7 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream, sensi
       for (let i = 0; i < bufferLength * 0.4; i++) {
         const barHeight = (dataArray[i] / 255) * height * 0.8 * sens;
         const gradient = ctx.createLinearGradient(0, height, 0, height - barHeight);
-        gradient.addColorStop(0, 'rgba(20, 255, 236, 0.05)');
+        gradient.addColorStop(0, 'rgba(20, 255, 236, 0.1)');
         gradient.addColorStop(1, accentColor);
         
         ctx.fillStyle = gradient;
@@ -140,11 +139,11 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream, sensi
         const angle = (i / (bufferLength * 0.8)) * 2 * Math.PI;
         const x1 = centerX + Math.cos(angle) * radius;
         const y1 = centerY + Math.sin(angle) * radius;
-        const x2 = centerX + Math.cos(angle) * (radius + value * 280);
-        const y2 = centerY + Math.sin(angle) * (radius + value * 280);
+        const x2 = centerX + Math.cos(angle) * (radius + value * 300);
+        const y2 = centerY + Math.sin(angle) * (radius + value * 300);
 
         ctx.strokeStyle = accentColor;
-        ctx.lineWidth = 2 + value * 4;
+        ctx.lineWidth = 3 + value * 6;
         ctx.beginPath();
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
@@ -158,17 +157,17 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream, sensi
       const baseRadius = Math.min(width, height) / 3.5;
       
       ctx.beginPath();
-      ctx.arc(centerX, centerY, baseRadius * (1 + value * 0.8), 0, 2 * Math.PI);
-      ctx.fillStyle = `rgba(20, 255, 236, ${0.1 + value * 0.4})`;
+      ctx.arc(centerX, centerY, baseRadius * (1 + value * 1.2), 0, 2 * Math.PI);
+      ctx.fillStyle = `rgba(20, 255, 236, ${0.1 + value * 0.5})`;
       ctx.fill();
       ctx.strokeStyle = accentColor;
-      ctx.lineWidth = 2 + 20 * value;
+      ctx.lineWidth = 2 + 30 * value;
       ctx.stroke();
     } else if (mode === 'wave') {
       const waveArray = new Uint8Array(bufferLength);
       analyser.getByteTimeDomainData(waveArray);
       
-      ctx.lineWidth = 4;
+      ctx.lineWidth = 5;
       ctx.strokeStyle = accentColor;
       ctx.beginPath();
       const sliceWidth = width / bufferLength;
@@ -193,6 +192,12 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream, sensi
       requestRef.current = requestAnimationFrame(draw);
     } else {
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      // Fill background if not playing
+      const ctx = canvasRef.current?.getContext('2d');
+      if (ctx && canvasRef.current) {
+         ctx.fillStyle = 'rgba(10, 10, 12, 1)';
+         ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+      }
     }
     return () => {
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
@@ -200,7 +205,7 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream, sensi
   }, [isPlaying, analyser, mode, sensitivity]);
 
   return (
-    <div className="relative w-full aspect-video bg-black rounded-2xl overflow-hidden border border-accent/20 shadow-2xl">
+    <div className="relative w-full aspect-video bg-black rounded-b-none overflow-hidden group">
       <canvas
         ref={canvasRef}
         width={1920}
@@ -208,62 +213,54 @@ export function StudioVisualizer({ analyser, mode, isPlaying, audioStream, sensi
         className="w-full h-full object-cover"
       />
       
-      <div className="absolute top-4 right-4 flex flex-wrap justify-end gap-2 z-10">
+      <div className="absolute top-6 right-6 flex flex-wrap justify-end gap-3 z-20">
         {!isRecording ? (
           <Button 
-            size="sm" 
+            size="lg" 
             variant="secondary" 
             className={cn(
-              "bg-black/80 text-white border-none backdrop-blur-md hover:bg-red-600 transition-colors",
+              "bg-black/80 text-white border-none backdrop-blur-xl hover:bg-accent transition-all rounded-2xl shadow-2xl",
               !isPlaying && "opacity-50"
             )}
             onClick={startRecording}
             disabled={!isPlaying}
           >
-            <Video className="w-4 h-4 mr-2" /> Rekam Musik Video
+            <Video className="w-5 h-5 mr-3" /> Rekam Musik Video
           </Button>
         ) : (
           <Button 
-            size="sm" 
+            size="lg" 
             variant="destructive" 
-            className="animate-pulse shadow-lg shadow-red-500/50"
+            className="animate-pulse shadow-2xl shadow-red-500/50 rounded-2xl"
             onClick={stopRecording}
           >
-            <StopCircle className="w-4 h-4 mr-2" /> Hentikan Rekaman
+            <StopCircle className="w-5 h-5 mr-3" /> Berhenti Rekam
           </Button>
         )}
         
         {videoBlob && !isRecording && (
           <Button 
-            size="sm" 
+            size="lg" 
             variant="secondary" 
-            className="bg-accent text-white border-none shadow-xl animate-bounce"
+            className="bg-accent text-white border-none shadow-2xl animate-bounce rounded-2xl"
             onClick={downloadVideo}
           >
-            <Download className="w-4 h-4 mr-2" /> Simpan Video (.webm)
+            <Download className="w-5 h-5 mr-3" /> Unduh Video (.webm)
           </Button>
         )}
       </div>
 
-      <div className="absolute top-4 left-4 pointer-events-none">
-        {isRecording && (
-          <div className="flex items-center gap-2 bg-red-600 px-3 py-1 rounded-full text-[10px] font-bold text-white uppercase tracking-tighter animate-pulse">
-            <span className="w-2 h-2 rounded-full bg-white"></span> Live Recording
-          </div>
-        )}
-      </div>
-
       {!isPlaying && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="text-center space-y-4 animate-in fade-in zoom-in duration-700">
-            <div className="p-5 bg-accent/20 rounded-3xl inline-block border border-accent/30 shadow-2xl">
-               <Monitor className="w-12 h-12 text-accent" />
-            </div>
-            <div className="space-y-1">
-              <p className="text-accent font-bold text-lg tracking-widest uppercase">Visual Station Ready</p>
-              <p className="text-muted-foreground text-xs font-mono">Input Audio Detected • Press Play to Start</p>
-            </div>
-          </div>
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 backdrop-blur-md">
+           <div className="p-8 bg-accent/10 border border-accent/20 rounded-3xl space-y-4 text-center">
+              <div className="p-4 bg-accent/20 rounded-full inline-block">
+                <Monitor className="w-12 h-12 text-accent" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-accent font-black text-xl uppercase tracking-tighter">Studio Monitor Ready</p>
+                <p className="text-muted-foreground text-xs uppercase tracking-widest">Putar audio untuk memulai visualisasi</p>
+              </div>
+           </div>
         </div>
       )}
     </div>

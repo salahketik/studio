@@ -17,15 +17,18 @@ import {
   Loader2, 
   Settings2,
   ChevronLeft,
-  MousePointer2,
   MonitorPlay,
-  Share2
+  Music,
+  Video,
+  CheckCircle2,
+  Info
 } from 'lucide-react';
 import { defaultAudioSettings, type AudioSettings, type VisualizerMode } from '@/features/audio-cleaner/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function AudioCleanerPage() {
   const { toast } = useToast();
@@ -37,6 +40,7 @@ export default function AudioCleanerPage() {
   const [audioSource, setAudioSource] = useState<AudioBufferSourceNode | null>(null);
   const [audioStream, setAudioStream] = useState<MediaStream | null>(null);
   const [audioFile, setAudioFile] = useState<File | null>(null);
+  const [activeTab, setActiveTab] = useState<'editor' | 'visualizer'>('editor');
 
   const audioCtxRef = useRef<AudioContext | null>(null);
 
@@ -44,7 +48,7 @@ export default function AudioCleanerPage() {
     setAudioFile(file);
     try {
       await loadAudio(file);
-      toast({ title: 'Audio Siap', description: 'Gunakan profil studio untuk memproses suara Anda.' });
+      toast({ title: 'Audio Siap', description: 'Atur efek suara di tab Editor.' });
     } catch (e) {
       toast({ variant: 'destructive', title: 'Kesalahan', description: 'Gagal memuat file audio.' });
     }
@@ -57,7 +61,7 @@ export default function AudioCleanerPage() {
       setIsPlaying(false);
     }
     await processAudio(settings);
-    toast({ title: 'Proses Selesai', description: 'Efek studio telah diterapkan.' });
+    toast({ title: 'Proses Selesai', description: 'Efek suara telah diperbarui.' });
   };
 
   const handleDownload = () => {
@@ -71,8 +75,9 @@ export default function AudioCleanerPage() {
       audioSource?.stop();
       setIsPlaying(false);
     } else {
-      if (!processedBuffer) {
-        toast({ title: "Belum Diproses", description: "Klik 'Terapkan Efek Studio' terlebih dahulu." });
+      const bufferToPlay = processedBuffer || audioBuffer;
+      if (!bufferToPlay) {
+        toast({ variant: 'destructive', title: "Audio Belum Siap", description: "Unggah file audio terlebih dahulu." });
         return;
       }
       
@@ -86,10 +91,9 @@ export default function AudioCleanerPage() {
 
       const nodeAnalyser = ctx.createAnalyser();
       nodeAnalyser.fftSize = 512;
-      nodeAnalyser.smoothingTimeConstant = 0.82;
       
       const source = ctx.createBufferSource();
-      source.buffer = processedBuffer;
+      source.buffer = bufferToPlay;
       
       const dest = ctx.createMediaStreamDestination();
       
@@ -130,12 +134,12 @@ export default function AudioCleanerPage() {
             </Button>
             <Badge variant="outline" className="text-accent border-accent/20 bg-accent/5 px-4 py-1 rounded-full">
               <Settings2 className="w-3.5 h-3.5 mr-2" />
-              Advanced Music Video Studio
+              Advanced Audio Studio
             </Badge>
           </div>
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">Audio FX & Visual Studio</h1>
+          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">Audio FX & Music Studio</h1>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Transformasi suara dan buat video musik visual reaktif berkualitas tinggi dalam hitungan detik.
+            Edit suara dengan profil studio dan buat visualisasi video reaktif berkualitas tinggi.
           </p>
         </div>
 
@@ -145,111 +149,130 @@ export default function AudioCleanerPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 xl:grid-cols-4 gap-8 animate-in fade-in slide-in-from-bottom-6 duration-700">
-            <div className="xl:col-span-3 space-y-8">
-              <Card className="glass-panel border-none overflow-hidden shadow-2xl rounded-3xl">
-                <CardContent className="p-0">
-                  <StudioVisualizer 
-                    analyser={analyser} 
-                    mode={settings.visualMode} 
-                    isPlaying={isPlaying}
-                    audioStream={audioStream || undefined}
-                    sensitivity={settings.visualSensitivity}
-                    bgImageUrl={settings.bgImageUrl}
-                  />
-                  
-                  <div className="p-8 space-y-8">
-                    <div className="flex flex-wrap items-center justify-between gap-8">
-                      <div className="flex items-center gap-8">
-                        <Button 
-                          size="lg" 
-                          className={cn(
-                            "h-20 w-20 md:h-24 md:w-24 rounded-full shadow-2xl transition-all active:scale-90 border-4 border-white/20",
-                            processedBuffer ? "bg-accent hover:bg-accent/90" : "bg-muted"
-                          )} 
-                          onClick={togglePlay}
-                          disabled={isProcessing}
-                        >
-                          {isPlaying ? <Pause className="h-10 w-10" /> : <Play className="h-10 w-10 ml-1" />}
-                        </Button>
-                        <div className="space-y-1.5">
-                          <p className="font-extrabold text-xl md:text-2xl tracking-tight">Master Playback</p>
-                          <div className="flex items-center gap-3">
-                            <span className="text-sm font-mono text-muted-foreground bg-muted px-2 py-0.5 rounded">{duration.toFixed(2)}s</span>
-                            <Badge variant="secondary" className="bg-accent/10 text-accent border-none uppercase text-[10px] tracking-widest px-3 font-bold">
-                              {settings.profile.replace('_', ' ')}
-                            </Badge>
+            <div className="xl:col-span-3">
+              <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="w-full">
+                <TabsList className="grid w-full grid-cols-2 mb-6 bg-muted/50 p-1 rounded-2xl h-14">
+                  <TabsTrigger value="editor" className="rounded-xl font-bold gap-2">
+                    <Music className="w-4 h-4" /> Editor Suara
+                  </TabsTrigger>
+                  <TabsTrigger value="visualizer" className="rounded-xl font-bold gap-2">
+                    <Video className="w-4 h-4" /> Visual Studio
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="editor" className="mt-0 space-y-8 animate-in fade-in duration-500">
+                  <Card className="glass-panel border-none shadow-2xl rounded-3xl overflow-hidden">
+                    <CardContent className="p-10 space-y-10">
+                      <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+                        <div className="flex items-center gap-8">
+                          <Button 
+                            size="lg" 
+                            className="h-24 w-24 rounded-full shadow-2xl transition-all active:scale-90 border-4 border-white/20 bg-accent hover:bg-accent/90" 
+                            onClick={togglePlay}
+                            disabled={isProcessing}
+                          >
+                            {isPlaying ? <Pause className="h-10 w-10" /> : <Play className="h-10 w-10 ml-1" />}
+                          </Button>
+                          <div className="space-y-1.5 text-left">
+                            <p className="font-extrabold text-2xl tracking-tight">Pratinjau Suara</p>
+                            <div className="flex items-center gap-3">
+                              <span className="text-sm font-mono text-muted-foreground bg-muted px-2 py-0.5 rounded">{duration.toFixed(2)}s</span>
+                              <Badge variant="secondary" className="bg-accent/10 text-accent border-none uppercase text-[10px] tracking-widest px-3 font-bold">
+                                {processedBuffer ? 'Teraplikasikan' : 'Original'}
+                              </Badge>
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      <div className="flex flex-wrap items-center gap-3 bg-muted/30 p-2 rounded-3xl border border-white/10">
-                        <div className="flex gap-1">
-                          {(['bars', 'circle', 'pulse', 'wave'] as VisualizerMode[]).map((mode) => (
-                            <Button
-                              key={mode}
-                              variant={settings.visualMode === mode ? 'secondary' : 'ghost'}
-                              size="sm"
-                              className={cn(
-                                "h-10 px-4 rounded-2xl text-[10px] font-bold uppercase tracking-wider transition-all",
-                                settings.visualMode === mode && "bg-background shadow-lg text-accent"
-                              )}
-                              onClick={() => setSettings({ ...settings, visualMode: mode })}
-                            >
-                              {mode}
-                            </Button>
-                          ))}
+                        <div className="flex flex-wrap items-center gap-3 bg-muted/30 p-2 rounded-3xl border border-white/10">
+                          <Button variant="outline" className="rounded-2xl border-accent/20 h-12 px-6 hover:bg-accent/5" onClick={() => { audioSource?.stop(); reset(); setAudioFile(null); setIsPlaying(false); }}>
+                            <RefreshCcw className="mr-2 h-4 w-4" />
+                            Ganti File
+                          </Button>
+                          <Button className="rounded-2xl shadow-xl h-12 px-8 bg-accent hover:bg-accent/90" onClick={handleDownload} disabled={!processedBuffer || isProcessing}>
+                            <Download className="mr-2 h-4 w-4" />
+                            Simpan Audio (WAV)
+                          </Button>
                         </div>
-                        
-                        <div className="w-px h-8 bg-border/50 mx-2 hidden md:block"></div>
-                        
-                        <Button variant="outline" className="rounded-2xl border-accent/20 h-10 px-4 hover:bg-accent/5" onClick={() => { audioSource?.stop(); reset(); setAudioFile(null); setIsPlaying(false); }}>
-                          <RefreshCcw className="mr-2 h-4 w-4" />
-                          Ganti
-                        </Button>
-                        <Button className="rounded-2xl shadow-xl h-10 px-6 bg-accent hover:bg-accent/90" onClick={handleDownload} disabled={!processedBuffer || isProcessing}>
-                          <Download className="mr-2 h-4 w-4" />
-                          Simpan WAV
-                        </Button>
                       </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-accent/5 border border-accent/20 rounded-3xl p-6 flex flex-col items-center text-center gap-4 transition-all hover:shadow-xl hover:-translate-y-1">
-                  <div className="p-4 bg-accent/20 rounded-2xl shrink-0 shadow-inner"><MonitorPlay className="w-8 h-8 text-accent" /></div>
-                  <div className="space-y-2">
-                    <h4 className="font-extrabold text-lg text-accent">Music Video AI</h4>
-                    <p className="text-xs text-muted-foreground leading-relaxed">Rekam visualisasi HD dengan audio yang sudah diproses untuk konten sosial media Anda.</p>
-                  </div>
-                </div>
-                <div className="bg-primary/5 border border-primary/20 rounded-3xl p-6 flex flex-col items-center text-center gap-4 transition-all hover:shadow-xl hover:-translate-y-1">
-                  <div className="p-4 bg-primary/20 rounded-2xl shrink-0 shadow-inner"><Share2 className="w-8 h-8 text-primary" /></div>
-                  <div className="space-y-2">
-                    <h4 className="font-extrabold text-lg text-primary">Custom Background</h4>
-                    <p className="text-xs text-muted-foreground leading-relaxed">Unggah gambar brand Anda sebagai latar belakang visualizer untuk branding yang konsisten.</p>
-                  </div>
-                </div>
-                <div className="bg-orange-500/5 border border-orange-500/20 rounded-3xl p-6 flex flex-col items-center text-center gap-4 transition-all hover:shadow-xl hover:-translate-y-1">
-                  <div className="p-4 bg-orange-500/20 rounded-2xl shrink-0 shadow-inner"><Sparkles className="w-8 h-8 text-orange-600" /></div>
-                  <div className="space-y-2">
-                    <h4 className="font-extrabold text-lg text-orange-600">Reactive Motion</h4>
-                    <p className="text-xs text-muted-foreground leading-relaxed">Mesin visual kami menganalisis spektrum audio secara real-time untuk pergerakan yang mulus.</p>
-                  </div>
-                </div>
-              </div>
+                      <div className="bg-accent/5 border border-accent/20 p-6 rounded-2xl flex gap-4">
+                        <Info className="w-5 h-5 text-accent shrink-0 mt-0.5" />
+                        <div className="space-y-1">
+                          <p className="text-sm font-bold text-accent">Tips Editor</p>
+                          <p className="text-xs text-muted-foreground leading-relaxed">
+                            Pilih profil suara di panel sebelah kanan, lalu klik "Terapkan Efek Studio". Setelah terproses, Anda bisa memindahkan tab ke <strong>Visual Studio</strong> untuk merekam video musik.
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="visualizer" className="mt-0 space-y-8 animate-in fade-in duration-500">
+                  <Card className="glass-panel border-none shadow-2xl rounded-3xl overflow-hidden">
+                    <CardContent className="p-0">
+                      <StudioVisualizer 
+                        analyser={analyser} 
+                        mode={settings.visualMode} 
+                        isPlaying={isPlaying}
+                        audioStream={audioStream || undefined}
+                        sensitivity={settings.visualSensitivity}
+                        bgImageUrl={settings.bgImageUrl}
+                      />
+                      <div className="p-8 flex items-center justify-between border-t bg-muted/10">
+                         <div className="flex items-center gap-6">
+                            <Button 
+                              size="icon" 
+                              className="h-14 w-14 rounded-full bg-accent" 
+                              onClick={togglePlay}
+                              disabled={isProcessing}
+                            >
+                              {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6 ml-0.5" />}
+                            </Button>
+                            <div className="space-y-0.5">
+                               <p className="text-sm font-bold">Visual Studio Mode</p>
+                               <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Audio: {settings.profile}</p>
+                            </div>
+                         </div>
+                         <div className="flex gap-2">
+                            {(['bars', 'circle', 'pulse', 'wave'] as VisualizerMode[]).map((mode) => (
+                              <Button
+                                key={mode}
+                                variant={settings.visualMode === mode ? 'secondary' : 'ghost'}
+                                size="sm"
+                                className={cn(
+                                  "h-10 px-4 rounded-xl text-[10px] font-bold uppercase tracking-wider",
+                                  settings.visualMode === mode && "bg-background shadow-lg text-accent"
+                                )}
+                                onClick={() => setSettings({ ...settings, visualMode: mode })}
+                              >
+                                {mode}
+                              </Button>
+                            ))}
+                         </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              </Tabs>
             </div>
 
             <div className="space-y-6">
               <AudioControls settings={settings} onSettingsChange={setSettings} disabled={isProcessing} />
               <Button onClick={handleProcess} className="w-full h-20 text-xl font-extrabold shadow-2xl rounded-3xl group relative overflow-hidden bg-accent hover:bg-accent/90 transition-all hover:scale-[1.02]" disabled={isProcessing}>
                 {isProcessing ? (
-                  <><Loader2 className="mr-3 h-8 w-8 animate-spin" /> Rendering Project...</>
+                  <><Loader2 className="mr-3 h-8 w-8 animate-spin" /> Rendering...</>
                 ) : (
                   <><Sparkles className="mr-3 h-8 w-8 group-hover:rotate-12 transition-transform" /> Terapkan Efek Studio</>
                 )}
               </Button>
+              {processedBuffer && (
+                <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-2xl flex items-center gap-3 animate-in slide-in-from-top-2">
+                  <CheckCircle2 className="w-5 h-5 text-green-600" />
+                  <p className="text-xs font-bold text-green-700">Efek Berhasil Diterapkan!</p>
+                </div>
+              )}
             </div>
           </div>
         )}

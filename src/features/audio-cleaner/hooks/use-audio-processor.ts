@@ -18,7 +18,7 @@ export function useAudioProcessor() {
     const arrayBuffer = await file.arrayBuffer();
     const decodedBuffer = await audioCtxRef.current.decodeAudioData(arrayBuffer);
     setAudioBuffer(decodedBuffer);
-    setProcessedBuffer(decodedBuffer);
+    setProcessedBuffer(null); // Reset processed when new audio loaded
     setDuration(decodedBuffer.duration);
   }, []);
 
@@ -56,9 +56,9 @@ export function useAudioProcessor() {
     const warmthFilter = offlineCtx.createBiquadFilter();
     const compressor = offlineCtx.createDynamicsCompressor();
     const distortionNode = offlineCtx.createWaveShaper();
-    const delayNode = offlineCtx.createDelay();
+    const delayNode = offlineCtx.createDelay(1.0);
     const feedbackNode = offlineCtx.createGain();
-    const gainNode = offlineCtx.createGain();
+    const outputGain = offlineCtx.createGain();
 
     // Reset Defaults
     hpFilter.type = 'highpass'; hpFilter.frequency.value = settings.highPass;
@@ -72,8 +72,8 @@ export function useAudioProcessor() {
     compressor.attack.value = 0.003;
     compressor.release.value = 0.25;
 
-    delayNode.delayTime.value = settings.echo;
-    feedbackNode.gain.value = settings.echo > 0 ? 0.4 : 0;
+    delayNode.delayTime.value = 0;
+    feedbackNode.gain.value = 0;
 
     // Profile Specific Logic
     switch (settings.profile) {
@@ -92,7 +92,6 @@ export function useAudioProcessor() {
         lpFilter.frequency.value = 8500;
         compressor.threshold.value = -35;
         compressor.ratio.value = 12;
-        compressor.attack.value = 0.001;
         break;
       case 'studio':
         presenceFilter.frequency.value = 3000;
@@ -108,7 +107,7 @@ export function useAudioProcessor() {
       case 'telephone':
         hpFilter.frequency.value = 450;
         lpFilter.frequency.value = 3200;
-        gainNode.gain.value *= 1.5;
+        outputGain.gain.value = 1.5;
         break;
       case 'vintage_tv':
         hpFilter.frequency.value = 400;
@@ -120,18 +119,9 @@ export function useAudioProcessor() {
         lpFilter.frequency.value = 2500;
         distortionNode.curve = createDistortionCurve(100);
         break;
-      case 'robot':
-        presenceFilter.type = 'allpass';
-        presenceFilter.frequency.value = 800;
-        distortionNode.curve = createDistortionCurve(60);
-        break;
       case 'cave':
         delayNode.delayTime.value = 0.3;
         feedbackNode.gain.value = 0.5;
-        break;
-      case 'underwater':
-        lpFilter.frequency.value = 600;
-        warmthFilter.gain.value = 10;
         break;
       case 'mega_bass':
         warmthFilter.frequency.value = 80;
@@ -141,21 +131,30 @@ export function useAudioProcessor() {
         break;
     }
 
-    // Connect Chain
+    // Manual Overrides if set
+    if (settings.echo > 0) {
+        delayNode.delayTime.value = settings.echo;
+        feedbackNode.gain.value = 0.4;
+    }
+
+    // Connect Chain: Source -> HPF -> LPF -> Presence -> Warmth -> Distortion -> Compressor -> Delay/Gain -> Output
     source.connect(hpFilter);
     hpFilter.connect(lpFilter);
     lpFilter.connect(presenceFilter);
     presenceFilter.connect(warmthFilter);
     warmthFilter.connect(distortionNode);
     distortionNode.connect(compressor);
+    
+    // Echo circuit
     compressor.connect(delayNode);
     delayNode.connect(feedbackNode);
     feedbackNode.connect(delayNode);
-    delayNode.connect(gainNode);
-    compressor.connect(gainNode); // Mix with dry signal for delay
-    gainNode.connect(offlineCtx.destination);
+    delayNode.connect(outputGain);
+    
+    compressor.connect(outputGain); // Primary path
+    outputGain.connect(offlineCtx.destination);
 
-    gainNode.gain.value = settings.gain;
+    outputGain.gain.value = settings.gain;
     if (settings.distortion > 0 && !distortionNode.curve) {
       distortionNode.curve = createDistortionCurve(settings.distortion);
     }
@@ -166,7 +165,7 @@ export function useAudioProcessor() {
       const renderedBuffer = await offlineCtx.startRendering();
       setProcessedBuffer(renderedBuffer);
     } catch (e) {
-      throw e;
+      console.error('Rendering failed', e);
     } finally {
       setIsProcessing(false);
     }
