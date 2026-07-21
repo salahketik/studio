@@ -12,7 +12,8 @@ import {
   Zap,
   ShieldCheck,
   Globe,
-  LayoutGrid
+  LayoutGrid,
+  TimerOff
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -43,6 +44,14 @@ const tools = [
     icon: Volume2,
     color: 'bg-orange-500/10 text-orange-600',
     badge: 'Studio DSP'
+  },
+  {
+    title: 'Hapus Bagian Diam',
+    description: 'Deteksi dan hapus jeda kosong (dead air) secara otomatis pada audio.',
+    href: '/dead-air-remover',
+    icon: TimerOff,
+    color: 'bg-yellow-500/10 text-yellow-600',
+    badge: 'Cerdas AI'
   },
   {
     title: 'Perangkat PDF',

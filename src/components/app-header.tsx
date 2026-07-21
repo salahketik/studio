@@ -20,9 +20,9 @@ const navItems = [
   { href: '/', label: 'Dashboard' },
   { href: '/image-converter', label: 'Gambar' },
   { href: '/mockup', label: 'Mockup' },
-  { href: '/audio-cleaner', label: 'Audio' },
+  { href: '/audio-cleaner', label: 'Studio Audio' },
+  { href: '/dead-air-remover', label: 'Dead Air' },
   { href: '/pdf-converter', label: 'PDF' },
-  { href: '/trim', label: 'Potong' },
 ];
 
 export function AppHeader() {
