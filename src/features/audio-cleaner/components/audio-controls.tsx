@@ -43,7 +43,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
 const iconMap: Record<string, any> = {
-  Mic2, Music, Headphones, Radio, Phone, Tv, VolumeX, Zap, Waves, Mountain, Bot, Speaker, Disc, Film, Users, Home, Newspaper, Mic, Cpu, Wind, Dumbbell
+  Mic2, Music, Headphones, Radio, Phone, Tv, VolumeX, Zap, Waves, Mountain, Bot, Speaker, Disc, Film, Users, Home, Newspaper, Mic, Cpu, Wind, Dumbbell, Sparkles, Volume2
 };
 
 interface AudioControlsProps {
@@ -88,7 +88,7 @@ export function AudioControls({ settings, onSettingsChange, disabled }: AudioCon
               <Monitor className="w-3.5 h-3.5" /> Visual
             </TabsTrigger>
             <TabsTrigger value="manual" className="flex-1 text-xs gap-1.5 py-2">
-              <Sparkles className="w-3.5 h-3.5" /> Manual
+              <Activity className="w-3.5 h-3.5" /> Manual
             </TabsTrigger>
           </TabsList>
 
@@ -98,18 +98,23 @@ export function AudioControls({ settings, onSettingsChange, disabled }: AudioCon
                 {voiceProfiles.map((profile) => {
                   const Icon = iconMap[profile.icon] || Mic2;
                   const isActive = settings.profile === profile.id;
+                  const isSpecial = profile.id === 'voice_enhance' || profile.id === 'noise_reduction';
+                  
                   return (
                     <button
                       key={profile.id}
                       onClick={() => updateSetting('profile', profile.id)}
                       disabled={disabled}
                       className={cn(
-                        "flex flex-col items-center justify-center p-3 rounded-2xl border transition-all text-center gap-2 min-h-[90px]",
+                        "flex flex-col items-center justify-center p-3 rounded-2xl border transition-all text-center gap-2 min-h-[90px] relative overflow-hidden",
                         isActive 
                           ? "bg-accent border-accent text-white shadow-lg ring-4 ring-accent/10" 
-                          : "bg-background/50 border-border hover:border-accent/50 hover:bg-accent/5"
+                          : isSpecial 
+                            ? "bg-accent/5 border-accent/30 hover:bg-accent/10" 
+                            : "bg-background/50 border-border hover:border-accent/50 hover:bg-accent/5"
                       )}
                     >
+                      {isSpecial && !isActive && <div className="absolute top-1 right-1"><Sparkles className="w-2.5 h-2.5 text-accent animate-pulse" /></div>}
                       <Icon className={cn("w-5 h-5", isActive ? "text-white" : "text-accent")} />
                       <div className="space-y-0.5">
                         <p className="text-[10px] font-bold leading-tight">{profile.label}</p>
@@ -149,7 +154,10 @@ export function AudioControls({ settings, onSettingsChange, disabled }: AudioCon
                             variant="ghost" 
                             size="sm" 
                             className="w-full text-[10px] text-destructive"
-                            onClick={() => updateSetting('bgImageUrl', undefined)}
+                            onClick={() => {
+                                updateSetting('bgImageUrl', undefined);
+                                if (fileInputRef.current) fileInputRef.current.value = '';
+                            }}
                         >
                             Hapus Latar
                         </Button>

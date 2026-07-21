@@ -1,10 +1,10 @@
-
 import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from '@/components/theme-provider';
 import { AppHeader } from '@/components/app-header';
 import { AppFooter } from '@/components/footer';
+import { GlobalErrorHandler } from '@/components/global-error-handler';
 
 
 export const metadata: Metadata = {
@@ -38,6 +38,7 @@ export default function RootLayout({
             </main>
             <AppFooter />
           </div>
+          <GlobalErrorHandler />
           <Toaster />
         </ThemeProvider>
       </body>
