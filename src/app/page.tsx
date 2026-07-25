@@ -25,7 +25,7 @@ import { cn } from '@/lib/utils';
 const categories = [
   {
     name: 'Audio & Suara',
-    description: 'Produksi dan pengeditan audio dengan teknologi DSP dan AI.',
+    description: 'Produksi dan pengeditan audio dengan teknologi DSP dan Workstation Manual.',
     icon: Music4,
     color: 'text-orange-600',
     tools: [
@@ -38,12 +38,12 @@ const categories = [
         badge: 'Studio DSP'
       },
       {
-        title: 'Voice to Subtitle',
-        description: 'Transkripsi suara otomatis ke format subtitle SRT menggunakan Gemini AI atau Manual Studio.',
+        title: 'Subtitle Studio',
+        description: 'Pembuatan file subtitle SRT secara manual dengan presisi stempel waktu milidetik.',
         href: '/voice-to-srt',
         icon: Captions,
         color: 'bg-purple-500/10 text-purple-600',
-        badge: 'Smart Transcribe'
+        badge: 'Manual Workstation'
       },
       {
         title: 'Hapus Bagian Diam',
@@ -108,7 +108,7 @@ export default function DashboardPage() {
           </h1>
           
           <p className="text-muted-foreground text-sm sm:text-lg md:text-2xl max-w-3xl mx-auto leading-relaxed px-4">
-            Satu ekosistem alat kreatif profesional yang dikelompokkan untuk mempercepat alur kerja Anda dengan presisi AI tinggi.
+            Satu ekosistem alat kreatif profesional yang dikelompokkan untuk mempercepat alur kerja Anda dengan presisi tinggi.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 pt-4 w-full sm:w-auto px-6 sm:px-0">
@@ -207,4 +207,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-

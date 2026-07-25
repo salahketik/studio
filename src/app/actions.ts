@@ -4,8 +4,6 @@ import { optimizeWebpCompression } from '@/ai/flows/optimize-webp-compression';
 import type { OptimizeWebpCompressionInput } from '@/ai/flows/optimize-webp-compression';
 import { generateBackground } from '@/ai/flows/generate-background';
 import type { GenerateBackgroundInput } from '@/ai/flows/generate-background';
-import { voiceToSrt } from '@/ai/flows/voice-to-srt';
-import type { VoiceToSrtInput, VoiceToSrtOutput } from '@/ai/flows/voice-to-srt';
 
 interface AIResult {
     optimizedImageUri?: string;
@@ -52,20 +50,4 @@ export async function runAIGenerateBackground(
             error: error instanceof Error ? error.message : 'Gagal menghasilkan latar belakang AI.',
         };
     }
-}
-
-interface SRTResult extends Partial<VoiceToSrtOutput> {
-  error?: string;
-}
-
-export async function runVoiceToSrtTranscription(
-  input: VoiceToSrtInput
-): Promise<SRTResult> {
-  try {
-    const result = await voiceToSrt(input);
-    return result;
-  } catch (error) {
-    console.error('Voice to SRT Error:', error);
-    return { error: error instanceof Error ? error.message : 'Gagal mentranskripsi audio ke SRT.' };
-  }
 }

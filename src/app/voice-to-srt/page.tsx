@@ -9,13 +9,10 @@ import { saveAs } from 'file-saver';
 import { 
   Captions, 
   ChevronLeft, 
-  Sparkles, 
-  Loader2, 
   Download, 
   UploadCloud, 
   FileAudio,
   Type,
-  FileCode,
   Play,
   Pause,
   Plus,
@@ -23,11 +20,11 @@ import {
   Clock,
   Settings2,
   Keyboard,
-  History
+  Info,
+  History,
+  Timer
 } from 'lucide-react';
-import { runVoiceToSrtTranscription } from '@/app/actions';
 import Link from 'next/link';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -43,26 +40,14 @@ interface SubtitleBlock {
 
 export default function VoiceToSrtPage() {
   const { toast } = useToast();
-  const [isProcessing, setIsProcessing] = useState(false);
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const [srtData, setSrtData] = useState<{ srtContent: string, transcript: string } | null>(null);
-  const [activeTab, setActiveTab] = useState<'ai' | 'manual'>('ai');
-
-  // Manual Editor State
+  
+  // Subtitle Workstation State
   const [manualBlocks, setManualBlocks] = useState<SubtitleBlock[]>([]);
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
-
-  const fileToDataUri = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -72,27 +57,14 @@ export default function VoiceToSrtPage() {
         return;
       }
       setAudioFile(file);
-      setAudioUrl(URL.createObjectURL(file));
-      setSrtData(null);
+      const url = URL.createObjectURL(file);
+      setAudioUrl(url);
       setManualBlocks([{ id: '1', start: 0, end: 5, text: '' }]);
-    }
-  };
-
-  const handleTranscribe = async () => {
-    if (!audioFile) return;
-    setIsProcessing(true);
-    try {
-      const audioDataUri = await fileToDataUri(audioFile);
-      const result = await runVoiceToSrtTranscription({ audioDataUri });
-      if (result.error) throw new Error(result.error);
-      if (result.srtContent && result.transcript) {
-        setSrtData({ srtContent: result.srtContent, transcript: result.transcript });
-        toast({ title: 'Transkripsi Selesai', description: 'Subtitle SRT telah berhasil dibuat oleh AI.' });
-      }
-    } catch (err) {
-      toast({ variant: 'destructive', title: 'Error AI', description: err instanceof Error ? err.message : 'Gagal memproses audio.' });
-    } finally {
-      setIsProcessing(false);
+      
+      toast({ 
+        title: 'Materi Dimuat', 
+        description: 'Mulai putar audio dan tambahkan baris subtitle sesuai kebutuhan.' 
+      });
     }
   };
 
@@ -105,7 +77,7 @@ export default function VoiceToSrtPage() {
 
   const addBlock = () => {
     const lastBlock = manualBlocks[manualBlocks.length - 1];
-    const startTime = lastBlock ? lastBlock.end + 0.5 : 0;
+    const startTime = lastBlock ? lastBlock.end + 0.1 : 0;
     const newBlock: SubtitleBlock = {
       id: Date.now().toString(),
       start: startTime,
@@ -120,11 +92,19 @@ export default function VoiceToSrtPage() {
   };
 
   const removeBlock = (id: string) => {
-    if (manualBlocks.length <= 1) return;
+    if (manualBlocks.length <= 1) {
+      toast({ variant: 'destructive', title: 'Minimal 1 baris', description: 'Anda tidak bisa menghapus semua baris subtitle.' });
+      return;
+    }
     setManualBlocks(manualBlocks.filter(b => b.id !== id));
   };
 
   const generateManualSrt = () => {
+    if (manualBlocks.some(b => !b.text.trim())) {
+      toast({ variant: 'destructive', title: 'Teks Kosong', description: 'Pastikan semua baris subtitle memiliki teks.' });
+      return;
+    }
+
     const content = manualBlocks
       .sort((a, b) => a.start - b.start)
       .map((b, i) => `${i + 1}\n${formatTime(b.start)} --> ${formatTime(b.end)}\n${b.text}\n`)
@@ -132,7 +112,7 @@ export default function VoiceToSrtPage() {
     
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     saveAs(blob, (audioFile?.name.replace(/\.[^/.]+$/, "") || "subtitle") + ".srt");
-    toast({ title: 'Berhasil', description: 'File SRT manual telah disimpan.' });
+    toast({ title: 'Berhasil Ekspor', description: 'File SRT telah berhasil diunduh.' });
   };
 
   const togglePlay = () => {
@@ -151,9 +131,16 @@ export default function VoiceToSrtPage() {
     updateBlock(id, { end: currentTime });
   };
 
+  // Cleanup effect for URL
+  useEffect(() => {
+    return () => {
+      if (audioUrl) URL.revokeObjectURL(audioUrl);
+    };
+  }, [audioUrl]);
+
   return (
     <div className="min-h-full bg-background/50 py-6 px-4 sm:py-10 sm:px-8">
-      <div className="max-w-7xl mx-auto space-y-8 sm:space-y-10">
+      <div className="max-w-7xl mx-auto space-y-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" asChild className="rounded-full shrink-0">
@@ -162,12 +149,12 @@ export default function VoiceToSrtPage() {
             <div className="space-y-1">
               <div className="flex flex-wrap items-center gap-2">
                 <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Subtitle Workstation</h1>
-                <Badge variant="outline" className="hidden sm:flex text-accent border-accent/20 bg-accent/5 px-4 py-1 rounded-full">
+                <Badge variant="outline" className="text-accent border-accent/20 bg-accent/5 px-4 py-1 rounded-full">
                   <Settings2 className="w-3 h-3 mr-2" />
-                  Advanced Editing
+                  Manual Mode (No AI)
                 </Badge>
               </div>
-              <p className="text-muted-foreground text-xs sm:text-sm">Otomatiskan dengan AI atau buat subtitle secara manual dengan presisi studio.</p>
+              <p className="text-muted-foreground text-xs sm:text-sm">Buat subtitle secara manual dengan presisi stempel waktu milidetik.</p>
             </div>
           </div>
         </div>
@@ -179,270 +166,201 @@ export default function VoiceToSrtPage() {
                 <Captions className="w-12 h-12 sm:w-16 sm:h-16 text-accent" />
               </div>
               <div className="space-y-2">
-                <h3 className="text-xl sm:text-2xl font-black uppercase tracking-tighter">Unggah Materi Media</h3>
-                <p className="text-muted-foreground max-w-sm text-xs sm:text-sm">Siapkan audio/video Anda. Pilih mode AI untuk kecepatan atau Manual untuk akurasi mutlak.</p>
+                <h3 className="text-xl sm:text-2xl font-black uppercase tracking-tighter">Mulai Project Subtitle</h3>
+                <p className="text-muted-foreground max-w-sm text-xs sm:text-sm">Unggah file audio atau video untuk mulai membuat subtitle secara manual. Semua proses dilakukan lokal di browser Anda.</p>
               </div>
               <input type="file" id="audio-upload" className="hidden" accept="audio/*,video/*" onChange={handleFileUpload} />
               <Button size="lg" className="rounded-2xl px-8 sm:px-10 shadow-2xl bg-accent hover:bg-accent/90 font-bold" onClick={() => document.getElementById('audio-upload')?.click()}>
-                Pilih File Sekarang
+                <UploadCloud className="mr-2 h-5 w-5" /> Pilih Materi Media
               </Button>
             </CardContent>
           </Card>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-in fade-in duration-700">
             
-            {/* Main Workspace */}
+            {/* Main Editing Area */}
             <div className="lg:col-span-8 space-y-6">
-              <Card className="glass-panel border-none shadow-2xl rounded-3xl overflow-hidden">
-                <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="w-full">
-                  <div className="px-4 sm:px-6 pt-6 border-b bg-muted/20 flex flex-col sm:flex-row items-center justify-between gap-4 pb-4">
-                    <TabsList className="bg-muted/50 p-1 rounded-xl h-12 w-full sm:w-auto">
-                      <TabsTrigger value="ai" className="flex-1 sm:flex-none rounded-lg font-bold px-6 gap-2">
-                        <Sparkles className="w-4 h-4" /> <span className="hidden sm:inline">AI Auto</span><span className="sm:hidden">AI</span>
-                      </TabsTrigger>
-                      <TabsTrigger value="manual" className="flex-1 sm:flex-none rounded-lg font-bold px-6 gap-2">
-                        <Keyboard className="w-4 h-4" /> <span className="hidden sm:inline">Manual Studio</span><span className="sm:hidden">Manual</span>
-                      </TabsTrigger>
-                    </TabsList>
-                    
-                    {activeTab === 'manual' && (
-                      <div className="flex items-center gap-2 w-full sm:w-auto">
-                        <Button onClick={addBlock} variant="outline" className="flex-1 sm:flex-none rounded-xl border-accent/30 text-accent font-bold h-10">
-                          <Plus className="w-4 h-4 sm:mr-2" /> <span className="hidden sm:inline">Baris Baru</span>
-                        </Button>
-                        <Button onClick={generateManualSrt} className="flex-1 sm:flex-none rounded-xl bg-accent hover:bg-accent/90 font-bold shadow-lg h-10">
-                          <Download className="w-4 h-4 sm:mr-2" /> <span className="hidden sm:inline">Ekspor SRT</span><span className="sm:hidden">SRT</span>
-                        </Button>
-                      </div>
-                    )}
+              <Card className="glass-panel border-none shadow-2xl rounded-3xl overflow-hidden flex flex-col h-[650px] sm:h-[750px]">
+                <div className="px-4 sm:px-6 pt-6 border-b bg-muted/20 flex flex-col sm:flex-row items-center justify-between gap-4 pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-accent/10 rounded-lg"><Keyboard className="w-5 h-5 text-accent" /></div>
+                    <h2 className="font-bold">Subtitle Editor Studio</h2>
                   </div>
+                  
+                  <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <Button onClick={addBlock} variant="outline" className="flex-1 sm:flex-none rounded-xl border-accent/30 text-accent font-bold h-10">
+                      <Plus className="w-4 h-4 sm:mr-2" /> Baris Baru
+                    </Button>
+                    <Button onClick={generateManualSrt} className="flex-1 sm:flex-none rounded-xl bg-accent hover:bg-accent/90 font-bold shadow-lg h-10">
+                      <Download className="w-4 h-4 sm:mr-2" /> Ekspor SRT
+                    </Button>
+                  </div>
+                </div>
 
-                  <TabsContent value="ai" className="m-0">
-                    <ScrollArea className="h-[500px] sm:h-[600px] w-full p-4 sm:p-8">
-                      {!srtData && !isProcessing && (
-                        <div className="h-full flex flex-col items-center justify-center text-center space-y-6 py-20 opacity-40">
-                          <Sparkles className="w-12 h-12 sm:w-16 sm:h-16" />
-                          <div className="space-y-2">
-                            <p className="text-lg sm:text-xl font-black uppercase tracking-widest">AI Standby</p>
-                            <p className="max-w-xs mx-auto text-[10px] sm:text-xs">Klik "Mulai Transkripsi AI" di panel samping untuk memproses suara secara otomatis.</p>
-                          </div>
+                <div className="p-4 bg-accent/5 border-b flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-10 py-6">
+                  <Button 
+                    size="icon" 
+                    variant="secondary" 
+                    className="h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-accent text-white shadow-xl hover:scale-105 transition-transform shrink-0"
+                    onClick={togglePlay}
+                  >
+                    {isPlaying ? <Pause className="h-6 w-6 sm:h-8 sm:w-8" /> : <Play className="h-6 w-6 sm:h-8 sm:w-8 ml-1" />}
+                  </Button>
+                  <div className="text-center">
+                    <p className="text-3xl sm:text-4xl font-black font-mono tracking-tighter text-accent leading-none">{formatTime(currentTime)}</p>
+                    <p className="text-[10px] sm:text-[11px] uppercase font-bold text-muted-foreground tracking-widest mt-1">Playback Timer</p>
+                  </div>
+                  <audio 
+                    ref={audioRef} 
+                    src={audioUrl || ''} 
+                    onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
+                    onEnded={() => setIsPlaying(false)}
+                    className="hidden"
+                  />
+                </div>
+                
+                <ScrollArea className="flex-grow p-4 sm:p-8">
+                  <div className="space-y-6 pb-20">
+                    {manualBlocks.map((block, index) => (
+                      <div key={block.id} className="group relative bg-card border rounded-2xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-all hover:border-accent/40">
+                        <div className="absolute -left-2 sm:-left-3 top-6 w-6 h-6 bg-accent text-white rounded-full flex items-center justify-center text-[10px] font-bold shadow-lg">
+                          {index + 1}
                         </div>
-                      )}
-                      {isProcessing && (
-                        <div className="h-full flex flex-col items-center justify-center text-center space-y-6 py-20">
-                          <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 animate-spin text-accent" />
-                          <div className="space-y-2">
-                            <p className="text-lg sm:text-xl font-black text-accent animate-pulse uppercase tracking-widest">AI Menganalisis...</p>
-                            <p className="text-[10px] sm:text-xs text-muted-foreground">Gemini sedang mendengarkan dan menuliskan subtitle untuk Anda.</p>
-                          </div>
-                        </div>
-                      )}
-                      {srtData && (
-                        <div className="space-y-8 animate-in slide-in-from-bottom-4">
-                           <div className="p-4 sm:p-6 bg-accent/5 border border-accent/20 rounded-2xl">
-                             <h4 className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-accent mb-4 flex items-center gap-2">
-                               <Type className="w-4 h-4" /> Teks Naratif
-                             </h4>
-                             <p className="text-xs sm:text-sm leading-relaxed whitespace-pre-wrap">{srtData.transcript}</p>
-                           </div>
-                           <div className="p-4 sm:p-6 bg-black/5 rounded-2xl font-mono text-[10px] sm:text-[11px] overflow-auto">
-                             <h4 className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4 flex items-center gap-2">
-                               <FileCode className="w-4 h-4" /> Format SRT Mentah
-                             </h4>
-                             <pre className="text-accent dark:text-accent-foreground/70">{srtData.srtContent}</pre>
-                           </div>
-                        </div>
-                      )}
-                    </ScrollArea>
-                  </TabsContent>
-
-                  <TabsContent value="manual" className="m-0">
-                    <div className="flex flex-col h-[500px] sm:h-[600px]">
-                      <div className="p-4 bg-accent/5 border-b flex items-center justify-center gap-4 sm:gap-6">
-                        <Button 
-                          size="icon" 
-                          variant="secondary" 
-                          className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-accent text-white shadow-xl hover:scale-105 transition-transform shrink-0"
-                          onClick={togglePlay}
-                        >
-                          {isPlaying ? <Pause className="h-5 w-5 sm:h-6 sm:w-6" /> : <Play className="h-5 w-5 sm:h-6 sm:w-6 ml-0.5" />}
-                        </Button>
-                        <div className="text-center">
-                          <p className="text-2xl sm:text-3xl font-black font-mono tracking-tighter text-accent">{formatTime(currentTime)}</p>
-                          <p className="text-[8px] sm:text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Waktu Sekarang</p>
-                        </div>
-                        <audio 
-                          ref={audioRef} 
-                          src={audioUrl || ''} 
-                          onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
-                          onEnded={() => setIsPlaying(false)}
-                          className="hidden"
-                        />
-                      </div>
-                      
-                      <ScrollArea className="flex-grow p-4 sm:p-6">
-                        <div className="space-y-4 pb-20">
-                          {manualBlocks.map((block, index) => (
-                            <div key={block.id} className="group relative bg-card border rounded-2xl p-4 shadow-sm hover:shadow-md transition-all hover:border-accent/30">
-                              <div className="absolute -left-2 sm:-left-3 top-1/2 -translate-y-1/2 w-5 h-5 sm:w-6 sm:h-6 bg-muted rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-bold border">
-                                {index + 1}
-                              </div>
-                              <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
-                                <div className="md:col-span-4 grid grid-cols-2 md:grid-cols-1 gap-3">
-                                  <div className="space-y-1.5">
-                                    <Label className="text-[9px] sm:text-[10px] uppercase font-bold text-muted-foreground">Mulai</Label>
-                                    <div className="flex gap-1">
-                                      <Input 
-                                        type="number" 
-                                        step="0.1"
-                                        value={block.start} 
-                                        onChange={(e) => updateBlock(block.id, { start: parseFloat(e.target.value) })}
-                                        className="h-8 sm:h-9 text-[10px] sm:text-xs font-mono"
-                                      />
-                                      <Button size="icon" variant="ghost" className="h-8 w-8 sm:h-9 sm:w-9 shrink-0" onClick={() => setStartToCurrent(block.id)} title="Gunakan waktu sekarang">
-                                        <Clock className="w-3.5 h-3.5" />
-                                      </Button>
-                                    </div>
-                                  </div>
-                                  <div className="space-y-1.5">
-                                    <Label className="text-[9px] sm:text-[10px] uppercase font-bold text-muted-foreground">Selesai</Label>
-                                    <div className="flex gap-1">
-                                      <Input 
-                                        type="number" 
-                                        step="0.1"
-                                        value={block.end} 
-                                        onChange={(e) => updateBlock(block.id, { end: parseFloat(e.target.value) })}
-                                        className="h-8 sm:h-9 text-[10px] sm:text-xs font-mono"
-                                      />
-                                      <Button size="icon" variant="ghost" className="h-8 w-8 sm:h-9 sm:w-9 shrink-0" onClick={() => setEndToCurrent(block.id)} title="Gunakan waktu sekarang">
-                                        <Clock className="w-3.5 h-3.5" />
-                                      </Button>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="md:col-span-7 space-y-1.5">
-                                  <Label className="text-[9px] sm:text-[10px] uppercase font-bold text-muted-foreground">Isi Subtitle</Label>
-                                  <Textarea 
-                                    placeholder="Ketik apa yang terdengar..." 
-                                    value={block.text}
-                                    onChange={(e) => updateBlock(block.id, { text: e.target.value })}
-                                    className="min-h-[70px] sm:min-h-[82px] text-xs sm:text-sm leading-relaxed resize-none rounded-xl"
-                                  />
-                                </div>
-                                <div className="md:col-span-1 pt-0 md:pt-6 flex justify-end">
-                                  <Button 
-                                    size="icon" 
-                                    variant="ghost" 
-                                    className="text-destructive hover:bg-destructive/10 rounded-full h-8 w-8"
-                                    onClick={() => removeBlock(block.id)}
-                                  >
-                                    <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                                  </Button>
-                                </div>
+                        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+                          <div className="md:col-span-4 grid grid-cols-1 gap-4">
+                            <div className="space-y-2">
+                              <Label className="text-[10px] uppercase font-bold text-muted-foreground flex items-center gap-2">
+                                <Timer className="w-3 h-3" /> Waktu Mulai
+                              </Label>
+                              <div className="flex gap-2">
+                                <Input 
+                                  type="number" 
+                                  step="0.01"
+                                  value={block.start} 
+                                  onChange={(e) => updateBlock(block.id, { start: parseFloat(e.target.value) })}
+                                  className="h-10 text-xs font-mono rounded-xl"
+                                />
+                                <Button size="icon" variant="secondary" className="h-10 w-10 shrink-0 rounded-xl" onClick={() => setStartToCurrent(block.id)} title="Gunakan waktu sekarang">
+                                  <Clock className="w-4 h-4" />
+                                </Button>
                               </div>
                             </div>
-                          ))}
+                            <div className="space-y-2">
+                              <Label className="text-[10px] uppercase font-bold text-muted-foreground flex items-center gap-2">
+                                <Timer className="w-3 h-3" /> Waktu Selesai
+                              </Label>
+                              <div className="flex gap-2">
+                                <Input 
+                                  type="number" 
+                                  step="0.01"
+                                  value={block.end} 
+                                  onChange={(e) => updateBlock(block.id, { end: parseFloat(e.target.value) })}
+                                  className="h-10 text-xs font-mono rounded-xl"
+                                />
+                                <Button size="icon" variant="secondary" className="h-10 w-10 shrink-0 rounded-xl" onClick={() => setEndToCurrent(block.id)} title="Gunakan waktu sekarang">
+                                  <Clock className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="md:col-span-7 space-y-2">
+                            <Label className="text-[10px] uppercase font-bold text-muted-foreground flex items-center gap-2">
+                              <Type className="w-3 h-3" /> Teks Subtitle
+                            </Label>
+                            <Textarea 
+                              placeholder="Masukkan narasi yang terdengar..." 
+                              value={block.text}
+                              onChange={(e) => updateBlock(block.id, { text: e.target.value })}
+                              className="min-h-[120px] text-sm leading-relaxed resize-none rounded-xl p-4"
+                            />
+                          </div>
+                          <div className="md:col-span-1 pt-8 flex justify-end">
+                            <Button 
+                              size="icon" 
+                              variant="ghost" 
+                              className="text-destructive hover:bg-destructive/10 rounded-full h-10 w-10"
+                              onClick={() => removeBlock(block.id)}
+                            >
+                              <Trash2 className="w-5 h-5" />
+                            </Button>
+                          </div>
                         </div>
-                      </ScrollArea>
-                    </div>
-                  </TabsContent>
-                </Tabs>
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
               </Card>
             </div>
 
-            {/* Sidebar Tools */}
+            {/* Sidebar Support Area */}
             <div className="lg:col-span-4 space-y-6">
               <Card className="rounded-3xl border-none shadow-xl overflow-hidden">
                 <CardHeader className="bg-muted/30 border-b py-4">
                   <CardTitle className="text-xs sm:text-sm font-bold flex items-center gap-2">
                     <FileAudio className="h-4 w-4 text-accent" />
-                    Media Info
+                    Detail File Lokal
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="p-4 sm:p-6 space-y-6">
-                  <div className="p-3 sm:p-4 bg-muted/50 rounded-2xl flex items-center gap-4">
-                    <div className="p-2.5 sm:p-3 bg-accent/20 rounded-xl text-accent">
-                      <FileAudio className="w-5 h-5 sm:w-6 sm:h-6" />
+                <CardContent className="p-6 space-y-6">
+                  <div className="p-4 bg-muted/50 rounded-2xl flex items-center gap-4">
+                    <div className="p-3 bg-accent/20 rounded-xl text-accent">
+                      <FileAudio className="w-6 h-6" />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-xs sm:text-sm font-bold truncate">{audioFile.name}</p>
-                      <p className="text-[8px] sm:text-[10px] text-muted-foreground uppercase tracking-widest">{(audioFile.size / (1024 * 1024)).toFixed(2)} MB • {audioFile.type.split('/')[1].toUpperCase()}</p>
+                      <p className="text-sm font-bold truncate">{audioFile.name}</p>
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-widest">{(audioFile.size / (1024 * 1024)).toFixed(2)} MB • {audioFile.type.split('/')[1].toUpperCase()}</p>
                     </div>
                   </div>
 
-                  {activeTab === 'ai' ? (
-                    <div className="space-y-4">
-                      <Button 
-                        className="w-full h-14 sm:h-16 rounded-2xl bg-accent hover:bg-accent/90 font-bold text-base sm:text-lg shadow-xl" 
-                        onClick={handleTranscribe} 
-                        disabled={isProcessing}
-                      >
-                        {isProcessing ? (
-                          <><Loader2 className="mr-2 h-5 w-5 sm:h-6 sm:w-6 animate-spin" /> Menganalisis...</>
-                        ) : (
-                          <><Sparkles className="mr-2 h-5 w-5 sm:h-6 sm:w-6" /> Auto AI Transcribe</>
-                        )}
-                      </Button>
-                      {srtData && (
-                         <Button variant="outline" className="w-full h-11 sm:h-12 rounded-xl border-accent/20" onClick={() => {
-                            const blob = new Blob([srtData.srtContent], { type: 'text/plain;charset=utf-8' });
-                            saveAs(blob, audioFile.name.replace(/\.[^/.]+$/, "") + ".srt");
-                         }}>
-                           <Download className="mr-2 h-4 w-4" /> Simpan Hasil AI
-                         </Button>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="bg-accent/5 border border-accent/20 p-4 sm:p-5 rounded-2xl space-y-4">
-                       <h4 className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-accent flex items-center gap-2">
-                          <Keyboard className="w-3 h-3" /> Manual Shortcuts
-                       </h4>
-                       <ul className="space-y-2">
-                          <li className="flex justify-between text-[9px] sm:text-[10px]">
-                             <span className="text-muted-foreground">Tambah Baris</span>
-                             <span className="font-mono bg-muted px-1.5 rounded">Enter (di teks)</span>
-                          </li>
-                          <li className="flex justify-between text-[9px] sm:text-[10px]">
-                             <span className="text-muted-foreground">Putar/Jeda</span>
-                             <span className="font-mono bg-muted px-1.5 rounded">Space</span>
-                          </li>
-                       </ul>
-                       <p className="text-[8px] sm:text-[10px] text-muted-foreground leading-relaxed italic border-t pt-3">
-                         Tips: Gunakan tombol jam (icon clock) untuk menangkap waktu saat Anda mendengar suara tertentu agar timing lebih akurat.
-                       </p>
-                    </div>
-                  )}
+                  <div className="bg-accent/5 border border-accent/20 p-5 rounded-2xl space-y-4">
+                     <h4 className="text-[10px] font-bold uppercase tracking-widest text-accent flex items-center gap-2">
+                        <Info className="w-3.5 h-3.5" /> Panduan Manual
+                     </h4>
+                     <ul className="space-y-3">
+                        <li className="flex gap-3 text-xs leading-relaxed text-muted-foreground">
+                           <span className="text-accent font-bold">1.</span>
+                           Klik tombol jam (<Clock className="w-3 h-3 inline" />) untuk mengisi waktu otomatis berdasarkan posisi pemutaran audio.
+                        </li>
+                        <li className="flex gap-3 text-xs leading-relaxed text-muted-foreground">
+                           <span className="text-accent font-bold">2.</span>
+                           Pastikan waktu mulai lebih kecil dari waktu selesai agar SRT valid.
+                        </li>
+                        <li className="flex gap-3 text-xs leading-relaxed text-muted-foreground">
+                           <span className="text-accent font-bold">3.</span>
+                           Gunakan tombol "Baris Baru" untuk menambahkan transkrip selanjutnya.
+                        </li>
+                     </ul>
+                  </div>
 
                   <Button 
                     variant="ghost" 
-                    className="w-full text-[10px] sm:text-xs text-muted-foreground h-10" 
-                    onClick={() => { setAudioFile(null); setSrtData(null); setAudioUrl(null); }}
-                    disabled={isProcessing}
+                    className="w-full text-xs text-muted-foreground h-11 rounded-xl" 
+                    onClick={() => { setAudioFile(null); setAudioUrl(null); }}
                   >
-                    <UploadCloud className="mr-2 h-3.5 w-3.5" /> Ganti Materi Media
+                    <UploadCloud className="mr-2 h-4 w-4" /> Ganti Materi Media
                   </Button>
                 </CardContent>
               </Card>
 
-              {/* AI Logs / History */}
+              {/* Technical Logs */}
               <Card className="rounded-3xl border-none shadow-lg">
                  <CardHeader className="pb-2 pt-4">
-                    <CardTitle className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
-                       <History className="w-3 h-3" /> Alur Kerja
+                    <CardTitle className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
+                       <History className="w-3.5 h-3.5" /> Log Aktivitas
                     </CardTitle>
                  </CardHeader>
-                 <CardContent className="text-[8px] sm:text-[10px] text-muted-foreground space-y-3 pb-6">
+                 <CardContent className="text-[11px] text-muted-foreground space-y-3 pb-6">
                     <div className="flex gap-3">
-                       <div className="w-1 bg-accent/20 rounded-full" />
-                       <p>Browser melakukan buffering media lokal untuk akses instan.</p>
+                       <div className="w-1 bg-accent/30 rounded-full" />
+                       <p>Pemrosesan lokal aktif. Tidak ada data yang dikirim ke AI Cloud.</p>
                     </div>
                     <div className="flex gap-3">
-                       <div className="w-1 bg-accent/20 rounded-full" />
-                       <p>Pemrosesan SRT mengikuti standar ITU-R BT.1771.</p>
+                       <div className="w-1 bg-accent/30 rounded-full" />
+                       <p>Sinkronisasi waktu presisi hingga 2 digit desimal (milidetik).</p>
                     </div>
                     <div className="flex gap-3">
-                       <div className="w-1 bg-accent/20 rounded-full" />
-                       <p>Format output kompatibel dengan YouTube, Premiere, dan VLC.</p>
+                       <div className="w-1 bg-accent/30 rounded-full" />
+                       <p>Format output UTF-8 standar (.srt).</p>
                     </div>
                  </CardContent>
               </Card>
@@ -453,4 +371,3 @@ export default function VoiceToSrtPage() {
     </div>
   );
 }
-
