@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { 
   FileImage, 
   Monitor, 
-  Volume2, 
   Crop, 
   ArrowRight,
   Sparkles,
@@ -12,8 +11,6 @@ import {
   ShieldCheck,
   Globe,
   LayoutGrid,
-  TimerOff,
-  Music4,
   Palette,
   Captions
 } from 'lucide-react';
@@ -23,38 +20,6 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 const categories = [
-  {
-    name: 'Audio & Suara',
-    description: 'Produksi dan pengeditan audio dengan teknologi DSP dan Workstation Manual.',
-    icon: Music4,
-    color: 'text-orange-600',
-    tools: [
-      {
-        title: 'Audio FX Studio',
-        description: 'Transformasi suara dengan 20 profil studio dan visualizer reaktif.',
-        href: '/audio-cleaner',
-        icon: Volume2,
-        color: 'bg-orange-500/10 text-orange-600',
-        badge: 'Studio DSP'
-      },
-      {
-        title: 'Subtitle Studio',
-        description: 'Pembuatan file subtitle SRT secara manual dengan presisi stempel waktu milidetik.',
-        href: '/voice-to-srt',
-        icon: Captions,
-        color: 'bg-purple-500/10 text-purple-600',
-        badge: 'Manual Workstation'
-      },
-      {
-        title: 'Hapus Bagian Diam',
-        description: 'Deteksi dan hapus jeda kosong (dead air) secara otomatis pada audio.',
-        href: '/dead-air-remover',
-        icon: TimerOff,
-        color: 'bg-yellow-500/10 text-yellow-600',
-        badge: 'Cerdas AI'
-      },
-    ]
-  },
   {
     name: 'Visual & Gambar',
     description: 'Alat pengolahan gambar dan pembuatan aset desain profesional.',
@@ -83,6 +48,22 @@ const categories = [
         href: '/trim',
         icon: Crop,
         color: 'bg-teal-500/10 text-teal-600',
+      },
+    ]
+  },
+  {
+    name: 'Subtitle & Teks',
+    description: 'Produksi teks dan subtitle dengan presisi tinggi.',
+    icon: Captions,
+    color: 'text-orange-600',
+    tools: [
+      {
+        title: 'Subtitle Studio',
+        description: 'Pembuatan file subtitle SRT secara manual dengan presisi stempel waktu milidetik.',
+        href: '/voice-to-srt',
+        icon: Captions,
+        color: 'bg-orange-500/10 text-orange-600',
+        badge: 'Manual Workstation'
       },
     ]
   }
@@ -131,7 +112,7 @@ export default function DashboardPage() {
               <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b pb-6 border-border/20">
                 <div className="flex items-center gap-3 sm:gap-4">
                   <div className={cn("p-2.5 sm:p-3 rounded-2xl bg-card shadow-sm border border-border/20", category.color)}>
-                    <category.icon className="w-6 h-6 sm:w-8 sm:h-8" />
+                    <category.icon className="w-6 h-6 sm:w-8 h-8" />
                   </div>
                   <div>
                     <h2 className="text-xl sm:text-3xl font-bold tracking-tight">{category.name}</h2>

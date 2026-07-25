@@ -20,9 +20,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 const navItems = [
   { href: '/', label: 'Dashboard' },
   { href: '/image-converter', label: 'Visual & Gambar' },
-  { href: '/audio-cleaner', label: 'Audio & Suara' },
-  { href: '/voice-to-srt', label: 'Voice to SRT' },
-  { href: '/dead-air-remover', label: 'Hapus Diam' },
+  { href: '/voice-to-srt', label: 'Subtitle Studio' },
+  { href: '/mockup', label: 'Mockup' },
   { href: '/trim', label: 'Potong Cerdas' },
 ];
 
