@@ -21,7 +21,7 @@ import { cn } from '@/lib/utils';
 const visualTools = [
   {
     title: 'Konverter Gambar',
-    description: 'Transformasi gambar ke WebP, JPG, atau PNG dengan analisis cerdas AI.',
+    description: 'Transformasi gambar ke WebP, JPG, atau PNG dengan analisis cerdas AI untuk hasil optimal.',
     href: '/image-converter',
     icon: FileImage,
     color: 'bg-blue-500/10 text-blue-600',
@@ -29,15 +29,15 @@ const visualTools = [
   },
   {
     title: 'Generator Mockup',
-    description: 'Ciptakan visual produk profesional dengan latar belakang buatan AI.',
+    description: 'Ciptakan visual produk profesional dengan latar belakang artistik yang dihasilkan oleh Imagen 4 AI.',
     href: '/mockup',
     icon: Monitor,
     color: 'bg-purple-500/10 text-purple-600',
-    badge: 'Imagen AI'
+    badge: 'AI Background'
   },
   {
     title: 'Potong Cerdas',
-    description: 'Segmentasi gambar cerdas untuk membuang area kosong secara instan.',
+    description: 'Segmentasi gambar cerdas untuk membuang area kosong atau margin transparan secara instan.',
     href: '/trim',
     icon: Crop,
     color: 'bg-teal-500/10 text-teal-600',
@@ -64,7 +64,7 @@ export default function DashboardPage() {
           </h1>
           
           <p className="text-muted-foreground text-sm sm:text-lg md:text-2xl max-w-3xl mx-auto leading-relaxed px-4">
-            Ekosistem alat pengolahan gambar profesional yang dikelompokkan untuk mempercepat alur kerja desain Anda.
+            Ekosistem alat pengolahan gambar profesional yang dikelompokkan untuk mempercepat alur kerja desain Anda secara lokal dan cerdas.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 pt-4 w-full sm:w-auto px-6 sm:px-0">
@@ -136,21 +136,21 @@ export default function DashboardPage() {
                 <div className="p-3 sm:p-4 bg-primary/20 rounded-2xl shadow-inner shrink-0"><LayoutGrid className="w-6 h-6 sm:w-8 sm:h-8 text-accent" /></div>
                 <div className="space-y-1 sm:space-y-2">
                     <h4 className="text-lg sm:text-xl font-bold">Terorganisir</h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground">Antarmuka bersih yang fokus pada alur kerja visual Anda.</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Antarmuka bersih yang fokus pada alur kerja visual Anda tanpa distraksi.</p>
                 </div>
             </div>
             <div className="flex flex-col md:flex-row items-center md:items-start gap-4 sm:gap-6">
                 <div className="p-3 sm:p-4 bg-primary/20 rounded-2xl shadow-inner shrink-0"><ShieldCheck className="w-6 h-6 sm:w-8 sm:h-8 text-accent" /></div>
                 <div className="space-y-1 sm:space-y-2">
                     <h4 className="text-lg sm:text-xl font-bold">Privasi Utama</h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground">Pemrosesan lokal di browser untuk keamanan aset gambar Anda.</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Pemrosesan lokal di browser memastikan aset Anda tetap berada di tangan Anda.</p>
                 </div>
             </div>
             <div className="flex flex-col md:flex-row items-center md:items-start gap-4 sm:gap-6">
                 <div className="p-3 sm:p-4 bg-primary/20 rounded-2xl shadow-inner shrink-0"><Globe className="w-6 h-6 sm:w-8 sm:h-8 text-accent" /></div>
                 <div className="space-y-1 sm:space-y-2">
-                    <h4 className="text-lg sm:text-xl font-bold">Gratis Selamanya</h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground">Tanpa login, tanpa biaya. Siap digunakan kapan pun Anda butuh.</p>
+                    <h4 className="text-lg sm:text-xl font-bold">Tanpa Batas</h4>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Tanpa login, tanpa biaya berlangganan. Siap digunakan kapan pun dibutuhkan.</p>
                 </div>
             </div>
         </div>

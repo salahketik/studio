@@ -8,8 +8,8 @@ import { GlobalErrorHandler } from '@/components/global-error-handler';
 
 
 export const metadata: Metadata = {
-  title: 'Visual Creative Suite',
-  description: 'Workstation digital profesional untuk konversi gambar, pembuatan mockup AI, dan pemotongan aset cerdas.',
+  title: 'Visual Creative Suite - Professional Image Workstation',
+  description: 'Workstation digital profesional untuk konversi gambar, pembuatan mockup AI, dan pemotongan aset cerdas dengan teknologi AI terbaru.',
 };
 
 export default function RootLayout({
