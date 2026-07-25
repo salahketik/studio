@@ -19,8 +19,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 
 const navItems = [
   { href: '/', label: 'Dashboard' },
-  { href: '/image-converter', label: 'Visual & Gambar' },
-  { href: '/voice-to-srt', label: 'Subtitle Studio' },
+  { href: '/image-converter', label: 'Konverter' },
   { href: '/mockup', label: 'Mockup' },
   { href: '/trim', label: 'Potong Cerdas' },
 ];
@@ -59,7 +58,7 @@ export function AppHeader() {
             <div className="bg-accent p-2 rounded-lg transition-transform group-hover:scale-110 shadow-lg shadow-accent/20">
               <Layers className="h-5 w-5 text-white" />
             </div>
-            <span className="font-bold text-xl tracking-tight">Alat Kreatif</span>
+            <span className="font-bold text-xl tracking-tight">Visual Suite</span>
           </Link>
           <NavLinks />
         </div>
@@ -69,7 +68,7 @@ export function AppHeader() {
                 <div className="bg-accent p-2 rounded-lg shadow-lg shadow-accent/20">
                     <Layers className="h-5 w-5 text-white" />
                 </div>
-                <span className="font-bold text-lg tracking-tight">Alat Kreatif</span>
+                <span className="font-bold text-lg tracking-tight">Visual Suite</span>
             </Link>
         </div>
 
@@ -85,13 +84,13 @@ export function AppHeader() {
             <SheetContent side="left" className="w-[280px] sm:w-[350px] p-0 flex flex-col border-r border-border/20">
                 <SheetHeader className="p-6 border-b border-border/10">
                   <SheetTitle className="sr-only">Navigasi Utama</SheetTitle>
-                  <SheetDescription className="sr-only">Menu utama aplikasi Alat Kreatif</SheetDescription>
+                  <SheetDescription className="sr-only">Menu utama aplikasi Visual Creative Suite</SheetDescription>
                   <div className="flex items-center justify-between">
                     <Link href="/" className="flex items-center space-x-3" onClick={() => setIsMobileMenuOpen(false)}>
                         <div className="bg-accent p-2 rounded-lg">
                             <Layers className="h-6 w-6 text-white" />
                         </div>
-                        <span className="font-bold text-xl tracking-tight">Alat Kreatif</span>
+                        <span className="font-bold text-xl tracking-tight">Visual Suite</span>
                     </Link>
                   </div>
                 </SheetHeader>

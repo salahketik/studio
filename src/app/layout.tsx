@@ -8,8 +8,8 @@ import { GlobalErrorHandler } from '@/components/global-error-handler';
 
 
 export const metadata: Metadata = {
-  title: 'Alat Kreatif',
-  description: 'Konversi gambar, buat mockup, dan edit PDF dengan alat canggih.',
+  title: 'Visual Creative Suite',
+  description: 'Workstation digital profesional untuk konversi gambar, pembuatan mockup AI, dan pemotongan aset cerdas.',
 };
 
 export default function RootLayout({
