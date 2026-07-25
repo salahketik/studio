@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -12,7 +11,7 @@ export function AppFooter() {
 
   return (
     <footer className="p-4 border-t border-border text-center text-sm text-muted-foreground">
-      <p>&copy; {year || '...'} Alat Kreatif. Hak cipta dilindungi undang-undang.</p>
+      <p>&copy; {year || '...'} Visual Creative Suite. Hak cipta dilindungi undang-undang.</p>
     </footer>
   );
 }
