@@ -22,7 +22,7 @@ const navItems = [
   { href: '/image-converter', label: 'Visual & Gambar' },
   { href: '/audio-cleaner', label: 'Audio & Suara' },
   { href: '/voice-to-srt', label: 'Voice to SRT' },
-  { href: '/pdf-converter', label: 'PDF Suite' },
+  { href: '/dead-air-remover', label: 'Hapus Diam' },
   { href: '/trim', label: 'Potong Cerdas' },
 ];
 
@@ -53,7 +53,7 @@ export function AppHeader() {
   );
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/20 bg-background/80 backdrop-blur-xl transition-all">
+    <header className="sticky top-0 z-50 w-full border-b border-border/10 bg-background/80 backdrop-blur-xl transition-all">
       <div className="container mx-auto flex h-16 items-center px-6">
         <div className="mr-8 hidden md:flex items-center gap-8">
           <Link href="/" className="flex items-center space-x-3 group">
@@ -78,7 +78,7 @@ export function AppHeader() {
           <ThemeToggle />
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild className="md:hidden">
-              <Button variant="ghost" size="icon" className="rounded-full">
+              <Button variant="ghost" size="icon" className="rounded-full hover:bg-accent/10">
                 <Menu className="h-6 w-6" />
                 <span className="sr-only">Menu</span>
               </Button>
@@ -105,7 +105,7 @@ export function AppHeader() {
                 
                 <div className="p-6 border-t border-border/10 bg-muted/30">
                     <p className="text-[10px] text-muted-foreground text-center font-medium uppercase tracking-widest">
-                        Digital Workstation v1.1
+                        Digital Workstation v1.5
                     </p>
                 </div>
             </SheetContent>

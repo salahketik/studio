@@ -5,7 +5,6 @@ import {
   FileImage, 
   Monitor, 
   Volume2, 
-  FileText, 
   Crop, 
   ArrowRight,
   Sparkles,
@@ -16,7 +15,6 @@ import {
   TimerOff,
   Music4,
   Palette,
-  Briefcase,
   Captions
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -41,7 +39,7 @@ const categories = [
       },
       {
         title: 'Voice to Subtitle',
-        description: 'Transkripsi suara otomatis ke format subtitle SRT menggunakan Gemini AI.',
+        description: 'Transkripsi suara otomatis ke format subtitle SRT menggunakan Gemini AI atau Manual Studio.',
         href: '/voice-to-srt',
         icon: Captions,
         color: 'bg-purple-500/10 text-purple-600',
@@ -87,22 +85,6 @@ const categories = [
         color: 'bg-teal-500/10 text-teal-600',
       },
     ]
-  },
-  {
-    name: 'Dokumen & Produktivitas',
-    description: 'Transformasi dokumen untuk alur kerja yang lebih cepat.',
-    icon: Briefcase,
-    color: 'text-red-600',
-    tools: [
-      {
-        title: 'Perangkat PDF Suite',
-        description: 'Dikonversi dokumen PDF Anda menjadi format Word, Excel, atau PPT secara presisi.',
-        href: '/pdf-converter',
-        icon: FileText,
-        color: 'bg-red-500/10 text-red-600',
-        badge: 'AI Engine'
-      },
-    ]
   }
 ];
 
@@ -130,10 +112,13 @@ export default function DashboardPage() {
           </p>
 
           <div className="flex gap-4 pt-4">
-            <Button size="lg" className="rounded-full px-8 shadow-xl hover:shadow-primary/20" asChild>
-              <Link href="#tools">Jelajahi Alat <Zap className="ml-2 w-4 h-4" /></Link>
-            </Button>
-            <Button size="lg" variant="outline" className="rounded-full px-8 backdrop-blur-sm" asChild>
+            <button 
+              className="bg-accent text-white px-10 py-4 rounded-full font-bold text-lg shadow-xl hover:shadow-accent/20 transition-all active:scale-95"
+              onClick={() => document.getElementById('tools')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              Jelajahi Alat <Zap className="ml-2 w-4 h-4 inline" />
+            </button>
+            <Button size="lg" variant="outline" className="rounded-full px-8 backdrop-blur-sm h-14" asChild>
               <Link href="/image-converter">Mulai Konversi</Link>
             </Button>
           </div>
@@ -143,9 +128,9 @@ export default function DashboardPage() {
         <div id="tools" className="space-y-20">
           {categories.map((category) => (
             <div key={category.name} className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-              <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b pb-6">
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b pb-6 border-border/20">
                 <div className="flex items-center gap-4">
-                  <div className={cn("p-3 rounded-2xl bg-card shadow-sm border", category.color)}>
+                  <div className={cn("p-3 rounded-2xl bg-card shadow-sm border border-border/20", category.color)}>
                     <category.icon className="w-8 h-8" />
                   </div>
                   <div>
@@ -158,7 +143,7 @@ export default function DashboardPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {category.tools.map((tool) => (
                   <Link key={tool.title} href={tool.href} className="group">
-                    <Card className="tool-card h-full flex flex-col">
+                    <Card className="tool-card h-full flex flex-col border-border/10 bg-card/60">
                       <CardHeader>
                         <div className={cn(
                           "w-14 h-14 rounded-2xl flex items-center justify-center mb-6 transition-all duration-500 group-hover:rotate-6",
@@ -171,7 +156,7 @@ export default function DashboardPage() {
                             {tool.title}
                           </CardTitle>
                           {tool.badge && (
-                            <Badge variant="secondary" className="text-[10px] uppercase tracking-wider font-bold">
+                            <Badge variant="secondary" className="text-[10px] uppercase tracking-wider font-bold bg-accent/10 text-accent border-none">
                               {tool.badge}
                             </Badge>
                           )}
