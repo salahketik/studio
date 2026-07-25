@@ -11,7 +11,8 @@ import {
   ShieldCheck,
   Globe,
   LayoutGrid,
-  Palette
+  Palette,
+  Info
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -128,6 +129,38 @@ export default function DashboardPage() {
               </Link>
             ))}
           </div>
+        </div>
+
+        {/* Quick Guide Section */}
+        <div className="space-y-10">
+           <div className="flex items-center gap-3 border-b pb-6 border-border/20">
+              <div className="p-2.5 sm:p-3 rounded-2xl bg-card shadow-sm border border-border/20 text-accent">
+                <Info className="w-6 h-6 sm:w-8 h-8" />
+              </div>
+              <div>
+                <h2 className="text-xl sm:text-3xl font-bold tracking-tight">Panduan Penggunaan</h2>
+                <p className="text-xs sm:text-sm text-muted-foreground">Tips memaksimalkan workstation visual Anda.</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+               <div className="glass-panel p-8 rounded-3xl space-y-4">
+                  <h3 className="text-xl font-bold flex items-center gap-2">
+                    <Zap className="w-5 h-5 text-accent" /> Ekspor WebP Cerdas
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Gunakan **Bantuan AI** saat mengonversi ke WebP. AI kami akan menganalisis konten gambar dan menyarankan parameter kompresi yang menyeimbangkan antara kejernihan dan ukuran file yang super kecil.
+                  </p>
+               </div>
+               <div className="glass-panel p-8 rounded-3xl space-y-4">
+                  <h3 className="text-xl font-bold flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-accent" /> AI Background Mockup
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Saat membuat mockup, tuliskan deskripsi latar belakang seperti *"minimalist high-end studio"* atau *"cinematic natural light"*. AI akan membuatkan latar belakang eksklusif untuk mockup Anda.
+                  </p>
+               </div>
+            </div>
         </div>
 
         {/* Trust Features */}

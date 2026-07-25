@@ -6,7 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 
 import { ImageUploader } from '@/features/smart-trim/components/image-uploader';
 import { Button } from '@/components/ui/button';
-import { Download, Loader2, ImageIcon, UploadCloud, ChevronLeft, Scissors } from 'lucide-react';
+import { Download, Loader2, ImageIcon, UploadCloud, ChevronLeft, Scissors, Sparkles, Info } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { saveAs } from 'file-saver';
 import { Slider } from '@/components/ui/slider';
@@ -37,23 +37,30 @@ export default function TrimPage() {
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const { data, width, height } = imageData;
     
+    // Top-left pixel is often background
     const bgR = data[0], bgG = data[1], bgB = data[2], bgA = data[3];
 
     let top = height, bottom = -1, left = width, right = -1;
 
     function isPixelEmpty(i: number) {
         const r = data[i], g = data[i+1], b = data[i+2], a = data[i+3];
-        const colorThreshold = 30;
+        
+        // Alpha transparency check
         if (a < tolerance) return true;
+        
+        // Color similarity check (useful for solid backgrounds)
+        const colorThreshold = 30;
         if (
             Math.abs(r - bgR) < colorThreshold &&
             Math.abs(g - bgG) < colorThreshold &&
             Math.abs(b - bgB) < colorThreshold &&
             Math.abs(a - bgA) < tolerance
         ) return true;
+        
         return false;
     }
 
+    // Scanning algorithms
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
             if (!isPixelEmpty((y * width + x) * 4)) { top = y; break; }
@@ -178,10 +185,18 @@ export default function TrimPage() {
                               <p className="text-center text-xs font-mono">{formatBytes(originalImage.file.size)}</p>
                           </div>
                           <div className="flex-1 p-6 space-y-4">
-                              <h3 className="text-xs font-bold uppercase tracking-widest text-accent">Trimmed Result</h3>
+                              <div className="flex items-center justify-between">
+                                <h3 className="text-xs font-bold uppercase tracking-widest text-accent">Trimmed Result</h3>
+                                {trimmedImage && (
+                                   <Badge variant="secondary" className="bg-accent/10 text-accent text-[9px] uppercase">Auto Processed</Badge>
+                                )}
+                              </div>
                               <div className="aspect-square relative rounded-2xl overflow-hidden border bg-accent/5 flex items-center justify-center p-4">
                                   {isTrimming ? (
-                                      <Loader2 className="w-8 h-8 animate-spin text-accent" />
+                                      <div className="flex flex-col items-center gap-3">
+                                          <Loader2 className="w-8 h-8 animate-spin text-accent" />
+                                          <p className="text-[10px] uppercase font-bold text-accent tracking-widest">Scanning Pixels...</p>
+                                      </div>
                                   ) : trimmedImage ? (
                                       <Image src={trimmedImage.url} alt="Trimmed" width={0} height={0} sizes="100vw" className="w-auto h-auto max-h-full max-w-full object-contain" />
                                   ) : (
@@ -209,9 +224,12 @@ export default function TrimPage() {
                                       onValueChange={setTolerance}
                                       disabled={isTrimming}
                                   />
-                                  <p className="text-[10px] text-muted-foreground leading-relaxed">
-                                      Gunakan toleransi lebih tinggi jika latar belakang tidak sepenuhnya bersih. Nilai 0 hanya memotong piksel yang identik.
-                                  </p>
+                                  <div className="p-3 bg-accent/5 border border-accent/20 rounded-xl flex gap-3">
+                                      <Info className="w-4 h-4 text-accent shrink-0 mt-0.5" />
+                                      <p className="text-[10px] text-muted-foreground leading-relaxed">
+                                          Gunakan toleransi lebih tinggi jika latar belakang tidak sepenuhnya bersih. Nilai 0 hanya memotong piksel yang identik.
+                                      </p>
+                                  </div>
                               </div>
                               <Button 
                                 onClick={handleDownload} 
@@ -223,10 +241,13 @@ export default function TrimPage() {
                           </CardContent>
                       </Card>
                       
-                      <div className="bg-primary/5 p-6 rounded-3xl border border-primary/20 space-y-2">
-                          <h4 className="text-xs font-bold uppercase tracking-widest text-primary">Pro Tip</h4>
-                          <p className="text-[11px] text-muted-foreground">
-                              Alat ini sangat berguna untuk memotong asset game atau logo yang memiliki margin transparan terlalu besar.
+                      <div className="bg-primary/5 p-6 rounded-3xl border border-primary/20 space-y-3">
+                          <div className="flex items-center gap-2">
+                             <Sparkles className="h-4 w-4 text-primary" />
+                             <h4 className="text-xs font-bold uppercase tracking-widest text-primary">Pro Tip</h4>
+                          </div>
+                          <p className="text-[11px] text-muted-foreground leading-relaxed">
+                              Alat ini bekerja paling baik untuk **Logo transparan**, **Aset Game**, dan **Ikon UI** yang memiliki margin kosong terlalu besar. Pengaturan toleransi membantu membersihkan piksel "semut" di pinggiran.
                           </p>
                       </div>
                   </div>
