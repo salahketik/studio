@@ -21,7 +21,16 @@ import {
   Code2,
   Search,
   X,
-  CheckCircle2
+  CheckCircle2,
+  Box,
+  Image as ImageIcon,
+  RotateCcw,
+  Palette,
+  Calculator,
+  Layers,
+  Wind,
+  Square,
+  FileCode
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -36,8 +45,8 @@ const visualTools = [
     href: '/image-converter',
     icon: FileImage,
     color: 'bg-blue-500/10 text-blue-600',
-    badge: 'Paling Populer',
-    useCase: 'Batch Processing'
+    badge: 'Popular',
+    useCase: 'Batch'
   },
   {
     title: 'Generator Mockup',
@@ -45,8 +54,8 @@ const visualTools = [
     href: '/mockup',
     icon: Monitor,
     color: 'bg-purple-500/10 text-purple-600',
-    badge: 'Desain Produk',
-    useCase: 'Presentation'
+    badge: 'Design',
+    useCase: 'Showcase'
   },
   {
     title: 'Resizer Pro',
@@ -54,8 +63,8 @@ const visualTools = [
     href: '/resizer',
     icon: Maximize2,
     color: 'bg-orange-500/10 text-orange-600',
-    badge: 'Sosial Media',
-    useCase: 'Content Resize'
+    badge: 'Sosial',
+    useCase: 'Resize'
   },
   {
     title: 'Potong Cerdas',
@@ -63,7 +72,7 @@ const visualTools = [
     href: '/trim',
     icon: Crop,
     color: 'bg-teal-500/10 text-teal-600',
-    badge: 'Pembersih Aset',
+    badge: 'Cleanup',
     useCase: 'Auto Crop'
   },
   {
@@ -72,8 +81,8 @@ const visualTools = [
     href: '/filters',
     icon: SlidersHorizontal,
     color: 'bg-pink-500/10 text-pink-600',
-    badge: 'Editor Cepat',
-    useCase: 'Enhancement'
+    badge: 'Editor',
+    useCase: 'Filters'
   },
   {
     title: 'Ekstrak Palet',
@@ -81,8 +90,8 @@ const visualTools = [
     href: '/palette-extractor',
     icon: Pipette,
     color: 'bg-indigo-500/10 text-indigo-600',
-    badge: 'Branding Kit',
-    useCase: 'Color Picking'
+    badge: 'Inspiration',
+    useCase: 'Colors'
   },
   {
     title: 'Watermark Pro',
@@ -90,8 +99,8 @@ const visualTools = [
     href: '/watermark',
     icon: Stamp,
     color: 'bg-red-500/10 text-red-600',
-    badge: 'Proteksi Karya',
-    useCase: 'Copyright'
+    badge: 'Copyright',
+    useCase: 'Protect'
   },
   {
     title: 'Grid Splitter',
@@ -99,8 +108,8 @@ const visualTools = [
     href: '/grid-splitter',
     icon: Grid3X3,
     color: 'bg-yellow-500/10 text-yellow-600',
-    badge: 'Layout Kit',
-    useCase: 'Instagram Grid'
+    badge: 'Layout',
+    useCase: 'Instagram'
   },
   {
     title: 'Hapus Metadata',
@@ -108,8 +117,8 @@ const visualTools = [
     href: '/metadata-cleaner',
     icon: ShieldAlert,
     color: 'bg-green-500/10 text-green-600',
-    badge: 'Privasi Aman',
-    useCase: 'Privacy Clean'
+    badge: 'Privacy',
+    useCase: 'Security'
   },
   {
     title: 'Base64 Tool',
@@ -117,8 +126,99 @@ const visualTools = [
     href: '/base64-tool',
     icon: Code2,
     color: 'bg-slate-500/10 text-slate-600',
-    badge: 'Utilitas Dev',
+    badge: 'Developer',
     useCase: 'Data URI'
+  },
+  // New 10 Tools
+  {
+    title: 'Favicon Generator',
+    description: 'Buat file favicon .ico berbagai ukuran (16x16, 32x32) secara otomatis.',
+    href: '/favicon-generator',
+    icon: Box,
+    color: 'bg-amber-500/10 text-amber-600',
+    badge: 'Web Utility',
+    useCase: 'Favicon'
+  },
+  {
+    title: 'Shadow Studio',
+    description: 'Tambahkan bayangan drop-shadow lembut yang profesional ke aset transparan.',
+    href: '/shadow-studio',
+    icon: Layers,
+    color: 'bg-indigo-500/10 text-indigo-600',
+    badge: 'Styling',
+    useCase: 'Depth'
+  },
+  {
+    title: 'Image Flipper',
+    description: 'Putar atau balikkan gambar secara horizontal dan vertikal secara instan.',
+    href: '/image-flipper',
+    icon: RotateCcw,
+    color: 'bg-emerald-500/10 text-emerald-600',
+    badge: 'Orientation',
+    useCase: 'Flip'
+  },
+  {
+    title: 'Grayscale Pro',
+    description: 'Ubah gambar berwarna menjadi hitam putih murni dengan kontras tinggi.',
+    href: '/grayscale-pro',
+    icon: ImageIcon,
+    color: 'bg-zinc-500/10 text-zinc-600',
+    badge: 'B&W',
+    useCase: 'Monochrome'
+  },
+  {
+    title: 'Color Mixer',
+    description: 'Mixer warna visual untuk menciptakan harmoni warna baru secara manual.',
+    href: '/color-mixer',
+    icon: Palette,
+    color: 'bg-rose-500/10 text-rose-600',
+    badge: 'Artistic',
+    useCase: 'Mixing'
+  },
+  {
+    title: 'Aspect Calculator',
+    description: 'Hitung rasio aspek dan dimensi gambar secara presisi untuk desain.',
+    href: '/aspect-calculator',
+    icon: Calculator,
+    color: 'bg-cyan-500/10 text-cyan-600',
+    badge: 'Utility',
+    useCase: 'Proportions'
+  },
+  {
+    title: 'Duotone Filter',
+    description: 'Terapkan efek dua warna (Duotone) yang modern ke foto apa pun.',
+    href: '/duotone',
+    icon: Sparkles,
+    color: 'bg-violet-500/10 text-violet-600',
+    badge: 'Creative',
+    useCase: 'Styles'
+  },
+  {
+    title: 'Film Grain',
+    description: 'Tambahkan tekstur grain film vintage yang artistik ke gambar digital Anda.',
+    href: '/film-grain',
+    icon: Wind,
+    color: 'bg-stone-500/10 text-stone-600',
+    badge: 'Vibe',
+    useCase: 'Texturizing'
+  },
+  {
+    title: 'Border Master',
+    description: 'Tambahkan bingkai solid atau gradien ke sekeliling gambar Anda.',
+    href: '/image-border',
+    icon: Square,
+    color: 'bg-lime-500/10 text-lime-600',
+    badge: 'Framing',
+    useCase: 'Border'
+  },
+  {
+    title: 'SVG Viewer',
+    description: 'Pratinjau kode SVG dan ekspor sebagai gambar resolusi tinggi.',
+    href: '/svg-view',
+    icon: FileCode,
+    color: 'bg-orange-500/10 text-orange-600',
+    badge: 'Developer',
+    useCase: 'SVG'
   },
 ];
 
@@ -141,19 +241,19 @@ export default function DashboardPage() {
         <div className="flex flex-col items-center text-center space-y-6 sm:space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-1000 pt-10 sm:pt-4">
           <Badge variant="outline" className="px-5 py-1.5 text-[9px] sm:text-[10px] text-accent border-accent/20 bg-accent/5 rounded-full uppercase tracking-[0.2em] font-black">
             <Sparkles className="w-3.5 h-3.5 mr-2 text-accent" />
-            Professional Visual Workstation
+            Ultimate Visual Workstation
           </Badge>
           
           <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tighter leading-[0.95]">
-            Satu Workstation. <br className="hidden sm:block" />
+            20 Alat Kreatif. <br className="hidden sm:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent via-primary to-accent animate-gradient-x">
-              Sepuluh Kekuatan.
+              Satu Ekosistem Lokal.
             </span>
           </h1>
           
           <p className="text-muted-foreground text-xs sm:text-sm md:text-lg max-w-2xl mx-auto leading-relaxed px-6 opacity-70">
-            Ekosistem pengolahan visual terlengkap yang berjalan 100% lokal. 
-            Cepat, aman, dan tanpa biaya berlangganan selamanya.
+            Workstation digital terlengkap yang berjalan 100% di browser Anda. 
+            Cepat, murni lokal, dan dirancang untuk profesional.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 pt-4 w-full sm:w-auto px-10 sm:px-0">
@@ -162,10 +262,7 @@ export default function DashboardPage() {
               className="bg-accent text-white px-10 h-12 rounded-full font-black text-xs uppercase tracking-widest shadow-2xl hover:shadow-accent/40 transition-all hover:scale-105 active:scale-95"
               onClick={() => document.getElementById('tools')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              Mulai Eksplorasi <Zap className="ml-2 w-4 h-4" />
-            </Button>
-            <Button size="lg" variant="outline" className="rounded-full px-10 h-12 backdrop-blur-md border-accent/20 font-bold text-xs uppercase tracking-widest hover:bg-accent/5" asChild>
-              <Link href="/image-converter">Konversi Batch</Link>
+              Jelajahi 20 Alat <Zap className="ml-2 w-4 h-4" />
             </Button>
           </div>
         </div>
@@ -179,14 +276,14 @@ export default function DashboardPage() {
               </div>
               <div>
                 <h2 className="text-xl sm:text-2xl font-black tracking-tight uppercase italic">Modul Kreatif</h2>
-                <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold opacity-60">Pilih alat yang Anda butuhkan</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold opacity-60">Cari di antara 20 alat visual</p>
               </div>
             </div>
 
             <div className="relative w-full md:w-[350px]">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input 
-                placeholder="Cari alat visual..." 
+                placeholder="Cari alat (cth: mockup, grid, shadow)..." 
                 className="pl-11 h-12 rounded-2xl bg-white/50 backdrop-blur-sm border-accent/10 focus:border-accent/30 transition-all"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -205,7 +302,7 @@ export default function DashboardPage() {
           </div>
 
           {filteredTools.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 animate-in fade-in duration-700">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 animate-in fade-in duration-700">
               {filteredTools.map((tool) => (
                 <Link key={tool.title} href={tool.href} className="group">
                   <Card className="tool-card h-full flex flex-col border-border/10 bg-card/30 hover:bg-card/90 transition-all duration-500 rounded-3xl">
@@ -229,7 +326,7 @@ export default function DashboardPage() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="mt-auto pt-0 p-6 flex items-center justify-between">
-                      <span className="text-[9px] font-bold text-muted-foreground/40 uppercase tracking-tighter">Ready to use</span>
+                      <span className="text-[9px] font-bold text-muted-foreground/40 uppercase tracking-tighter">Ready</span>
                       <div className="flex items-center text-[10px] font-black text-accent opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">
                         BUKA <ArrowRight className="ml-1 w-3 h-3" />
                       </div>
@@ -241,8 +338,8 @@ export default function DashboardPage() {
           ) : (
             <div className="py-20 text-center space-y-4 glass-panel rounded-3xl border-dashed">
                <Search className="w-12 h-12 text-muted-foreground/20 mx-auto" />
-               <p className="text-muted-foreground font-medium">Tidak ada alat yang cocok dengan pencarian "{searchQuery}"</p>
-               <Button variant="outline" className="rounded-full" onClick={() => setSearchQuery('')}>Lihat Semua Alat</Button>
+               <p className="text-muted-foreground font-medium">Tidak ada alat yang cocok dengan "{searchQuery}"</p>
+               <Button variant="outline" className="rounded-full" onClick={() => setSearchQuery('')}>Tampilkan Semua 20 Alat</Button>
             </div>
           )}
         </div>
@@ -251,23 +348,23 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="glass-panel p-8 rounded-[2.5rem] border-none space-y-4 group">
                 <div className="p-3 bg-accent/10 rounded-2xl w-fit group-hover:scale-110 transition-transform"><Zap className="w-6 h-6 text-accent" /></div>
-                <h3 className="text-lg font-black uppercase tracking-tighter">Zero Latency</h3>
+                <h3 className="text-lg font-black uppercase tracking-tighter">Speed of Light</h3>
                 <p className="text-xs text-muted-foreground leading-relaxed opacity-80">
-                  Semua proses dilakukan di perangkat Anda. Tanpa antrean server, tanpa upload data, hasil instan.
+                  Pemrosesan kanvas lokal tanpa antrean server. Hasil instan untuk workflow profesional Anda.
                 </p>
             </div>
             <div className="glass-panel p-8 rounded-[2.5rem] border-none space-y-4 group">
                 <div className="p-3 bg-accent/10 rounded-2xl w-fit group-hover:scale-110 transition-transform"><ShieldCheck className="w-6 h-6 text-accent" /></div>
-                <h3 className="text-lg font-black uppercase tracking-tighter">Privacy First</h3>
+                <h3 className="text-lg font-black uppercase tracking-tighter">Privacy Engine</h3>
                 <p className="text-xs text-muted-foreground leading-relaxed opacity-80">
-                  Data Anda tidak pernah meninggalkan browser. Privasi 100% terjamin untuk aset perusahaan atau pribadi.
+                  Data Anda adalah privasi Anda. 100% pemrosesan dilakukan di perangkat tanpa upload cloud.
                 </p>
             </div>
             <div className="glass-panel p-8 rounded-[2.5rem] border-none space-y-4 group">
                 <div className="p-3 bg-accent/10 rounded-2xl w-fit group-hover:scale-110 transition-transform"><CheckCircle2 className="w-6 h-6 text-accent" /></div>
-                <h3 className="text-lg font-black uppercase tracking-tighter">Industry Standard</h3>
+                <h3 className="text-lg font-black uppercase tracking-tighter">20-In-1 Power</h3>
                 <p className="text-xs text-muted-foreground leading-relaxed opacity-80">
-                  Output berkualitas tinggi yang dioptimalkan untuk web, media sosial, dan kebutuhan desain profesional.
+                  Dari konversi batch hingga shadow studio. Semua kebutuhan visual dalam satu alamat web.
                 </p>
             </div>
         </div>
@@ -275,9 +372,9 @@ export default function DashboardPage() {
         {/* Professional Trust Area */}
         <div className="flex flex-wrap justify-center gap-12 py-10 opacity-30 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-1000">
             <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em]"><ShieldCheck className="w-5 h-5" /> Secured</div>
-            <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em]"><Globe className="w-5 h-5" /> Global Access</div>
-            <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em]"><Zap className="w-5 h-5" /> Instant Engine</div>
-            <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em]"><Maximize2 className="w-5 h-5" /> Pro Quality</div>
+            <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em]"><Globe className="w-5 h-5" /> Global</div>
+            <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em]"><Zap className="w-5 h-5" /> Instant</div>
+            <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em]"><Maximize2 className="w-5 h-5" /> HQ Output</div>
         </div>
 
       </div>

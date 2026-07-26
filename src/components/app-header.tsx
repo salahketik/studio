@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { Menu, Layers, ChevronRight } from 'lucide-react';
+import { Menu, Layers, ChevronRight, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
 import {
@@ -60,7 +60,7 @@ export function AppHeader() {
   );
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/5 bg-background/70 backdrop-blur-xl transition-all h-16 flex items-center">
+    <header className="sticky top-0 z-[100] w-full border-b border-border/5 bg-background/80 backdrop-blur-xl transition-all h-16 flex items-center">
       <div className="container mx-auto flex items-center px-6">
         <div className="flex-1 flex items-center gap-8">
           <Link href="/" className="flex items-center space-x-3 group">
@@ -109,7 +109,7 @@ export function AppHeader() {
                 
                 <div className="p-8 border-t border-border/5 bg-muted/10">
                     <p className="text-[9px] text-muted-foreground text-center font-black uppercase tracking-[0.3em] opacity-40">
-                        Workstation v2.8.0-Local
+                        Workstation v2.9.0-Stable
                     </p>
                 </div>
             </SheetContent>
