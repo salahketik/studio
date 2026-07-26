@@ -17,7 +17,9 @@ import {
   SlidersHorizontal,
   Pipette,
   Stamp,
-  Grid3X3
+  Grid3X3,
+  ShieldAlert,
+  Code2
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -27,7 +29,7 @@ import { cn } from '@/lib/utils';
 const visualTools = [
   {
     title: 'Konverter Gambar',
-    description: 'Transformasi gambar ke WebP, JPG, atau PNG dengan analisis cerdas untuk hasil optimal.',
+    description: 'Transformasi massal gambar ke WebP, JPG, atau PNG dengan optimasi instan.',
     href: '/image-converter',
     icon: FileImage,
     color: 'bg-blue-500/10 text-blue-600',
@@ -35,15 +37,15 @@ const visualTools = [
   },
   {
     title: 'Generator Mockup',
-    description: 'Ciptakan visual produk profesional dengan frame browser dan latar belakang artistik.',
+    description: 'Presentasi produk profesional dengan bingkai browser dan latar AI.',
     href: '/mockup',
     icon: Monitor,
     color: 'bg-purple-500/10 text-purple-600',
-    badge: 'Mockup Studio'
+    badge: 'Presentation'
   },
   {
     title: 'Resizer Pro',
-    description: 'Ubah ukuran gambar secara instan untuk format Instagram, TikTok, YouTube, dan platform lainnya.',
+    description: 'Ubah ukuran gambar untuk Instagram, TikTok, YouTube secara instan.',
     href: '/resizer',
     icon: Maximize2,
     color: 'bg-orange-500/10 text-orange-600',
@@ -51,15 +53,15 @@ const visualTools = [
   },
   {
     title: 'Potong Cerdas',
-    description: 'Segmentasi gambar untuk membuang area kosong atau margin transparan secara instan.',
+    description: 'Hapus area kosong atau margin transparan secara otomatis.',
     href: '/trim',
     icon: Crop,
     color: 'bg-teal-500/10 text-teal-600',
-    badge: 'Pixel Perfect'
+    badge: 'Pixel-Clean'
   },
   {
     title: 'Filter Studio',
-    description: 'Sesuaikan kecerahan, kontras, dan terapkan filter artistik secara lokal di browser.',
+    description: 'Edit kecerahan, kontras, dan terapkan filter artistik profesional.',
     href: '/filters',
     icon: SlidersHorizontal,
     color: 'bg-pink-500/10 text-pink-600',
@@ -67,108 +69,122 @@ const visualTools = [
   },
   {
     title: 'Ekstrak Palet',
-    description: 'Ambil palet warna dominan (HEX) dari gambar Anda untuk referensi desain profesional.',
+    description: 'Ambil skema warna HEX dari gambar untuk referensi desain.',
     href: '/palette-extractor',
     icon: Pipette,
     color: 'bg-indigo-500/10 text-indigo-600',
-    badge: 'Color Picker'
-  },
-  {
-    title: 'Watermark Pro',
-    description: 'Lindungi karya Anda dengan menambahkan logo atau teks hak cipta secara instan.',
-    href: '/watermark',
-    icon: Stamp,
-    color: 'bg-red-500/10 text-red-600',
     badge: 'Branding'
   },
   {
+    title: 'Watermark Pro',
+    description: 'Lindungi karya Anda dengan logo atau teks hak cipta.',
+    href: '/watermark',
+    icon: Stamp,
+    color: 'bg-red-500/10 text-red-600',
+    badge: 'Protection'
+  },
+  {
     title: 'Grid Splitter',
-    description: 'Bagi satu gambar menjadi grid 3x3 atau 3x1 untuk tampilan profil media sosial yang estetik.',
+    description: 'Bagi gambar menjadi grid 3x3 atau 3x1 untuk profil estetik.',
     href: '/grid-splitter',
     icon: Grid3X3,
     color: 'bg-yellow-500/10 text-yellow-600',
     badge: 'Content Kit'
+  },
+  {
+    title: 'Hapus Metadata',
+    description: 'Bersihkan data privasi EXIF dari foto Anda secara permanen.',
+    href: '/metadata-cleaner',
+    icon: ShieldAlert,
+    color: 'bg-green-500/10 text-green-600',
+    badge: 'Privacy'
+  },
+  {
+    title: 'Base64 Tool',
+    description: 'Ubah gambar menjadi string Base64 untuk kebutuhan pengembang.',
+    href: '/base64-tool',
+    icon: Code2,
+    color: 'bg-slate-500/10 text-slate-600',
+    badge: 'Dev Utility'
   },
 ];
 
 export default function DashboardPage() {
   return (
     <div className="min-h-full hero-gradient pb-20 overflow-x-hidden">
-      <div className="container mx-auto px-4 sm:px-6 md:p-16 lg:p-24 space-y-16 sm:y-24">
+      <div className="container mx-auto px-4 sm:px-6 md:p-12 lg:p-20 space-y-16 sm:space-y-20">
         
         {/* Hero Section */}
-        <div className="flex flex-col items-center text-center space-y-6 sm:space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-1000 pt-10 sm:pt-0">
-          <Badge variant="outline" className="px-4 sm:px-6 py-1.5 text-[10px] sm:text-xs text-primary border-primary/30 bg-primary/10 rounded-full shadow-sm">
-            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
-            Visual Creative Suite Professional
+        <div className="flex flex-col items-center text-center space-y-4 sm:space-y-6 animate-in fade-in slide-in-from-bottom-8 duration-1000 pt-6 sm:pt-0">
+          <Badge variant="outline" className="px-4 py-1 text-[9px] sm:text-[10px] text-primary border-primary/30 bg-primary/5 rounded-full uppercase tracking-widest font-bold">
+            <Sparkles className="w-3 h-3 mr-2" />
+            Ultimate Visual Workstation
           </Badge>
           
-          <h1 className="text-3xl sm:text-5xl md:text-7xl font-extrabold tracking-tight leading-tight">
-            Workstation Visual <br />
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tighter leading-[1.1]">
+            Kreativitas Tanpa <br className="hidden sm:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-primary animate-gradient-x">
-              Kreativitas Tanpa Batas.
+              Batas Teknis.
             </span>
           </h1>
           
-          <p className="text-muted-foreground text-sm sm:text-lg md:text-2xl max-w-3xl mx-auto leading-relaxed px-4">
-            Ekosistem alat pengolahan gambar profesional yang dirancang untuk mempercepat alur kerja desain Anda secara lokal, cepat, dan 100% aman.
+          <p className="text-muted-foreground text-xs sm:text-sm md:text-base max-w-2xl mx-auto leading-relaxed px-4 opacity-80">
+            Ekosistem 10 alat pengolahan gambar profesional yang berjalan 100% lokal di browser Anda. Cepat, aman, dan tanpa biaya berlangganan.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 pt-4 w-full sm:w-auto px-6 sm:px-0">
+          <div className="flex flex-col sm:flex-row gap-3 pt-2 w-full sm:w-auto px-6 sm:px-0">
             <button 
-              className="bg-accent text-white px-8 sm:px-10 py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg shadow-xl hover:shadow-accent/20 transition-all active:scale-95 w-full sm:w-auto"
+              className="bg-accent text-white px-8 py-3 rounded-full font-bold text-sm shadow-xl hover:shadow-accent/20 transition-all active:scale-95 w-full sm:w-auto"
               onClick={() => document.getElementById('tools')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              Jelajahi Alat <Zap className="ml-2 w-4 h-4 inline" />
+              Mulai Eksplorasi <Zap className="ml-2 w-3.5 h-3.5 inline" />
             </button>
-            <Button size="lg" variant="outline" className="rounded-full px-8 backdrop-blur-sm h-12 sm:h-14 w-full sm:w-auto font-bold" asChild>
-              <Link href="/image-converter">Mulai Konversi</Link>
+            <Button size="lg" variant="outline" className="rounded-full px-8 backdrop-blur-sm h-11 w-full sm:w-auto font-bold text-sm" asChild>
+              <Link href="/image-converter">Konversi Batch</Link>
             </Button>
           </div>
         </div>
 
         {/* Visual Tools Grid */}
-        <div id="tools" className="space-y-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b pb-6 border-border/20">
-            <div className="flex items-center gap-3 sm:gap-4">
-              <div className="p-2.5 sm:p-3 rounded-2xl bg-card shadow-sm border border-border/20 text-blue-600">
-                <Palette className="w-6 h-6 sm:w-8 h-8" />
+        <div id="tools" className="space-y-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b pb-4 border-border/10">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-card shadow-sm border border-border/20 text-accent">
+                <LayoutGrid className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-xl sm:text-3xl font-bold tracking-tight">Alat Kreatif</h2>
-                <p className="text-xs sm:text-sm text-muted-foreground">Pengolahan gambar dan pembuatan aset desain profesional.</p>
+                <h2 className="text-lg sm:text-xl font-black tracking-tight uppercase">Dashboard Alat</h2>
+                <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-widest font-medium">10 Modul Visual Aktif</p>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
             {visualTools.map((tool) => (
               <Link key={tool.title} href={tool.href} className="group">
-                <Card className="tool-card h-full flex flex-col border-border/10 bg-card/60">
-                  <CardHeader className="p-5 sm:p-6">
+                <Card className="tool-card h-full flex flex-col border-border/10 bg-card/40 hover:bg-card transition-all duration-300">
+                  <CardHeader className="p-5">
                     <div className={cn(
-                      "w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center mb-4 sm:mb-6 transition-all duration-500 group-hover:rotate-6",
+                      "w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-all duration-500 group-hover:rotate-6 shadow-sm",
                       tool.color
                     )}>
-                      <tool.icon className="w-6 h-6 sm:w-7 sm:h-7" />
+                      <tool.icon className="w-5 h-5" />
                     </div>
-                    <div className="flex items-center justify-between mb-2">
-                      <CardTitle className="text-lg sm:text-xl group-hover:text-accent transition-colors">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <CardTitle className="text-sm font-bold group-hover:text-accent transition-colors tracking-tight">
                         {tool.title}
                       </CardTitle>
-                      {tool.badge && (
-                        <Badge variant="secondary" className="text-[8px] sm:text-[9px] uppercase tracking-wider font-bold bg-accent/10 text-accent border-none shrink-0">
-                          {tool.badge}
-                        </Badge>
-                      )}
                     </div>
-                    <CardDescription className="text-sm sm:text-base leading-relaxed text-muted-foreground/80 line-clamp-3">
+                    <CardDescription className="text-[11px] leading-relaxed text-muted-foreground/80 line-clamp-2">
                       {tool.description}
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="mt-auto pt-4 sm:pt-6 p-5 sm:p-6">
-                    <div className="flex items-center text-xs sm:text-sm font-bold text-accent sm:translate-x-[-10px] sm:opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">
-                      Buka Alat <ArrowRight className="ml-2 w-4 h-4" />
+                  <CardContent className="mt-auto pt-2 p-5 flex items-center justify-between">
+                     <Badge variant="secondary" className="text-[8px] uppercase tracking-wider font-black bg-accent/5 text-accent/60 border-none group-hover:bg-accent/10 transition-colors">
+                        {tool.badge}
+                      </Badge>
+                    <div className="flex items-center text-[10px] font-black text-accent opacity-0 group-hover:opacity-100 transition-all duration-300">
+                      BUKA <ArrowRight className="ml-1 w-3 h-3" />
                     </div>
                   </CardContent>
                 </Card>
@@ -177,61 +193,31 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Quick Guide Section */}
-        <div className="space-y-10">
-           <div className="flex items-center gap-3 border-b pb-6 border-border/20">
-              <div className="p-2.5 sm:p-3 rounded-2xl bg-card shadow-sm border border-border/20 text-accent">
-                <Info className="w-6 h-6 sm:w-8 h-8" />
-              </div>
-              <div>
-                <h2 className="text-xl sm:text-3xl font-bold tracking-tight">Panduan Penggunaan</h2>
-                <p className="text-xs sm:text-sm text-muted-foreground">Tips memaksimalkan workstation visual Anda.</p>
-              </div>
+        {/* Quick Guide */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="glass-panel p-6 rounded-2xl border-none shadow-sm space-y-3">
+                <h3 className="text-sm font-black flex items-center gap-2 uppercase tracking-tight">
+                  <Zap className="w-4 h-4 text-accent" /> Kecepatan Lokal
+                </h3>
+                <p className="text-[11px] text-muted-foreground leading-relaxed">
+                  Semua proses dilakukan di perangkat Anda. Tidak ada antrean server, data tidak pernah meninggalkan browser, dan privasi Anda terjamin 100%.
+                </p>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-               <div className="glass-panel p-8 rounded-3xl space-y-4">
-                  <h3 className="text-xl font-bold flex items-center gap-2">
-                    <Zap className="w-5 h-5 text-accent" /> Ekspor Cepat & Aman
-                  </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    Seluruh proses pengolahan gambar dilakukan secara **lokal di browser Anda**. Tidak ada data yang dikirim ke server, sehingga privasi Anda terjamin 100% dan proses berjalan sangat instan.
-                  </p>
-               </div>
-               <div className="glass-panel p-8 rounded-3xl space-y-4">
-                  <h3 className="text-xl font-bold flex items-center gap-2">
-                    <Maximize2 className="w-5 h-5 text-accent" /> Branding & Media Sosial
-                  </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    Gunakan **Watermark Pro** untuk melindungi hak cipta gambar Anda, lalu pecahkan gambar menggunakan **Grid Splitter** untuk tampilan profil Instagram yang kohesif dan estetik.
-                  </p>
-               </div>
+            <div className="glass-panel p-6 rounded-2xl border-none shadow-sm space-y-3">
+                <h3 className="text-sm font-black flex items-center gap-2 uppercase tracking-tight">
+                  <Maximize2 className="w-4 h-4 text-accent" /> Standar Industri
+                </h3>
+                <p className="text-[11px] text-muted-foreground leading-relaxed">
+                  Output berkualitas tinggi yang dioptimalkan untuk performa web dan media sosial tanpa kompromi pada fidelitas visual.
+                </p>
             </div>
         </div>
 
-        {/* Trust Features */}
-        <div className="glass-panel rounded-3xl p-6 sm:p-8 md:p-12 grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12 text-center md:text-left border-none shadow-2xl">
-            <div className="flex flex-col md:flex-row items-center md:items-start gap-4 sm:gap-6">
-                <div className="p-3 sm:p-4 bg-primary/20 rounded-2xl shadow-inner shrink-0"><LayoutGrid className="w-6 h-6 sm:w-8 sm:h-8 text-accent" /></div>
-                <div className="space-y-1 sm:space-y-2">
-                    <h4 className="text-lg sm:text-xl font-bold">Terorganisir</h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground">Antarmuka bersih yang fokus pada alur kerja visual Anda tanpa distraksi.</p>
-                </div>
-            </div>
-            <div className="flex flex-col md:flex-row items-center md:items-start gap-4 sm:gap-6">
-                <div className="p-3 sm:p-4 bg-primary/20 rounded-2xl shadow-inner shrink-0"><ShieldCheck className="w-6 h-6 sm:w-8 sm:h-8 text-accent" /></div>
-                <div className="space-y-1 sm:space-y-2">
-                    <h4 className="text-lg sm:text-xl font-bold">Privasi Utama</h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground">Pemrosesan lokal di browser memastikan aset Anda tetap berada di tangan Anda.</p>
-                </div>
-            </div>
-            <div className="flex flex-col md:flex-row items-center md:items-start gap-4 sm:gap-6">
-                <div className="p-3 sm:p-4 bg-primary/20 rounded-2xl shadow-inner shrink-0"><Globe className="w-6 h-6 sm:w-8 sm:h-8 text-accent" /></div>
-                <div className="space-y-1 sm:space-y-2">
-                    <h4 className="text-lg sm:text-xl font-bold">Tanpa Batas</h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground">Tanpa login, tanpa biaya berlangganan. Siap digunakan kapan pun dibutuhkan.</p>
-                </div>
-            </div>
+        {/* Trust Badge Area */}
+        <div className="flex flex-wrap justify-center gap-8 py-4 opacity-40 grayscale hover:grayscale-0 transition-all duration-700">
+            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"><ShieldCheck className="w-4 h-4" /> Secure Processing</div>
+            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"><Globe className="w-4 h-4" /> Global Standards</div>
+            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"><Zap className="w-4 h-4" /> Zero Latency</div>
         </div>
 
       </div>
