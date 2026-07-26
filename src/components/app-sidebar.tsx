@@ -22,7 +22,25 @@ import {
   Cpu,
   User,
   Scale,
-  FileText
+  FileText,
+  FileImage, Crop, Sparkles, 
+  Maximize2, SlidersHorizontal, Pipette, Grid3X3, 
+  ShieldAlert, Database, 
+  Layers, Wind, Split, Eye, 
+  Type, Scaling, Ghost, Contrast, Aperture, Paintbrush2, Minimize2, 
+  IterationCcw, Frame, Component, Focus, Sun, Filter,
+  TimerOff, Captions, Terminal, UserCircle,
+  Hash, Binary, Search, SearchCode,
+  Layers2, RefreshCcw, Flame, Coins,
+  ImagePlus, Monitor,
+  GlassWater, Camera, Globe,
+  Layout, CheckCircle2, RotateCcw,
+  Heart, Stars, Palette as PaletteIcon,
+  Barcode, Key, FileJson, Link as LinkIcon, Ruler, Scan,
+  MousePointer2, Mail, Lock,
+  Settings2, Bot, Video, Languages, Stamp, FileCode,
+  Shield, Trash2, Scissors, ListChecks, FileType, 
+  FileSpreadsheet, Clock, Braces, Table, AlignLeft
 } from 'lucide-react';
 
 import {
@@ -111,7 +129,9 @@ export function AppSidebar() {
       icon: Code2,
       items: [
         { title: "JSON Beautifier", url: "/json-beautifier" },
-        { title: "Case Converter", url: "/case-converter" },
+        { title: "List Cleaner", url: "/list-cleaner" },
+        { title: "Markdown Studio", url: "/markdown-studio" },
+        { title: "JWT Inspector", url: "/jwt-inspector" },
         { title: "PX to REM Calc", url: "/px-rem" },
       ],
     },
@@ -139,12 +159,12 @@ export function AppSidebar() {
       <SidebarContent className="px-2 pt-4">
         {/* PERSONAL SPACE */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[9px] uppercase tracking-[0.2em] font-black px-4 mb-2 opacity-40">Personal Workspace</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-[9px] uppercase tracking-[0.2em] font-black px-4 mb-2 opacity-40 text-sidebar-foreground/60">Personal Workspace</SidebarGroupLabel>
           <SidebarMenu className="gap-1">
             <SidebarMenuItem>
                 <Collapsible className="group/collapsible">
                     <CollapsibleTrigger asChild>
-                        <SidebarMenuButton tooltip="Favorit Saya">
+                        <SidebarMenuButton tooltip="Favorit Saya" className="text-sidebar-foreground hover:text-sidebar-foreground">
                             <Star className="w-4 h-4 text-yellow-500" />
                             <span className="font-bold text-[10px] uppercase tracking-wider">Favorit</span>
                             <ChevronRight className="ml-auto w-3 h-3 transition-transform group-data-[state=open]:rotate-90" />
@@ -154,11 +174,11 @@ export function AppSidebar() {
                         <SidebarMenuSub className="ml-4 border-l border-sidebar-border mt-1 py-1 gap-1">
                             {favoriteTools.length > 0 ? favoriteTools.map(t => (
                                 <SidebarMenuSubItem key={t.href}>
-                                    <SidebarMenuSubButton asChild className="h-8 rounded-lg text-[9px] font-bold uppercase tracking-widest px-4">
+                                    <SidebarMenuSubButton asChild className="h-8 rounded-lg text-[9px] font-bold uppercase tracking-widest px-4 text-sidebar-foreground/80 hover:text-sidebar-foreground">
                                         <Link href={t.href}>{t.title}</Link>
                                     </SidebarMenuSubButton>
                                 </SidebarMenuSubItem>
-                            )) : <p className="text-[8px] px-4 opacity-50 italic">Belum ada favorit</p>}
+                            )) : <p className="text-[8px] px-4 opacity-50 italic text-sidebar-foreground/40">Belum ada favorit</p>}
                         </SidebarMenuSub>
                     </CollapsibleContent>
                 </Collapsible>
@@ -167,7 +187,7 @@ export function AppSidebar() {
             <SidebarMenuItem>
                 <Collapsible className="group/collapsible">
                     <CollapsibleTrigger asChild>
-                        <SidebarMenuButton tooltip="Terakhir Digunakan">
+                        <SidebarMenuButton tooltip="Terakhir Digunakan" className="text-sidebar-foreground hover:text-sidebar-foreground">
                             <History className="w-4 h-4 text-blue-500" />
                             <span className="font-bold text-[10px] uppercase tracking-wider">Terakhir</span>
                             <ChevronRight className="ml-auto w-3 h-3 transition-transform group-data-[state=open]:rotate-90" />
@@ -177,11 +197,11 @@ export function AppSidebar() {
                         <SidebarMenuSub className="ml-4 border-l border-sidebar-border mt-1 py-1 gap-1">
                             {recentTools.length > 0 ? recentTools.map(t => (
                                 <SidebarMenuSubItem key={t.href}>
-                                    <SidebarMenuSubButton asChild className="h-8 rounded-lg text-[9px] font-bold uppercase tracking-widest px-4">
+                                    <SidebarMenuSubButton asChild className="h-8 rounded-lg text-[9px] font-bold uppercase tracking-widest px-4 text-sidebar-foreground/80 hover:text-sidebar-foreground">
                                         <Link href={t.href}>{t.title}</Link>
                                     </SidebarMenuSubButton>
                                 </SidebarMenuSubItem>
-                            )) : <p className="text-[8px] px-4 opacity-50 italic">Kosong</p>}
+                            )) : <p className="text-[8px] px-4 opacity-50 italic text-sidebar-foreground/40">Kosong</p>}
                         </SidebarMenuSub>
                     </CollapsibleContent>
                 </Collapsible>
@@ -191,7 +211,7 @@ export function AppSidebar() {
 
         {/* WORKSTATION MODULES */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[9px] uppercase tracking-[0.2em] font-black px-4 mb-2 opacity-40">Modul Operasional</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-[9px] uppercase tracking-[0.2em] font-black px-4 mb-2 opacity-40 text-sidebar-foreground/60">Modul Operasional</SidebarGroupLabel>
           <SidebarMenu className="gap-1">
             {navMain.map((item) => (
               <SidebarMenuItem key={item.title}>
@@ -201,7 +221,7 @@ export function AppSidebar() {
                       <SidebarMenuButton 
                         tooltip={item.title}
                         className={cn(
-                          "h-10 rounded-xl px-4 transition-all hover:bg-sidebar-accent",
+                          "h-10 rounded-xl px-4 transition-all hover:bg-sidebar-accent text-sidebar-foreground hover:text-sidebar-foreground",
                           item.items.some(sub => sub.url === pathname) && "bg-sidebar-accent text-primary"
                         )}
                       >
@@ -235,7 +255,7 @@ export function AppSidebar() {
                     tooltip={item.title}
                     isActive={pathname === item.url}
                     className={cn(
-                      "h-10 rounded-xl px-4 transition-all hover:bg-sidebar-accent",
+                      "h-10 rounded-xl px-4 transition-all hover:bg-sidebar-accent text-sidebar-foreground hover:text-sidebar-foreground",
                       pathname === item.url && "bg-sidebar-accent text-primary"
                     )}
                   >
@@ -252,10 +272,10 @@ export function AppSidebar() {
 
         {/* SYSTEM INFO */}
         <SidebarGroup>
-            <SidebarGroupLabel className="text-[9px] uppercase tracking-[0.2em] font-black px-4 mb-2 opacity-40">System Node</SidebarGroupLabel>
+            <SidebarGroupLabel className="text-[9px] uppercase tracking-[0.2em] font-black px-4 mb-2 opacity-40 text-sidebar-foreground/60">System Node</SidebarGroupLabel>
             <SidebarMenu className="gap-1">
                 <SidebarMenuItem>
-                    <SidebarMenuButton asChild tooltip="Changelog">
+                    <SidebarMenuButton asChild tooltip="Changelog" className="text-sidebar-foreground hover:text-sidebar-foreground">
                         <Link href="/changelog">
                             <FileText className="w-4 h-4 text-emerald-500" />
                             <span className="font-bold text-[10px] uppercase tracking-wider">Changelog</span>
@@ -263,7 +283,7 @@ export function AppSidebar() {
                     </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                    <SidebarMenuButton asChild tooltip="Tentang Workstation">
+                    <SidebarMenuButton asChild tooltip="Tentang Workstation" className="text-sidebar-foreground hover:text-sidebar-foreground">
                         <Link href="/about">
                             <Info className="w-4 h-4 text-cyan-500" />
                             <span className="font-bold text-[10px] uppercase tracking-wider">Tentang</span>

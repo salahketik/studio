@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
@@ -6,8 +7,8 @@ import {
   Copy, 
   X, 
   RefreshCcw, 
-  ChevronDown, 
-  ChevronUp 
+  Phone,
+  MessageSquare
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { 
@@ -71,6 +72,11 @@ export function GlobalErrorHandler() {
     });
   };
 
+  const contactDev = () => {
+    const waUrl = `https://wa.me/6282286301655?text=Halo Dev, saya menemukan error di Visual Creative Suite: ${encodeURIComponent(error?.message || '')}`;
+    window.open(waUrl, '_blank');
+  };
+
   if (!error) return null;
 
   return (
@@ -87,10 +93,10 @@ export function GlobalErrorHandler() {
           <p className="text-xs opacity-90 leading-relaxed truncate">{error.message}</p>
           <div className="flex gap-2">
             <Button size="sm" variant="secondary" className="text-[10px] h-7 bg-white/10 hover:bg-white/20 text-white border-none" onClick={() => setShowDetails(true)}>
-              Lihat Detail & Salin Log
+              Detail Log
             </Button>
-            <Button size="sm" variant="secondary" className="text-[10px] h-7 bg-white/10 hover:bg-white/20 text-white border-none" onClick={() => window.location.reload()}>
-              <RefreshCcw className="h-3 w-3 mr-1" /> Segarkan
+            <Button size="sm" variant="secondary" className="text-[10px] h-7 bg-white/10 hover:bg-white/20 text-white border-none" onClick={contactDev}>
+              <MessageSquare className="h-3 w-3 mr-1" /> Hubungi Dev
             </Button>
           </div>
         </AlertDescription>
@@ -116,10 +122,13 @@ export function GlobalErrorHandler() {
                 </ScrollArea>
              </div>
           </div>
-          <DialogFooter className="mt-4 flex flex-row gap-2">
+          <DialogFooter className="mt-4 flex flex-col sm:flex-row gap-2">
             <Button variant="outline" className="flex-1" onClick={() => setShowDetails(false)}>Tutup</Button>
+            <Button className="flex-1 bg-green-600 hover:bg-green-700 text-white" onClick={contactDev}>
+              <Phone className="h-4 w-4 mr-2" /> WhatsApp Dev
+            </Button>
             <Button className="flex-1 bg-accent hover:bg-accent/90" onClick={copyToClipboard}>
-              <Copy className="h-4 w-4 mr-2" /> Salin Log Error
+              <Copy className="h-4 w-4 mr-2" /> Salin Log
             </Button>
           </DialogFooter>
         </DialogContent>

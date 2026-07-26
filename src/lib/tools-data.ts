@@ -17,7 +17,8 @@ import {
   Barcode, Key, FileJson, Link as LinkIcon, Ruler, Scan,
   MousePointer2, ShieldCheck, Mail, Lock, BrainCircuit,
   Settings2, Bot, Video, FileText, Languages, Stamp, FileCode,
-  Shield, Scale, Trash2, Scissors
+  Shield, Scale, Trash2, Scissors, ListChecks, FileType, 
+  FileSpreadsheet, Clock, SearchCode, Braces, Table, AlignLeft
 } from 'lucide-react';
 
 export interface Tool {
@@ -82,13 +83,27 @@ export const ALL_TOOLS: Tool[] = [
   { title: 'Loji Mixer', description: 'Pencampuran warna logaritma.', href: '/loji-mix', icon: Camera, category: 'advanced', useCase: 'Tone' },
   { title: 'Color Mixer', description: 'Eksperimen RGB channel lab.', href: '/color-mixer', icon: Palette, category: 'advanced', useCase: 'Lab' },
   { title: 'Noise Studio', description: 'Analog grain texture studio.', href: '/noise', icon: Filter, category: 'advanced', useCase: 'Texture' },
+  { title: 'Selective Gray', description: 'Isolasi warna tertentu dengan latar abu-abu.', href: '/selective-gray', icon: MousePointer2, category: 'advanced', useCase: 'Focus' },
+  { title: 'Gamma Tuner', description: 'Koreksi pencahayaan mid-tone.', href: '/gamma', icon: Sun, category: 'advanced', useCase: 'Luma' },
 
   // 5. Studio Audio
   { title: 'Audio FX Studio', description: 'Edit suara dengan profil studio musik.', href: '/audio-cleaner', icon: Music, category: 'audio', useCase: 'Studio' },
   { title: 'Dead Air Remover', description: 'Hapus jeda sunyi secara otomatis.', href: '/dead-air-remover', icon: TimerOff, category: 'audio', useCase: 'Podcast' },
   { title: 'Subtitle Workstation', description: 'Workstation subtitle manual presisi.', href: '/voice-to-srt', icon: Captions, category: 'audio', useCase: 'Video' },
 
-  // 6. Developer & Utility
+  // 6. Developer & Utility (Ekspansi Baru)
+  { title: 'List Cleaner', description: 'Deduplikasi dan sortir daftar teks Anda.', href: '/list-cleaner', icon: ListChecks, category: 'dev', useCase: 'Text' },
+  { title: 'Markdown Studio', description: 'Tulis dan pratinjau markdown secara real-time.', href: '/markdown-studio', icon: FileType, category: 'dev', useCase: 'Docs' },
+  { title: 'JWT Inspector', description: 'Dekode token JWT secara lokal dan aman.', href: '/jwt-inspector', icon: ShieldCheck, category: 'dev', useCase: 'Auth' },
+  { title: 'HTML Entities', description: 'Enkode dan dekode entitas HTML.', href: '/html-entities', icon: Code2, category: 'dev', useCase: 'HTML' },
+  { title: 'Flexbox Studio', description: 'Generator tata letak CSS Flexbox visual.', href: '/flexbox-studio', icon: Layout, category: 'dev', useCase: 'CSS' },
+  { title: 'JSON to YAML', description: 'Konversi JSON ke YAML secara instan.', href: '/json-yaml', icon: Braces, category: 'dev', useCase: 'Data' },
+  { title: 'SQL Formatter', description: 'Rapikan kode SQL yang berantakan.', href: '/sql-formatter', icon: Database, category: 'dev', useCase: 'SQL' },
+  { title: 'RegEx Lab', description: 'Uji ekspresi reguler secara langsung.', href: '/regex-lab', icon: SearchCode, category: 'dev', useCase: 'Logic' },
+  { title: 'Color Contrast', description: 'Periksa rasio kontras warna aksesibilitas.', href: '/color-contrast', icon: Eye, category: 'dev', useCase: 'WCAG' },
+  { title: 'CSV to JSON', description: 'Konversi data CSV ke format JSON.', href: '/csv-json', icon: Table, category: 'dev', useCase: 'Convert' },
+  
+  // 7. Utility Legacy
   { title: 'JSON Beautifier', description: 'Format dan rapikan kode JSON berantakan.', href: '/json-beautifier', icon: FileJson, category: 'dev', useCase: 'Code' },
   { title: 'Case Converter', description: 'Ubah teks ke UPPER, lower, camelCase.', href: '/case-converter', icon: Type, category: 'dev', useCase: 'Text' },
   { title: 'Hash Master', description: 'Generate hash SHA-256 secara lokal.', href: '/hash-master', icon: Lock, category: 'dev', useCase: 'Hash' },
@@ -98,4 +113,7 @@ export const ALL_TOOLS: Tool[] = [
   { title: 'QR Generator', description: 'Generate kode QR statis instan.', href: '/qr-gen', icon: Binary, category: 'utility', useCase: 'Scan' },
   { title: 'Barcode Maker', description: 'Buat barcode standar untuk produk.', href: '/barcode-gen', icon: Barcode, category: 'utility', useCase: 'Retail' },
   { title: 'Password Pro', description: 'Generator kata sandi kuat dan aman.', href: '/password-gen', icon: Key, category: 'utility', useCase: 'Secure' },
+  { title: 'Lorem Ipsum', description: 'Generator teks dummy untuk konten.', href: '/lorem-ipsum', icon: AlignLeft, category: 'utility', useCase: 'Draft' },
+  { title: 'Aspect Ratio', description: 'Kalkulator rasio dimensi gambar.', href: '/aspect-calculator', icon: Hash, category: 'utility', useCase: 'Math' },
+  { title: 'Favicon Gen', description: 'Buat ikon browser standar 32x32.', href: '/favicon-generator', icon: Box, category: 'utility', useCase: 'Web' },
 ];
