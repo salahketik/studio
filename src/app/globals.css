@@ -25,7 +25,7 @@
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.75rem;
 
-    /* Sidebar Light Theme */
+    /* Sidebar Variables - Light Mode */
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
@@ -57,14 +57,14 @@
     --input: 217 33% 14%;
     --ring: 224.3 76.3% 48%;
 
-    /* Sidebar Dark Theme */
-    --sidebar-background: 240 10% 3.9%;
-    --sidebar-foreground: 240 5% 96.1%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    /* Sidebar Variables - Dark Mode (FIXED CONTRAST) */
+    --sidebar-background: 240 10% 4%;
+    --sidebar-foreground: 240 5% 90%;
+    --sidebar-primary: 217.2 91.2% 59.8%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 5% 96.1%;
-    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-accent: 240 5% 12%;
+    --sidebar-accent-foreground: 240 5% 100%;
+    --sidebar-border: 240 5% 15%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }

@@ -16,7 +16,9 @@ import {
   ImagePlus, Monitor,
   GlassWater, Camera, Cpu, Globe,
   Layout, Info, CheckCircle2, History, RotateCcw,
-  Smartphone, Heart, Stars, Palette as PaletteIcon
+  Smartphone, Heart, Stars, Palette as PaletteIcon,
+  Barcode, Key, FileJson, Link as LinkIcon, Ruler, Scan,
+  MousePointer2, ShieldCheck, Mail, Lock
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -32,6 +34,7 @@ const allTools = [
   { title: 'Atur DPI', description: 'Ubah resolusi cetak metadata gambar.', href: '/dpi-adjuster', icon: Hash, category: 'core', useCase: 'Print' },
   { title: 'Hapus Metadata', description: 'Bersihkan data privasi EXIF secara permanen.', href: '/metadata-cleaner', icon: ShieldAlert, category: 'core', useCase: 'Privacy' },
   { title: 'Base64 Tool', description: 'Ubah gambar menjadi string data URI.', href: '/base64-tool', icon: Code2, category: 'core', useCase: 'Dev' },
+  { title: 'Base64 Decoder', description: 'Ubah string Base64 kembali menjadi file asli.', href: '/base64-decode', icon: Database, category: 'core', useCase: 'Extract' },
   
   // 2. Kreator & Layout
   { title: 'Resizer Pro', description: 'Preset media sosial & kustom resolusi.', href: '/resizer', icon: Maximize2, category: 'social', useCase: 'Resize' },
@@ -58,6 +61,9 @@ const allTools = [
   { title: 'Kaleidoscope', description: 'Ciptakan geometri fraktal melingkar.', href: '/kaleido', icon: Focus, category: 'studio', useCase: 'Fractal' },
   { title: 'Pixelate Art', description: 'Ubah gambar menjadi gaya retro 8-bit.', href: '/pixelate', icon: Component, category: 'studio', useCase: 'Retro' },
   { title: 'Halftone Filter', description: 'Filter titik-titik koran retro klasik.', href: '/halftone', icon: Binary, category: 'studio', useCase: 'Print' },
+  { title: 'Solarize Art', description: 'Efek warna terbakar (inversi parsial).', href: '/solarize', icon: Stars, category: 'studio', useCase: 'Surreal' },
+  { title: 'Oil Paint Art', description: 'Transformasi foto menjadi lukisan minyak.', href: '/oil-paint', icon: PaletteIcon, category: 'studio', useCase: 'Art' },
+  { title: 'Bloom FX', description: 'Efek cahaya berpendar pada area terang.', href: '/bloom', icon: Stars, category: 'studio', useCase: 'Glow' },
 
   // 4. Editor Teknis (Precision)
   { title: 'Sharpen Pro', description: 'Tingkatkan ketajaman garis tepi gambar.', href: '/sharpen', icon: Wand2, category: 'advanced', useCase: 'Detail' },
@@ -70,40 +76,33 @@ const allTools = [
   { title: 'Loji Mixer', description: 'Pencampuran warna logaritma.', href: '/loji-mix', icon: Camera, category: 'advanced', useCase: 'Tone' },
   { title: 'Color Balance', description: 'Keseimbangan warna RGB tingkat lanjut.', href: '/color-balance', icon: Palette, category: 'advanced', useCase: 'Grading' },
   { title: 'Edge Detection', description: 'Analisis kontur garis tepi Laplacian.', href: '/edge-detection', icon: Wand2, category: 'advanced', useCase: 'Analytic' },
+  { title: 'Sobel Edge', description: 'Deteksi kontur teknis algoritma Sobel.', href: '/sobel-edge', icon: Activity, category: 'advanced', useCase: 'Tech' },
+  { title: 'Color Tint', description: 'Warnai gambar dengan lapisan warna solid.', href: '/color-tint', icon: PaletteIcon, category: 'advanced', useCase: 'Tint' },
+  { title: 'Selective Gray', description: 'Isolasi warna tertentu, sisanya monokrom.', href: '/selective-gray', icon: MousePointer2, category: 'advanced', useCase: 'Creative' },
 
   // 5. Studio Audio
   { title: 'Audio FX Studio', description: 'Edit suara dengan profil studio musik.', href: '/audio-cleaner', icon: Music, category: 'audio', useCase: 'Studio' },
   { title: 'Dead Air Remover', description: 'Hapus jeda sunyi secara otomatis.', href: '/dead-air-remover', icon: TimerOff, category: 'audio', useCase: 'Podcast' },
   { title: 'Subtitle Workstation', description: 'Workstation subtitle manual presisi.', href: '/voice-to-srt', icon: Captions, category: 'audio', useCase: 'Video' },
 
-  // 6. Utilitas Dev & Desain
-  { title: 'Gradient Studio', description: 'Generator gradien linear & radial.', href: '/gradient-gen', icon: Palette, category: 'utility', useCase: 'CSS' },
-  { title: 'Glassmorphism', description: 'Generator efek kaca transparan CSS.', href: '/glassmorphism', icon: GlassWater, category: 'utility', useCase: 'UI' },
-  { title: 'Tilt-Shift FX', description: 'Efek miniatur dengan blur lensa.', icon: Focus, href: '/tilt-shift', category: 'utility', useCase: 'Focus' },
-  { title: 'Lomo Camera', description: 'Filter saturasi tinggi & vignette klasik.', icon: Camera, href: '/lomo', category: 'utility', useCase: 'Vintage' },
-  { title: 'Polaroid Frame', description: 'Bingkai foto instan gaya retro.', href: '/polaroid', icon: Box, category: 'utility', useCase: 'Instant' },
-  { title: 'QR Generator', description: 'Generate kode QR statis instan.', href: '/qr-gen', icon: Binary, category: 'utility', useCase: 'Scan' },
-  { title: 'Favicon Gen', description: 'Buat ikon situs web .ico standar.', href: '/favicon-generator', icon: Box, category: 'utility', useCase: 'Web' },
-  { title: 'Kalkulator Aspek', description: 'Hitung proporsi dimensi gambar.', href: '/aspect-calculator', icon: Hash, category: 'utility', useCase: 'Design' },
-  { title: 'Inspektur EXIF', description: 'Baca atribut data biner asli foto.', href: '/exif-view', icon: Eye, category: 'utility', useCase: 'Metadata' },
-  { title: 'Pola Berulang', description: 'Buat pratinjau pola ubin mulus.', href: '/pattern', icon: Scaling, category: 'utility', useCase: 'Texture' },
-  { title: 'Heatmap Visual', description: 'Analisis densitas warna piksel.', href: '/heatmap', icon: Flame, category: 'utility', useCase: 'Analytics' },
-  { title: 'Image Border', description: 'Tambah bingkai artistik pada gambar.', href: '/image-border', icon: Frame, category: 'utility', useCase: 'Frame' },
-  { title: 'Blur Pro', description: 'Filter blur Gaussian presisi tinggi.', href: '/blur', icon: Ghost, category: 'utility', useCase: 'Depth' },
-  { title: 'Noise Studio', description: 'Tekstur grain analog kustom.', href: '/noise', icon: Filter, category: 'utility', useCase: 'Analog' },
-  { title: 'Overlay Studio', description: 'Gabungkan dua gambar dengan transparansi.', href: '/overlay', icon: Layers, category: 'utility', useCase: 'Merge' },
+  // 6. Developer Hub (New)
+  { title: 'JSON Beautifier', description: 'Format dan rapikan kode JSON berantakan.', href: '/json-beautifier', icon: FileJson, category: 'dev', useCase: 'Code' },
+  { title: 'Case Converter', description: 'Ubah teks ke UPPER, lower, camelCase.', href: '/case-converter', icon: Type, category: 'dev', useCase: 'Text' },
+  { title: 'Hash Master', description: 'Generate hash MD5, SHA-256 secara lokal.', href: '/hash-master', icon: Lock, category: 'dev', useCase: 'Hash' },
+  { title: 'URL Tool', description: 'Encode dan decode string URL dengan aman.', href: '/url-tool', icon: LinkIcon, category: 'dev', useCase: 'URL' },
+  { title: 'PX to REM', description: 'Kalkulator konversi unit desain UI.', href: '/px-rem', icon: Ruler, category: 'dev', useCase: 'CSS' },
+  { title: 'CSS Box Shadow', description: 'Generator bayangan visual dengan kode CSS.', href: '/box-shadow', icon: Layers2, category: 'dev', useCase: 'UI' },
 
-  // 7. Penambahan 10 Modul Baru (Unique)
-  { title: 'Oil Paint Art', description: 'Transformasi foto menjadi lukisan minyak.', href: '/oil-paint', icon: PaletteIcon, category: 'studio', useCase: 'Art' },
-  { title: 'Sobel Edge', description: 'Deteksi kontur teknis algoritma Sobel.', href: '/sobel-edge', icon: Activity, category: 'advanced', useCase: 'Tech' },
-  { title: 'Median Noise', description: 'Pembersihan noise piksel cerdas.', href: '/median-noise', icon: ShieldAlert, category: 'advanced', useCase: 'Clean' },
-  { title: 'Bloom FX', description: 'Efek cahaya berpendar pada area terang.', href: '/bloom', icon: Stars, category: 'studio', useCase: 'Glow' },
-  { title: 'Pencil Sketch', description: 'Sketsa pensil hitam-putih artistik.', href: '/pencil-sketch', icon: Paintbrush2, category: 'studio', useCase: 'Sketch' },
-  { title: 'Sepia Matang', description: 'Karakter foto klasik tahun 1920-an.', href: '/sepia-vintage', icon: Heart, category: 'studio', useCase: 'Legacy' },
-  { title: 'Luma Keyer', description: 'Isolasi area berdasarkan intensitas cahaya.', href: '/luma-key', icon: Sun, category: 'advanced', useCase: 'Mask' },
-  { title: 'RGB Offset', description: 'Geser kanal warna untuk efek 3D unik.', href: '/rgb-offset', icon: IterationCcw, category: 'studio', useCase: 'Shift' },
-  { title: 'Pincushion', description: 'Distorsi lensa melengkung ke dalam.', href: '/pincushion', icon: Focus, category: 'utility', useCase: 'Lens' },
-  { title: 'Fisheye Lens', description: 'Simulasi lensa mata ikan ultra-lebar.', href: '/fisheye', icon: Aperture, category: 'utility', useCase: 'Wide' },
+  // 7. Keamanan & Utilitas
+  { title: 'Password Pro', description: 'Generator kata sandi kuat dan aman.', href: '/password-gen', icon: Key, category: 'utility', useCase: 'Secure' },
+  { title: 'QR Generator', description: 'Generate kode QR statis instan.', href: '/qr-gen', icon: Binary, category: 'utility', useCase: 'Scan' },
+  { title: 'Barcode Maker', description: 'Buat barcode standar untuk produk.', href: '/barcode-gen', icon: Barcode, category: 'utility', useCase: 'Retail' },
+  { title: 'Favicon Gen', description: 'Buat ikon situs web .ico standar.', href: '/favicon-generator', icon: Box, category: 'utility', useCase: 'Web' },
+  { title: 'Meta Tag Gen', description: 'Generator meta tag SEO untuk website.', href: '/meta-gen', icon: Globe, category: 'utility', useCase: 'SEO' },
+  { title: 'Lorem Ipsum Pro', description: 'Generator teks pengisi untuk desain.', href: '/lorem-ipsum', icon: Type, category: 'utility', useCase: 'Copy' },
+  { title: 'Inspektur EXIF', description: 'Baca atribut data biner asli foto.', href: '/exif-view', icon: Eye, category: 'utility', useCase: 'Metadata' },
+  { title: 'Heatmap Visual', description: 'Analisis densitas warna piksel.', href: '/heatmap', icon: Flame, category: 'utility', useCase: 'Analytics' },
+  { title: 'Scanline FX', description: 'Efek garis TV CRT gaya retro.', href: '/scanline', icon: Monitor, category: 'studio', useCase: 'Retro' },
 ];
 
 export default function DashboardPage() {
@@ -123,14 +122,14 @@ export default function DashboardPage() {
         
         {/* Header Ribbon */}
         <div className="flex flex-col space-y-2">
-            <h1 className="text-4xl font-black tracking-tighter uppercase">Dasbor Utama</h1>
+            <h1 className="text-4xl font-black tracking-tighter uppercase">Workstation Dashboard</h1>
             <div className="flex items-center justify-between flex-wrap gap-4">
                <p className="text-muted-foreground text-xs font-medium opacity-60">
-                 Workstation aktif. {allTools.length}+ modul operasional siap digunakan 100% lokal.
+                 Sistem Aktif. {allTools.length}+ modul operasional siap digunakan 100% lokal.
                </p>
                <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full">
                  <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                 <span className="text-[9px] font-black uppercase text-primary tracking-widest">Node Stabil v4.5</span>
+                 <span className="text-[9px] font-black uppercase text-primary tracking-widest">Node Stabil v4.8</span>
                </div>
             </div>
         </div>
@@ -138,10 +137,10 @@ export default function DashboardPage() {
         {/* Horizontal Stat Ribbon */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { label: 'Modul Aktif', value: `${allTools.length}+`, sub: 'Total Terintegrasi', icon: Cpu, color: 'text-primary' },
+            { label: 'Modul Aktif', value: `${allTools.length}`, sub: 'Total Terintegrasi', icon: Cpu, color: 'text-primary' },
             { label: 'Latensi Node', value: '0ms', sub: 'Pemrosesan Lokal', icon: Zap, color: 'text-orange-500' },
-            { label: 'Cache Buffer', value: '1.2 GB', sub: 'Optimasi RAM', icon: Database, color: 'text-cyan-500' },
-            { label: 'Status Region', value: 'ID', sub: 'Bahasa Terpasang', icon: Globe, color: 'text-green-500' },
+            { label: 'Cache Buffer', value: '1.4 GB', sub: 'Optimasi RAM', icon: Database, color: 'text-cyan-500' },
+            { label: 'Privasi', value: '100%', sub: 'Sisi Klien', icon: ShieldCheck, color: 'text-green-500' },
           ].map((stat, i) => (
             <Card key={i} className="bg-card/40 border-border/50 rounded-2xl p-5 shadow-sm group hover:border-primary/30 transition-all">
                 <div className="flex justify-between items-start">
@@ -166,7 +165,7 @@ export default function DashboardPage() {
            <Input 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Cari modul visual (cth: konverter, filter, srt)..." 
+            placeholder="Cari modul visual atau kode (cth: barcode, filter, json)..." 
             className="h-16 pl-14 pr-8 rounded-2xl bg-card/80 border-border/50 focus-visible:ring-1 focus-visible:ring-primary/40 text-sm font-bold tracking-tight shadow-xl"
            />
         </div>
@@ -196,6 +195,7 @@ export default function DashboardPage() {
                           tool.category === 'social' && 'bg-orange-500/10 text-orange-500',
                           tool.category === 'studio' && 'bg-pink-500/10 text-pink-500',
                           tool.category === 'advanced' && 'bg-purple-500/10 text-purple-500',
+                          tool.category === 'dev' && 'bg-cyan-500/10 text-cyan-500',
                           tool.category === 'utility' && 'bg-slate-500/10 text-slate-500',
                           tool.category === 'audio' && 'bg-emerald-500/10 text-emerald-500',
                         )}>
@@ -215,7 +215,7 @@ export default function DashboardPage() {
                       </div>
                     </CardHeader>
                     <CardContent className="mt-auto pt-4 p-6 flex items-center justify-between border-t border-border/5 bg-muted/5">
-                      <span className="text-[8px] font-black text-muted-foreground/40 uppercase tracking-widest group-hover:text-primary transition-colors">Buka Alat</span>
+                      <span className="text-[8px] font-black text-muted-foreground/40 uppercase tracking-widest group-hover:text-primary transition-colors">Buka Modul</span>
                       <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all">
                         <ArrowRight className="w-3 h-3" />
                       </div>

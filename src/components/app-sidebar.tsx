@@ -19,7 +19,11 @@ import {
   History,
   FileCode,
   Palette,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Key,
+  ShieldAlert,
+  Terminal,
+  Code2
 } from 'lucide-react';
 
 import {
@@ -54,7 +58,8 @@ const navMain = [
       { title: "Suite PDF", url: "/pdf-converter" },
       { title: "Atur DPI", url: "/dpi-adjuster" },
       { title: "Hapus Metadata", url: "/metadata-cleaner" },
-      { title: "Alat Base64", url: "/base64-tool" },
+      { title: "Base64 Encoder", url: "/base64-tool" },
+      { title: "Base64 Decoder", url: "/base64-decode" },
     ],
   },
   {
@@ -67,6 +72,7 @@ const navMain = [
       { title: "Image Stitcher", url: "/stitcher" },
       { title: "Studio Mockup", url: "/mockup" },
       { title: "Watermark Pro", url: "/watermark" },
+      { title: "Image Flipper", url: "/image-flipper" },
     ],
   },
   {
@@ -78,7 +84,10 @@ const navMain = [
       { title: "Seni ASCII", url: "/ascii-art" },
       { title: "Kaleidoskop", url: "/kaleido" },
       { title: "Seni Pixelate", url: "/pixelate" },
-      { title: "Heatmap Visual", url: "/heatmap" },
+      { title: "Halftone Art", url: "/halftone" },
+      { title: "Oil Paint", url: "/oil-paint" },
+      { title: "Bloom FX", url: "/bloom" },
+      { title: "Scanline TV", url: "/scanline" },
     ],
   },
   {
@@ -88,9 +97,23 @@ const navMain = [
       { title: "Kontrol Luminansi", url: "/luminance" },
       { title: "Studio Bayangan", url: "/shadow-studio" },
       { title: "Warp Perspektif", url: "/perspective" },
-      { title: "Sepia Pro", url: "/sepia" },
-      { title: "Invert Warna", url: "/invert" },
-      { title: "Ketajaman (Sharpen)", url: "/sharpen" },
+      { title: "Sharpen Pro", url: "/sharpen" },
+      { title: "Edge Detection", url: "/edge-detection" },
+      { title: "Sobel Contour", url: "/sobel-edge" },
+      { title: "Color Balance", url: "/color-balance" },
+      { title: "Selective Gray", url: "/selective-gray" },
+    ],
+  },
+  {
+    title: "Developer Hub",
+    icon: Code2,
+    items: [
+      { title: "JSON Beautifier", url: "/json-beautifier" },
+      { title: "Case Converter", url: "/case-converter" },
+      { title: "URL Encode/Decode", url: "/url-tool" },
+      { title: "PX to REM Calc", url: "/px-rem" },
+      { title: "CSS Box Shadow", url: "/box-shadow" },
+      { title: "Meta Tag Gen", url: "/meta-gen" },
     ],
   },
   {
@@ -99,18 +122,20 @@ const navMain = [
     items: [
       { title: "Studio FX Audio", url: "/audio-cleaner" },
       { title: "Hapus Jeda Sunyi", url: "/dead-air-remover" },
-      { title: "Subtitle Workstation", url: "/voice-to-srt" },
+      { title: "Subtitle Maker", url: "/voice-to-srt" },
     ],
   },
   {
-    title: "Dev & Utilitas",
-    icon: Binary,
+    title: "Keamanan & Utilitas",
+    icon: ShieldCheck,
     items: [
+      { title: "Password Gen", url: "/password-gen" },
+      { title: "Hash Master", url: "/hash-master" },
       { title: "QR Generator", url: "/qr-gen" },
+      { title: "Barcode Maker", url: "/barcode-gen" },
       { title: "Favicon Gen", url: "/favicon-generator" },
-      { title: "SVG Inspector", url: "/svg-view" },
-      { title: "Kalkulator Aspek", url: "/aspect-calculator" },
-      { title: "Inspektur EXIF", url: "/exif-view" },
+      { title: "Lorem Ipsum", url: "/lorem-ipsum" },
+      { title: "Heatmap Visual", url: "/heatmap" },
     ],
   },
 ];
@@ -162,7 +187,7 @@ export function AppSidebar() {
                                 isActive={pathname === subItem.url}
                                 className={cn(
                                   "h-8 rounded-lg text-[9px] font-bold uppercase tracking-widest px-4 transition-colors",
-                                  pathname === subItem.url ? "text-primary bg-primary/5" : "text-muted-foreground hover:text-sidebar-foreground"
+                                  pathname === subItem.url ? "text-primary bg-primary/5" : "text-sidebar-foreground/70 hover:text-sidebar-foreground"
                                 )}
                             >
                               <Link href={subItem.url}>{subItem.title}</Link>
@@ -201,7 +226,7 @@ export function AppSidebar() {
           </div>
           <div className="flex flex-col truncate group-data-[collapsible=icon]:hidden">
              <span className="text-[9px] font-black uppercase tracking-tight text-sidebar-foreground">Node Lokal</span>
-             <span className="text-[7px] text-green-500 font-bold uppercase tracking-widest">v4.5.0 STABIL</span>
+             <span className="text-[7px] text-green-500 font-bold uppercase tracking-widest">v4.8.0 STABIL</span>
           </div>
         </div>
       </SidebarFooter>
