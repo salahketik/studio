@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -12,20 +13,16 @@ import {
   Folder,
   Wand2,
   Smartphone,
-  Binary,
-  Cpu,
-  Settings,
   ShieldCheck,
-  History,
-  FileCode,
-  Palette,
-  Image as ImageIcon,
-  Key,
-  ShieldAlert,
-  Terminal,
   Code2,
   BrainCircuit,
-  Bot
+  Star,
+  History,
+  Info,
+  Cpu,
+  User,
+  Scale,
+  FileText
 } from 'lucide-react';
 
 import {
@@ -44,115 +41,86 @@ import {
 } from '@/components/ui/sidebar';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
-
-const navMain = [
-  {
-    title: "Dasbor Utama",
-    url: "/",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "AI Command Center",
-    icon: BrainCircuit,
-    items: [
-      { title: "AI Image Analyst", url: "/ai-analyst" },
-      { title: "AI Background Gen", url: "/ai-background" },
-      { title: "AI Voice-to-SRT", url: "/voice-to-srt" },
-      { title: "AI Doc Helper", url: "/pdf-converter" },
-    ],
-  },
-  {
-    title: "Berkas Core",
-    icon: Folder,
-    items: [
-      { title: "Konverter Massal", url: "/image-converter" },
-      { title: "Optimasi PNG", url: "/png-opt" },
-      { title: "Suite PDF", url: "/pdf-converter" },
-      { title: "Atur DPI", url: "/dpi-adjuster" },
-      { title: "Hapus Metadata", url: "/metadata-cleaner" },
-      { title: "Base64 Encoder", url: "/base64-tool" },
-      { title: "Base64 Decoder", url: "/base64-decode" },
-    ],
-  },
-  {
-    title: "Kreator Sosial",
-    icon: Smartphone,
-    items: [
-      { title: "Resizer Pro", url: "/resizer" },
-      { title: "Grid Splitter", url: "/grid-splitter" },
-      { title: "Potong Cerdas", url: "/trim" },
-      { title: "Image Stitcher", url: "/stitcher" },
-      { title: "Studio Mockup", url: "/mockup" },
-      { title: "Watermark Pro", url: "/watermark" },
-      { title: "Image Flipper", url: "/image-flipper" },
-      { title: "Avatar Circle", url: "/avatar-circle" },
-    ],
-  },
-  {
-    title: "Studio FX",
-    icon: Box,
-    items: [
-      { title: "Ruang Filter", url: "/filters" },
-      { title: "Lab Palet Warna", url: "/palette-extractor" },
-      { title: "Seni ASCII", url: "/ascii-art" },
-      { title: "Kaleidoskop", url: "/kaleido" },
-      { title: "Seni Pixelate", url: "/pixelate" },
-      { title: "Halftone Art", url: "/halftone" },
-      { title: "Duotone Filter", url: "/duotone" },
-      { title: "Posterize Art", url: "/posterize" },
-      { title: "Vignette Studio", url: "/vignette" },
-    ],
-  },
-  {
-    title: "Editor Teknis",
-    icon: Wand2,
-    items: [
-      { title: "Sharpen Pro", url: "/sharpen" },
-      { title: "Kontrol Luminansi", url: "/luminance" },
-      { title: "Studio Bayangan", url: "/shadow-studio" },
-      { title: "Warp Perspektif", url: "/perspective" },
-      { title: "Edge Detection", url: "/edge-detection" },
-      { title: "Color Balance", url: "/color-balance" },
-      { title: "Loji Mixer", url: "/loji-mix" },
-      { title: "Threshold B&W", url: "/threshold" },
-    ],
-  },
-  {
-    title: "Developer Hub",
-    icon: Code2,
-    items: [
-      { title: "JSON Beautifier", url: "/json-beautifier" },
-      { title: "Case Converter", url: "/case-converter" },
-      { title: "URL Encode/Decode", url: "/url-tool" },
-      { title: "PX to REM Calc", url: "/px-rem" },
-      { title: "SVG Viewer", url: "/svg-view" },
-    ],
-  },
-  {
-    title: "Studio Audio",
-    icon: Music,
-    items: [
-      { title: "Studio FX Audio", url: "/audio-cleaner" },
-      { title: "Hapus Jeda Sunyi", url: "/dead-air-remover" },
-      { title: "Subtitle Maker", url: "/voice-to-srt" },
-    ],
-  },
-  {
-    title: "Keamanan & Utilitas",
-    icon: ShieldCheck,
-    items: [
-      { title: "Password Gen", url: "/password-gen" },
-      { title: "Hash Master", url: "/hash-master" },
-      { title: "QR Generator", url: "/qr-gen" },
-      { title: "Barcode Maker", url: "/barcode-gen" },
-      { title: "Favicon Gen", url: "/favicon-generator" },
-      { title: "Lorem Ipsum", url: "/lorem-ipsum" },
-    ],
-  },
-];
+import { useUserData } from '@/hooks/use-user-data';
+import { ALL_TOOLS } from '@/lib/tools-data';
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const { favorites, recent, mounted } = useUserData();
+
+  const navMain = [
+    {
+      title: "Dasbor Utama",
+      url: "/",
+      icon: LayoutDashboard,
+    },
+    {
+      title: "AI Command Center",
+      icon: BrainCircuit,
+      items: [
+        { title: "AI Image Analyst", url: "/ai-analyst" },
+        { title: "AI Background Gen", url: "/ai-background" },
+        { title: "AI Voice-to-SRT", url: "/voice-to-srt" },
+        { title: "AI Doc Helper", url: "/pdf-converter" },
+      ],
+    },
+    {
+      title: "Berkas Core",
+      icon: Folder,
+      items: [
+        { title: "Konverter Massal", url: "/image-converter" },
+        { title: "Optimasi PNG", url: "/png-opt" },
+        { title: "Suite PDF", url: "/pdf-converter" },
+        { title: "Atur DPI", url: "/dpi-adjuster" },
+        { title: "Hapus Metadata", url: "/metadata-cleaner" },
+        { title: "Base64 Suite", url: "/base64-tool" },
+      ],
+    },
+    {
+      title: "Kreator Sosial",
+      icon: Smartphone,
+      items: [
+        { title: "Resizer Pro", url: "/resizer" },
+        { title: "Grid Splitter", url: "/grid-splitter" },
+        { title: "Potong Cerdas", url: "/trim" },
+        { title: "Studio Mockup", url: "/mockup" },
+        { title: "Watermark Pro", url: "/watermark" },
+      ],
+    },
+    {
+      title: "Studio FX",
+      icon: Box,
+      items: [
+        { title: "Ruang Filter", url: "/filters" },
+        { title: "Seni ASCII", url: "/ascii-art" },
+        { title: "Duotone Filter", url: "/duotone" },
+        { title: "Posterize Art", url: "/posterize" },
+      ],
+    },
+    {
+      title: "Editor Teknis",
+      icon: Wand2,
+      items: [
+        { title: "Sharpen Pro", url: "/sharpen" },
+        { title: "Edge Detection", url: "/edge-detection" },
+        { title: "Loji Mixer", url: "/loji-mix" },
+      ],
+    },
+    {
+      title: "Developer Hub",
+      icon: Code2,
+      items: [
+        { title: "JSON Beautifier", url: "/json-beautifier" },
+        { title: "Case Converter", url: "/case-converter" },
+        { title: "PX to REM Calc", url: "/px-rem" },
+      ],
+    },
+  ];
+
+  const favoriteTools = mounted ? ALL_TOOLS.filter(t => favorites.includes(toolTitleClean(t.title))) : [];
+  const recentTools = mounted ? ALL_TOOLS.filter(t => recent.includes(toolTitleClean(t.title))).slice(0, 5) : [];
+
+  function toolTitleClean(t: string) { return t.toLowerCase().trim(); }
 
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border bg-sidebar">
@@ -169,8 +137,61 @@ export function AppSidebar() {
       </SidebarHeader>
       
       <SidebarContent className="px-2 pt-4">
+        {/* PERSONAL SPACE */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[9px] uppercase tracking-[0.2em] font-black px-4 mb-2 opacity-40 text-sidebar-foreground">Modul Kerja</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-[9px] uppercase tracking-[0.2em] font-black px-4 mb-2 opacity-40">Personal Workspace</SidebarGroupLabel>
+          <SidebarMenu className="gap-1">
+            <SidebarMenuItem>
+                <Collapsible className="group/collapsible">
+                    <CollapsibleTrigger asChild>
+                        <SidebarMenuButton tooltip="Favorit Saya">
+                            <Star className="w-4 h-4 text-yellow-500" />
+                            <span className="font-bold text-[10px] uppercase tracking-wider">Favorit</span>
+                            <ChevronRight className="ml-auto w-3 h-3 transition-transform group-data-[state=open]:rotate-90" />
+                        </SidebarMenuButton>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                        <SidebarMenuSub className="ml-4 border-l border-sidebar-border mt-1 py-1 gap-1">
+                            {favoriteTools.length > 0 ? favoriteTools.map(t => (
+                                <SidebarMenuSubItem key={t.href}>
+                                    <SidebarMenuSubButton asChild className="h-8 rounded-lg text-[9px] font-bold uppercase tracking-widest px-4">
+                                        <Link href={t.href}>{t.title}</Link>
+                                    </SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                            )) : <p className="text-[8px] px-4 opacity-50 italic">Belum ada favorit</p>}
+                        </SidebarMenuSub>
+                    </CollapsibleContent>
+                </Collapsible>
+            </SidebarMenuItem>
+            
+            <SidebarMenuItem>
+                <Collapsible className="group/collapsible">
+                    <CollapsibleTrigger asChild>
+                        <SidebarMenuButton tooltip="Terakhir Digunakan">
+                            <History className="w-4 h-4 text-blue-500" />
+                            <span className="font-bold text-[10px] uppercase tracking-wider">Terakhir</span>
+                            <ChevronRight className="ml-auto w-3 h-3 transition-transform group-data-[state=open]:rotate-90" />
+                        </SidebarMenuButton>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                        <SidebarMenuSub className="ml-4 border-l border-sidebar-border mt-1 py-1 gap-1">
+                            {recentTools.length > 0 ? recentTools.map(t => (
+                                <SidebarMenuSubItem key={t.href}>
+                                    <SidebarMenuSubButton asChild className="h-8 rounded-lg text-[9px] font-bold uppercase tracking-widest px-4">
+                                        <Link href={t.href}>{t.title}</Link>
+                                    </SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                            )) : <p className="text-[8px] px-4 opacity-50 italic">Kosong</p>}
+                        </SidebarMenuSub>
+                    </CollapsibleContent>
+                </Collapsible>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroup>
+
+        {/* WORKSTATION MODULES */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-[9px] uppercase tracking-[0.2em] font-black px-4 mb-2 opacity-40">Modul Operasional</SidebarGroupLabel>
           <SidebarMenu className="gap-1">
             {navMain.map((item) => (
               <SidebarMenuItem key={item.title}>
@@ -227,6 +248,29 @@ export function AppSidebar() {
               </SidebarMenuItem>
             ))}
           </SidebarMenu>
+        </SidebarGroup>
+
+        {/* SYSTEM INFO */}
+        <SidebarGroup>
+            <SidebarGroupLabel className="text-[9px] uppercase tracking-[0.2em] font-black px-4 mb-2 opacity-40">System Node</SidebarGroupLabel>
+            <SidebarMenu className="gap-1">
+                <SidebarMenuItem>
+                    <SidebarMenuButton asChild tooltip="Changelog">
+                        <Link href="/changelog">
+                            <FileText className="w-4 h-4 text-emerald-500" />
+                            <span className="font-bold text-[10px] uppercase tracking-wider">Changelog</span>
+                        </Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                    <SidebarMenuButton asChild tooltip="Tentang Workstation">
+                        <Link href="/about">
+                            <Info className="w-4 h-4 text-cyan-500" />
+                            <span className="font-bold text-[10px] uppercase tracking-wider">Tentang</span>
+                        </Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+            </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
 
