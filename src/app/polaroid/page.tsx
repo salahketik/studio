@@ -6,16 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { saveAs } from 'file-saver';
-import { ChevronLeft, Paintbrush2, Download, RefreshCcw, Loader2 } from 'lucide-react';
+import { ChevronLeft, Box, Download, RefreshCcw, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { ImageUploader } from '@/features/image-converter/components/image-uploader';
-import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
 
-export default function PosterizePage() {
+export default function PolaroidPage() {
   const { toast } = useToast();
   const [originalImage, setOriginalImage] = useState<{file: File, url: string} | null>(null);
-  const [levels, setLevels] = useState([5]);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleUpload = (files: File[]) => {
@@ -32,32 +29,30 @@ export default function PosterizePage() {
     const img = new Image();
     img.src = originalImage.url;
     img.onload = () => {
+      const border = 40;
+      const bottomBorder = 120;
       const canvas = document.createElement('canvas');
-      canvas.width = img.width;
-      canvas.height = img.height;
+      canvas.width = img.width + (border * 2);
+      canvas.height = img.height + border + bottomBorder;
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      ctx.drawImage(img, 0, 0);
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const data = imageData.data;
-      const step = Math.floor(255 / (levels[0] - 1));
-
-      for (let i = 0; i < data.length; i += 4) {
-        data[i] = Math.floor(data[i] / step) * step;
-        data[i+1] = Math.floor(data[i+1] / step) * step;
-        data[i+2] = Math.floor(data[i+2] / step) * step;
-      }
+      // Draw Polaroid frame
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      ctx.putImageData(imageData, 0, 0);
+      // Shadow simulation
+      ctx.shadowBlur = 20;
+      ctx.shadowColor = 'rgba(0,0,0,0.1)';
+      ctx.drawImage(img, border, border);
 
       canvas.toBlob((blob) => {
         if (blob) {
-          saveAs(blob, `poster_${originalImage.file.name}`);
-          toast({ title: "Selesai", description: "Efek posterize telah diterapkan." });
+          saveAs(blob, `polaroid_${originalImage.file.name}`);
+          toast({ title: "Selesai", description: "Bingkai Polaroid telah ditambahkan." });
         }
         setIsProcessing(false);
-      }, originalImage.file.type);
+      }, 'image/png');
     };
   };
 
@@ -68,8 +63,8 @@ export default function PosterizePage() {
           <Link href="/"><ChevronLeft className="h-6 w-6" /></Link>
         </Button>
         <div className="space-y-1">
-          <h1 className="text-2xl font-black uppercase tracking-tight">Posterize Filter</h1>
-          <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Pop Art Color Reduction</p>
+          <h1 className="text-2xl font-black uppercase tracking-tight">Polaroid Maker</h1>
+          <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Instant Retro Frame Tool</p>
         </div>
       </div>
 
@@ -81,30 +76,21 @@ export default function PosterizePage() {
             <Card className="rounded-3xl border-none shadow-xl overflow-hidden">
               <CardHeader className="bg-muted/50 border-b py-4">
                 <CardTitle className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
-                  <Paintbrush2 className="w-4 h-4 text-accent" /> Levels
+                  <Box className="w-4 h-4 text-accent" /> Instant Filter
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-6 space-y-8">
-                <div className="space-y-4">
-                  <Label className="text-[10px] uppercase font-bold text-muted-foreground">Color Tones: {levels[0]}</Label>
-                  <Slider value={levels} onValueChange={setLevels} min={2} max={20} step={1} />
-                </div>
+              <CardContent className="p-6">
                 <Button className="w-full h-12 bg-accent hover:bg-accent/90 rounded-xl font-bold" onClick={processImage} disabled={isProcessing}>
-                  {isProcessing ? <Loader2 className="animate-spin mr-2" /> : <Download className="mr-2" />} Export Art
+                  {isProcessing ? <Loader2 className="animate-spin mr-2" /> : <Download className="mr-2" />} Export Polaroid
                 </Button>
               </CardContent>
             </Card>
-            <Button variant="ghost" className="w-full text-[10px] uppercase font-bold" onClick={() => setOriginalImage(null)}>
-              <RefreshCcw className="mr-2 h-3 w-3" /> New Image
-            </Button>
           </div>
 
-          <div className="lg:col-span-8">
-            <Card className="rounded-3xl border-none shadow-2xl glass-panel overflow-hidden">
-              <CardContent className="p-0 flex items-center justify-center min-h-[400px] bg-muted/20">
-                 <img src={originalImage.url} alt="Preview" className="max-w-full h-auto" />
-              </CardContent>
-            </Card>
+          <div className="lg:col-span-8 flex items-center justify-center p-12 bg-muted/10 rounded-[3rem]">
+             <div className="bg-white p-6 pb-20 shadow-2xl transition-transform hover:rotate-1 duration-500">
+                <img src={originalImage.url} alt="Preview" className="max-w-[400px] h-auto shadow-inner" style={{ filter: 'sepia(0.2) contrast(1.1)' }} />
+             </div>
           </div>
         </div>
       )}

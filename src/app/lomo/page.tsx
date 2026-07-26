@@ -6,16 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { saveAs } from 'file-saver';
-import { ChevronLeft, Aperture, Download, RefreshCcw, Loader2 } from 'lucide-react';
+import { ChevronLeft, Camera, Download, RefreshCcw, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { ImageUploader } from '@/features/image-converter/components/image-uploader';
-import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
 
-export default function VignettePage() {
+export default function LomoPage() {
   const { toast } = useToast();
   const [originalImage, setOriginalImage] = useState<{file: File, url: string} | null>(null);
-  const [intensity, setIntensity] = useState([50]);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleUpload = (files: File[]) => {
@@ -38,25 +35,25 @@ export default function VignettePage() {
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
+      // Lomo Filter: High Saturation, High Contrast, Vignette
+      ctx.filter = 'saturate(1.8) contrast(1.4) brightness(1.1)';
       ctx.drawImage(img, 0, 0);
-      
-      const gradient = ctx.createRadialGradient(
+
+      const vGradient = ctx.createRadialGradient(
         canvas.width / 2, canvas.height / 2, 0,
         canvas.width / 2, canvas.height / 2, Math.sqrt(Math.pow(canvas.width/2, 2) + Math.pow(canvas.height/2, 2))
       );
+      vGradient.addColorStop(0, 'rgba(0,0,0,0)');
+      vGradient.addColorStop(0.6, 'rgba(0,0,0,0)');
+      vGradient.addColorStop(1, 'rgba(0,0,0,0.6)');
       
-      const alpha = intensity[0] / 100;
-      gradient.addColorStop(0, 'rgba(0,0,0,0)');
-      gradient.addColorStop(0.5, 'rgba(0,0,0,0)');
-      gradient.addColorStop(1, `rgba(0,0,0,${alpha})`);
-      
-      ctx.fillStyle = gradient;
+      ctx.fillStyle = vGradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       canvas.toBlob((blob) => {
         if (blob) {
-          saveAs(blob, `vignette_${originalImage.file.name}`);
-          toast({ title: "Selesai", description: "Efek vignette telah diterapkan." });
+          saveAs(blob, `lomo_${originalImage.file.name}`);
+          toast({ title: "Selesai", description: "Filter Lomo telah diterapkan." });
         }
         setIsProcessing(false);
       }, originalImage.file.type);
@@ -70,8 +67,8 @@ export default function VignettePage() {
           <Link href="/"><ChevronLeft className="h-6 w-6" /></Link>
         </Button>
         <div className="space-y-1">
-          <h1 className="text-2xl font-black uppercase tracking-tight">Vignette Studio</h1>
-          <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Dramatic Border Focus</p>
+          <h1 className="text-2xl font-black uppercase tracking-tight">Lomo Camera</h1>
+          <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Vibrant Vintage Aesthetics</p>
         </div>
       </div>
 
@@ -83,16 +80,12 @@ export default function VignettePage() {
             <Card className="rounded-3xl border-none shadow-xl overflow-hidden">
               <CardHeader className="bg-muted/50 border-b py-4">
                 <CardTitle className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
-                  <Aperture className="w-4 h-4 text-accent" /> Controls
+                  <Camera className="w-4 h-4 text-accent" /> Action
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-6 space-y-8">
-                <div className="space-y-4">
-                  <Label className="text-[10px] uppercase font-bold text-muted-foreground">Intensity: {intensity[0]}%</Label>
-                  <Slider value={intensity} onValueChange={setIntensity} min={0} max={100} step={1} />
-                </div>
+              <CardContent className="p-6">
                 <Button className="w-full h-12 bg-accent hover:bg-accent/90 rounded-xl font-bold" onClick={processImage} disabled={isProcessing}>
-                  {isProcessing ? <Loader2 className="animate-spin mr-2" /> : <Download className="mr-2" />} Export Image
+                  {isProcessing ? <Loader2 className="animate-spin mr-2" /> : <Download className="mr-2" />} Export Lomo
                 </Button>
               </CardContent>
             </Card>
@@ -104,11 +97,13 @@ export default function VignettePage() {
           <div className="lg:col-span-8">
             <Card className="rounded-3xl border-none shadow-2xl glass-panel overflow-hidden">
               <CardContent className="p-0 flex items-center justify-center min-h-[400px] bg-muted/20 relative">
-                 <img src={originalImage.url} alt="Preview" className="max-w-full h-auto" />
-                 <div 
-                  className="absolute inset-0 pointer-events-none"
-                  style={{ background: `radial-gradient(circle, transparent 50%, rgba(0,0,0,${intensity[0]/100}) 100%)` }}
+                 <img 
+                  src={originalImage.url} 
+                  alt="Preview" 
+                  className="max-w-full h-auto"
+                  style={{ filter: 'saturate(1.8) contrast(1.4) brightness(1.1)' }}
                  />
+                 <div className="absolute inset-0 bg-[radial-gradient(circle,transparent_60%,rgba(0,0,0,0.6)_100%)] pointer-events-none" />
               </CardContent>
             </Card>
           </div>

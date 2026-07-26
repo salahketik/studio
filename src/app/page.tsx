@@ -12,29 +12,11 @@ import {
   IterationCcw, Frame, Component, Focus, Sun, Filter,
   Music, TimerOff, Captions, Terminal, UserCircle,
   Hash, Binary, Search,
-  Database, Globe,
-  Monitor as Screen,
-  Move3d,
-  Layers2,
-  Activity,
-  Cpu,
-  Eraser,
-  Wand2,
-  CircleDashed,
-  Compass,
-  Trello,
-  Layout,
-  HardDrive,
-  RefreshCcw,
-  Flame,
-  Droplets,
-  ZapOff,
-  Scan,
-  Maximize,
-  Coins,
-  Puzzle,
-  Mic2,
-  Table
+  Database, Activity, Cpu, HardDrive,
+  Wand2, Layers2, Scan, RefreshCcw, Flame, Droplets, Coins, Puzzle,
+  Camera, MousePointer2, BoxSelect, Eraser, Move3d,
+  CircleDashed, ImagePlus, Monitor as Screen,
+  GlassWater, Focus as FocusIcon, Layers as LayersIcon
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -46,11 +28,10 @@ const allTools = [
   // 1. Berkas Core
   { title: 'Konverter Gambar', description: 'Konversi massal ke WebP, JPG, PNG secara lokal.', href: '/image-converter', icon: FileImage, category: 'core', useCase: 'Batch' },
   { title: 'Optimasi PNG', description: 'Kompresi aset PNG tanpa mengurangi kualitas.', href: '/png-opt', icon: Minimize2, category: 'core', useCase: 'Ukuran' },
-  { title: 'Suite PDF', description: 'Transformasi PDF ke Word, Excel, atau PPT.', href: '/pdf-converter', icon: Globe, category: 'core', useCase: 'Dokumen' },
+  { title: 'Suite PDF', description: 'Transformasi PDF ke Word, Excel, atau PPT.', href: '/pdf-converter', icon: ShieldAlert, category: 'core', useCase: 'Dokumen' },
   { title: 'Atur DPI', description: 'Ubah resolusi cetak metadata gambar.', href: '/dpi-adjuster', icon: Hash, category: 'core', useCase: 'Cetak' },
   { title: 'Hapus Metadata', description: 'Bersihkan data privasi EXIF secara permanen.', href: '/metadata-cleaner', icon: ShieldAlert, category: 'core', useCase: 'Privasi' },
   { title: 'Base64 Tool', description: 'Ubah gambar menjadi string data URI.', href: '/base64-tool', icon: Code2, category: 'core', useCase: 'Dev' },
-  { title: 'Smart Compress', description: 'Optimasi cerdas untuk memori rendah.', href: '/smart-compress', icon: HardDrive, category: 'core', useCase: 'Memori' },
   
   // 2. Kreator & Layout
   { title: 'Resizer Pro', description: 'Preset media sosial & kustom resolusi.', href: '/resizer', icon: Maximize2, category: 'social', useCase: 'Resize' },
@@ -61,48 +42,49 @@ const allTools = [
   { title: 'Avatar Bulat', description: 'Potong foto menjadi profil lingkaran.', href: '/avatar-circle', icon: UserCircle, category: 'social', useCase: 'Profil' },
   { title: 'Corner Rounder', description: 'Bulatkan sudut gambar dengan presisi.', href: '/corners', icon: Frame, category: 'social', useCase: 'UI/UX' },
   { title: 'Canvas Text', description: 'Tambah teks caption pada kanvas gambar.', href: '/canvas-text', icon: Type, category: 'social', useCase: 'Teks' },
-  { title: 'Watermark Pro', description: 'Tambah logo/teks hak cipta pada gambar.', href: '/watermark', icon: Compass, category: 'social', useCase: 'Copyright' },
+  { title: 'Watermark Pro', description: 'Tambah logo/teks hak cipta pada gambar.', href: '/watermark', icon: ImagePlus, category: 'social', useCase: 'Copyright' },
 
   // 3. Studio FX (Artistic)
   { title: 'Filter Studio', description: 'Edit pencahayaan, kontras, & suasana.', href: '/filters', icon: SlidersHorizontal, category: 'studio', useCase: 'Editor' },
   { title: 'Ekstrak Palet', description: 'Ambil kode HEX warna dari piksel foto.', href: '/palette-extractor', icon: Pipette, category: 'studio', useCase: 'Warna' },
   { title: 'Grayscale Pro', description: 'Kontrol monokrom kontras tinggi.', href: '/grayscale-pro', icon: ImageIcon, category: 'studio', useCase: 'Hitam Putih' },
   { title: 'Duotone Filter', description: 'Efek gradasi dua warna artistik.', href: '/duotone', icon: Sparkles, category: 'studio', useCase: 'Seni' },
+  { title: 'Vignette Studio', description: 'Efek gelap dramatis pada tepian gambar.', href: '/vignette', icon: Aperture, category: 'studio', useCase: 'Drama' },
+  { title: 'Posterize Art', description: 'Pengurangan warna gaya Pop Art.', href: '/posterize', icon: Paintbrush2, category: 'studio', useCase: 'Retro' },
   { title: 'Film Grain', description: 'Tekstur grain vintage sinematik.', href: '/film-grain', icon: Wind, category: 'studio', useCase: 'Analog' },
   { title: 'Glitch Maker', description: 'Efek distorsi digital bergaya cyberpunk.', href: '/glitch', icon: IterationCcw, category: 'studio', useCase: 'Digital' },
   { title: 'ASCII Art Pro', description: 'Ubah gambar menjadi karakter teks unik.', href: '/ascii-art', icon: Terminal, category: 'studio', useCase: 'Retro' },
   { title: 'Kaleidoscope', description: 'Ciptakan geometri fraktal melingkar.', href: '/kaleido', icon: Focus, category: 'studio', useCase: 'Fraktal' },
   { title: 'Pixelate Art', description: 'Ubah gambar menjadi gaya retro 8-bit.', href: '/pixelate', icon: Component, category: 'studio', useCase: 'Retro' },
-  { title: 'Heatmap Visual', description: 'Visualisasi densitas warna gambar.', href: '/heatmap', icon: Flame, category: 'studio', useCase: 'Data' },
-  { title: 'Solarize Pro', description: 'Efek negatif fotografi klasik.', href: '/solarize', icon: Sun, category: 'studio', useCase: 'Art' },
-  { title: 'Oil Paint', description: 'Ubah foto menjadi lukisan cat minyak.', href: '/oil-paint', icon: Paintbrush2, category: 'studio', useCase: 'Artist' },
 
   // 4. Editor Teknis (Precision)
+  { title: 'Sharpen Pro', description: 'Tingkatkan ketajaman garis tepi gambar.', href: '/sharpen', icon: Wand2, category: 'advanced', useCase: 'Detail' },
   { title: 'Mirror Studio', description: 'Efek cermin reflektif horizontal.', href: '/mirror', icon: IterationCcw, category: 'advanced', useCase: 'Simetri' },
   { title: 'Luminance Tool', description: 'Kontrol pencahayaan tingkat lanjut.', href: '/luminance', icon: Sun, category: 'advanced', useCase: 'Cahaya' },
   { title: 'Opacity Pro', description: 'Kontrol saluran alfa transparansi.', href: '/opacity', icon: Ghost, category: 'advanced', useCase: 'Alpha' },
   { title: 'Shadow Studio', description: 'Tambah kedalaman bayangan (drop shadow).', href: '/shadow-studio', icon: Layers, category: 'advanced', useCase: 'Dimensi' },
   { title: 'Perspective Warp', description: 'Transformasi 3D skew & tilt gambar.', href: '/perspective', icon: Move3d, category: 'advanced', useCase: '3D' },
-  { title: 'Threshold Blur', description: 'Penghalusan gambar dengan deteksi tepi.', href: '/threshold-blur', icon: Droplets, category: 'advanced', useCase: 'Filter' },
-  { title: 'Color Tint', description: 'Penyesuaian rona warna keseluruhan.', href: '/color-tint', icon: Palette, category: 'advanced', useCase: 'Color' },
-  { title: 'Dither Art', description: 'Pola titik retro hitam putih.', href: '/dither', icon: Scan, category: 'advanced', useCase: 'Retro' },
-  { title: 'Channel Swap', description: 'Tukar saluran warna R, G, B.', href: '/channel-swap', icon: RefreshCcw, category: 'advanced', useCase: 'Biner' },
-  { title: 'Sepia Pro', description: 'Tonasi cokelat artistik tingkat lanjut.', href: '/sepia', icon: Coins, category: 'advanced', useCase: 'Vintage' },
-  { title: 'Bulge Distort', description: 'Efek cembung/cekung pada tengah gambar.', href: '/bulge', icon: Puzzle, category: 'advanced', useCase: 'Warp' },
-  { title: 'Emboss Pro', description: 'Efek pahatan timbul mendalam.', href: '/emboss', icon: Layers2, category: 'advanced', useCase: 'Relief' },
+  { title: 'Threshold B&W', description: 'Konversi biner hitam putih murni.', href: '/threshold', icon: Contrast, category: 'advanced', useCase: 'Binary' },
+  { title: 'Color Mixer', description: 'Eksperimen RGB channel lab.', href: '/color-mixer', icon: Palette, category: 'advanced', useCase: 'Lab' },
+  { title: 'Loji Mixer', description: 'Pencampuran warna logaritma.', href: '/loji-mix', icon: Camera, category: 'advanced', useCase: 'Tone' },
 
   // 5. Studio Audio
   { title: 'Audio FX Studio', description: 'Edit suara dengan profil studio musik.', href: '/audio-cleaner', icon: Music, category: 'audio', useCase: 'Studio' },
   { title: 'Dead Air Remover', description: 'Hapus jeda sunyi secara otomatis.', href: '/dead-air-remover', icon: TimerOff, category: 'audio', useCase: 'Podcast' },
   { title: 'Subtitle Workstation', description: 'Workstation subtitle manual presisi.', href: '/voice-to-srt', icon: Captions, category: 'audio', useCase: 'Video' },
 
-  // 6. Utilitas Dev & Web
+  // 6. Utilitas Dev & Desain Baru
+  { title: 'Gradient Studio', description: 'Generator gradien linear & radial.', href: '/gradient-gen', icon: Palette, category: 'utility', useCase: 'CSS' },
+  { title: 'Glassmorphism', description: 'Generator efek kaca transparan CSS.', href: '/glassmorphism', icon: GlassWater, category: 'utility', useCase: 'UI' },
+  { title: 'Tilt-Shift FX', description: 'Efek miniatur dengan blur lensa.', href: '/tilt-shift', icon: FocusIcon, category: 'utility', useCase: 'Fokus' },
+  { title: 'Lomo Camera', description: 'Filter saturasi tinggi & vignette klasik.', href: '/lomo', icon: Camera, category: 'utility', useCase: 'Vintage' },
+  { title: 'Polaroid Frame', description: 'Bingkai foto instan gaya retro.', href: '/polaroid', icon: Box, category: 'utility', useCase: 'Instan' },
   { title: 'QR Generator', description: 'Generate kode QR statis instan.', href: '/qr-gen', icon: Binary, category: 'utility', useCase: 'Scan' },
   { title: 'Favicon Gen', description: 'Buat ikon situs web .ico standar.', href: '/favicon-generator', icon: Box, category: 'utility', useCase: 'Web' },
   { title: 'SVG Inspector', description: 'Inspeksi & pratinjau kode vektor SVG.', href: '/svg-view', icon: Code2, category: 'utility', useCase: 'Vektor' },
   { title: 'Kalkulator Aspek', description: 'Hitung proporsi dimensi gambar.', href: '/aspect-calculator', icon: Hash, category: 'utility', useCase: 'Desain' },
   { title: 'Inspektur EXIF', description: 'Baca atribut data biner asli foto.', href: '/exif-view', icon: Eye, category: 'utility', useCase: 'Metadata' },
-  { title: 'Color Mixer', description: 'Eksperimen RGB channel lab.', href: '/color-mixer', icon: Palette, category: 'utility', useCase: 'Lab' },
+  { title: 'Pola Berulang', description: 'Buat pratinjau pola ubin mulus.', href: '/pattern', icon: Scaling, category: 'utility', useCase: 'Texture' },
 ];
 
 export default function DashboardPage() {
@@ -241,4 +223,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
