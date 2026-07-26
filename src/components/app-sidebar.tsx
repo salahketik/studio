@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -19,7 +20,12 @@ import {
   Smartphone,
   ShieldCheck,
   Binary,
-  Monitor
+  Monitor,
+  LayoutGrid,
+  ShieldAlert,
+  Flame,
+  Droplets,
+  Coins
 } from 'lucide-react';
 
 import {
@@ -56,7 +62,6 @@ const navMain = [
       { title: "Atur DPI", url: "/dpi-adjuster" },
       { title: "Hapus Metadata", url: "/metadata-cleaner" },
       { title: "Alat Base64", url: "/base64-tool" },
-      { title: "Smart Compress", url: "/smart-compress" },
     ],
   },
   {
@@ -69,8 +74,6 @@ const navMain = [
       { title: "Potong Cerdas", url: "/trim" },
       { title: "Image Stitcher", url: "/stitcher" },
       { title: "Studio Mockup", url: "/mockup" },
-      { title: "Avatar Bulat", url: "/avatar-circle" },
-      { title: "Corner Rounder", url: "/corners" },
       { title: "Watermark Pro", url: "/watermark" },
     ],
   },
@@ -81,11 +84,11 @@ const navMain = [
     items: [
       { title: "Ruang Filter", url: "/filters" },
       { title: "Lab Palet Warna", url: "/palette-extractor" },
-      { title: "Pembuat Glitch", url: "/glitch" },
       { title: "Seni ASCII", url: "/ascii-art" },
       { title: "Kaleidoskop", url: "/kaleido" },
       { title: "Seni Pixelate", url: "/pixelate" },
-      { title: "Seni Halftone", url: "/halftone" },
+      { title: "Heatmap Visual", url: "/heatmap" },
+      { title: "Solarize Pro", url: "/solarize" },
     ],
   },
   {
@@ -94,11 +97,11 @@ const navMain = [
     icon: Wand2,
     items: [
       { title: "Kontrol Luminansi", url: "/luminance" },
-      { title: "Opacity Pro", url: "/opacity" },
       { title: "Studio Bayangan", url: "/shadow-studio" },
       { title: "Warp Perspektif", url: "/perspective" },
+      { title: "Threshold Blur", url: "/threshold-blur" },
+      { title: "Sepia Pro", url: "/sepia" },
       { title: "Invert Warna", url: "/invert" },
-      { title: "Edge Detection", url: "/edge-detection" },
     ],
   },
   {
@@ -109,6 +112,18 @@ const navMain = [
       { title: "Studio FX Audio", url: "/audio-cleaner" },
       { title: "Hapus Jeda Sunyi", url: "/dead-air-remover" },
       { title: "Subtitle Workstation", url: "/voice-to-srt" },
+    ],
+  },
+  {
+    title: "Dev & Utilitas",
+    url: "/qr-gen",
+    icon: Binary,
+    items: [
+      { title: "QR Generator", url: "/qr-gen" },
+      { title: "Favicon Gen", url: "/favicon-generator" },
+      { title: "SVG Inspector", url: "/svg-view" },
+      { title: "Kalkulator Aspek", url: "/aspect-calculator" },
+      { title: "Inspektur EXIF", url: "/exif-view" },
     ],
   },
 ];
@@ -132,7 +147,7 @@ export function AppSidebar() {
       
       <SidebarContent className="px-2">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[9px] uppercase tracking-[0.2em] font-black px-4 mb-4 mt-2 opacity-40">Menu Utama</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-[9px] uppercase tracking-[0.2em] font-black px-4 mb-4 mt-2 opacity-40 text-white">Menu Utama</SidebarGroupLabel>
           <SidebarMenu className="gap-1">
             {navMain.map((item) => (
               <SidebarMenuItem key={item.title}>
@@ -173,22 +188,6 @@ export function AppSidebar() {
             ))}
           </SidebarMenu>
         </SidebarGroup>
-
-        <div className="mt-auto p-4 group-data-[collapsible=icon]:hidden">
-           <div className="bg-[#11121d] rounded-2xl p-5 border border-white/5 space-y-4 shadow-xl">
-              <div className="flex items-center justify-between">
-                 <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-accent shadow-[0_0_8px_rgba(37,99,235,0.8)] animate-pulse" />
-                    <span className="text-[10px] font-black uppercase tracking-widest text-accent flex items-center gap-1">
-                       <Zap className="w-3 h-3" /> Ran Dev
-                    </span>
-                 </div>
-              </div>
-              <p className="text-[10px] text-muted-foreground italic leading-relaxed">
-                 "Workstation lokal murni yang mengutamakan privasi dan kecepatan."
-              </p>
-           </div>
-        </div>
       </SidebarContent>
 
       <SidebarFooter className="p-4 border-t border-white/5 bg-black/20">
@@ -197,8 +196,8 @@ export function AppSidebar() {
              <Settings className="w-4 h-4 text-accent" />
           </div>
           <div className="flex flex-col truncate group-data-[collapsible=icon]:hidden">
-             <span className="text-[10px] font-black uppercase tracking-tight">Sistem Node</span>
-             <span className="text-[8px] text-green-500 font-bold uppercase tracking-widest">v3.5.0 STABIL</span>
+             <span className="text-[10px] font-black uppercase tracking-tight text-white">Sistem Node</span>
+             <span className="text-[8px] text-green-500 font-bold uppercase tracking-widest">v3.8.0 STABIL</span>
           </div>
         </div>
       </SidebarFooter>
