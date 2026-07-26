@@ -20,7 +20,8 @@ import {
   Crop,
   Settings2,
   Smartphone,
-  Monitor
+  Monitor,
+  Info
 } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
