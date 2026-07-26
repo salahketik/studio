@@ -36,7 +36,6 @@ import {
   SidebarGroupLabel,
 } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
 
 const navMain = [
   {
