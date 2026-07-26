@@ -2,6 +2,8 @@ import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from '@/components/theme-provider';
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
+import { AppSidebar } from '@/components/app-sidebar';
 import { AppHeader } from '@/components/app-header';
 import { AppFooter } from '@/components/footer';
 import { GlobalErrorHandler } from '@/components/global-error-handler';
@@ -32,13 +34,16 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex flex-col h-full">
-            <AppHeader />
-            <main className="flex-grow">
-              {children}
-            </main>
-            <AppFooter />
-          </div>
+          <SidebarProvider>
+            <AppSidebar />
+            <SidebarInset className="flex flex-col min-h-screen">
+              <AppHeader />
+              <main className="flex-grow">
+                {children}
+              </main>
+              <AppFooter />
+            </SidebarInset>
+          </SidebarProvider>
           <GlobalErrorHandler />
           <Toaster />
         </ThemeProvider>

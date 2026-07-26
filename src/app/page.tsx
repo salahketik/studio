@@ -118,39 +118,38 @@ export default function DashboardPage() {
   }, [searchQuery, activeCategory]);
 
   return (
-    <div className="min-h-full hero-gradient pb-24 overflow-x-hidden workstation-content">
-      <div className="container mx-auto px-4 sm:px-6 md:p-12 lg:px-24 space-y-12 sm:space-y-20">
+    <div className="min-h-full pb-24 overflow-x-hidden workstation-content">
+      <div className="container mx-auto px-6 lg:px-12 py-10 space-y-12">
         
-        <div className="flex flex-col items-center text-center space-y-6 sm:space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-1000 pt-10 sm:pt-6">
-          <Badge variant="outline" className="px-5 py-1.5 text-[9px] sm:text-[10px] text-accent border-accent/20 bg-accent/5 rounded-full uppercase tracking-[0.25em] font-black">
-            <Sparkles className="w-3.5 h-3.5 mr-2 text-accent" />
-            60-in-1 Ultimate Creative Workstation
-          </Badge>
-          
-          <h1 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] max-w-5xl">
-            Solusi Kreatif <br className="hidden sm:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent via-primary/80 to-accent animate-gradient-x">
-              Tanpa Batas.
-            </span>
-          </h1>
-          
-          <p className="text-muted-foreground text-[11px] sm:text-sm md:text-lg max-w-3xl mx-auto leading-relaxed px-8 opacity-80 uppercase tracking-widest font-medium">
-            Ekosistem 60 alat modular untuk pengolahan visual, audio, dan utilitas digital. 
-            <br className="hidden md:block" /> Berjalan instan secara lokal, menjamin privasi 100%.
-          </p>
+        <div className="space-y-4">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+             <div className="space-y-1">
+                <h1 className="text-3xl sm:text-5xl font-black tracking-tighter uppercase">
+                  Workstation <span className="text-accent">Hub</span>
+                </h1>
+                <p className="text-muted-foreground text-[11px] uppercase tracking-widest font-bold opacity-60">
+                   60 Modular Creative Modules • 100% Local Processing
+                </p>
+             </div>
+             <div className="flex items-center gap-2">
+                <Badge variant="outline" className="h-10 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest border-accent/20 bg-accent/5 text-accent">
+                   <Zap className="w-3 h-3 mr-2" /> All Systems Nominal
+                </Badge>
+             </div>
+          </div>
         </div>
 
-        <div className="space-y-10">
-          <div className="flex flex-col lg:flex-row items-center gap-6 justify-between border-b pb-8 border-border/10">
-            <div className="flex flex-wrap justify-center lg:justify-start gap-1.5">
+        <div className="space-y-8">
+          <div className="flex flex-col lg:flex-row items-center gap-4 justify-between bg-card/50 p-2 rounded-[2rem] border border-border/10 backdrop-blur-md">
+            <div className="flex flex-wrap justify-center lg:justify-start gap-1 p-1">
               {categories.map((cat) => (
                 <Button 
                   key={cat.id}
                   variant={activeCategory === cat.id ? 'secondary' : 'ghost'}
                   size="sm"
                   className={cn(
-                    "rounded-full px-5 h-10 text-[10px] font-black uppercase tracking-widest transition-all",
-                    activeCategory === cat.id ? "bg-accent text-white shadow-xl shadow-accent/20 scale-105" : "text-muted-foreground"
+                    "rounded-[1.25rem] px-5 h-10 text-[10px] font-black uppercase tracking-widest transition-all",
+                    activeCategory === cat.id ? "bg-accent text-white shadow-xl shadow-accent/20" : "text-muted-foreground hover:bg-accent/5"
                   )}
                   onClick={() => setActiveCategory(cat.id)}
                 >
@@ -160,21 +159,21 @@ export default function DashboardPage() {
               ))}
             </div>
 
-            <div className="relative w-full lg:w-[400px]">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <div className="relative w-full lg:w-[350px] mr-2">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground opacity-30" />
               <Input 
-                placeholder="Cari alat (cth: konversi, subtitle, qr)..." 
-                className="pl-12 h-14 rounded-2xl bg-white/40 backdrop-blur-md border-accent/5 focus:border-accent/40 transition-all text-xs"
+                placeholder="Cari alat spesifik..." 
+                className="pl-12 h-11 rounded-2xl bg-background/50 border-none focus-visible:ring-1 focus-visible:ring-accent/30 text-[11px] font-bold"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4 animate-in fade-in duration-700">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 animate-in fade-in duration-700">
             {filteredTools.map((tool) => (
               <Link key={tool.title} href={tool.href} className="group">
-                <Card className="tool-card h-full flex flex-col border-border/5 bg-card/20 hover:bg-card/95 transition-all duration-500 rounded-[1.5rem]">
+                <Card className="tool-card h-full flex flex-col border-border/5 bg-card/40 hover:bg-card/95 transition-all duration-500 rounded-[1.5rem] overflow-hidden">
                   <CardHeader className="p-5 pb-2">
                     <div className="flex items-start justify-between mb-4">
                       <div className={cn(
@@ -188,7 +187,7 @@ export default function DashboardPage() {
                       )}>
                         <tool.icon className="w-5 h-5" />
                       </div>
-                      <Badge variant="outline" className="text-[7px] uppercase tracking-widest font-black opacity-40 group-hover:opacity-100 transition-opacity">
+                      <Badge variant="outline" className="text-[7px] uppercase tracking-widest font-black opacity-30 group-hover:opacity-100 transition-opacity">
                         {tool.useCase}
                       </Badge>
                     </div>
@@ -201,8 +200,8 @@ export default function DashboardPage() {
                       </CardDescription>
                     </div>
                   </CardHeader>
-                  <CardContent className="mt-auto pt-3 p-5 flex items-center justify-between">
-                    <span className="text-[8px] font-black text-muted-foreground/30 uppercase tracking-[0.2em]">Open Module</span>
+                  <CardContent className="mt-auto pt-3 p-5 flex items-center justify-between border-t border-border/5">
+                    <span className="text-[8px] font-black text-muted-foreground/20 uppercase tracking-[0.2em]">Open Module</span>
                     <div className="flex items-center text-[9px] font-black text-accent opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">
                       <ArrowRight className="w-3.5 h-3.5" />
                     </div>
@@ -215,26 +214,9 @@ export default function DashboardPage() {
           {filteredTools.length === 0 && (
             <div className="py-24 text-center space-y-4 glass-panel rounded-[2rem] border-dashed border-muted-foreground/10">
                <Search className="w-12 h-12 text-muted-foreground/20 mx-auto" />
-               <p className="text-muted-foreground font-black uppercase tracking-widest text-xs">Alat tidak ditemukan</p>
+               <p className="text-muted-foreground font-black uppercase tracking-widest text-[10px]">Alat tidak ditemukan</p>
             </div>
           )}
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 opacity-70">
-            {[
-              { label: 'On-Demand Processor', icon: ShieldCheck, desc: 'Instan & Ringan' },
-              { label: 'Privacy First', icon: Zap, desc: 'Tanpa Cloud Upload' },
-              { label: 'High Fidelity', icon: Download, desc: 'Ekspor Berkualitas' },
-              { label: '60 Modular Units', icon: Component, desc: 'Ekosistem Lengkap' }
-            ].map((stat, i) => (
-              <div key={i} className="glass-panel p-6 rounded-[2rem] flex flex-col items-center text-center gap-3 hover:bg-white/60 transition-colors">
-                  <stat.icon className="w-5 h-5 text-accent" />
-                  <div>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-accent">{stat.label}</p>
-                    <p className="text-[9px] text-muted-foreground font-bold uppercase">{stat.desc}</p>
-                  </div>
-              </div>
-            ))}
         </div>
       </div>
     </div>
