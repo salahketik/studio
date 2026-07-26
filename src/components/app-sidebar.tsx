@@ -19,30 +19,9 @@ import {
   History,
   Info,
   Cpu,
-  User,
-  Scale,
   FileText,
-  FileImage, Crop, Sparkles, 
-  Maximize2, SlidersHorizontal, Pipette, Grid3X3, 
-  ShieldAlert, Database, 
-  Layers, Wind, Split, Eye, 
-  Type, Scaling, Ghost, Contrast, Aperture, Paintbrush2, Minimize2, 
-  IterationCcw, Frame, Component, Focus, Sun, Filter,
-  TimerOff, Captions, Terminal, UserCircle,
-  Hash, Binary, Search, SearchCode,
-  Layers2, RefreshCcw, Flame, Coins,
-  ImagePlus, Monitor,
-  GlassWater, Camera, Globe,
-  Layout, CheckCircle2, RotateCcw,
-  Heart, Stars, Palette as PaletteIcon,
-  Barcode, Key, FileJson, Link as LinkIcon, Ruler, Scan,
-  MousePointer2, Mail, Lock,
-  Settings2, Bot, Video, Languages, Stamp, FileCode,
-  Shield, Trash2, Scissors, ListChecks, FileType, 
-  FileSpreadsheet, Clock, Braces, Table, AlignLeft,
-  Waveform, Microscope, ScanEye, Brush, Waves, Activity,
-  Volume2, FileUp, Laptop, Globe2, Fingerprint, FileSearch, TerminalSquare,
-  Network, Share2, MousePointerClick, MessageSquareText, PenTool
+  Search,
+  Activity
 } from 'lucide-react';
 
 import {
@@ -81,7 +60,7 @@ export function AppSidebar() {
         { title: "AI Image Analyst", url: "/ai-analyst" },
         { title: "AI Background Gen", url: "/ai-background" },
         { title: "AI Audio Subtitle", url: "/voice-to-srt" },
-        { title: "AI Doc Helper", url: "/pdf-converter" },
+        { title: "AI PDF Assistant", url: "/pdf-converter" },
       ],
     },
     {
@@ -146,10 +125,9 @@ export function AppSidebar() {
     },
   ];
 
+  function toolTitleClean(t: string) { return t.toLowerCase().trim(); }
   const favoriteTools = mounted ? ALL_TOOLS.filter(t => favorites.includes(toolTitleClean(t.title))) : [];
   const recentTools = mounted ? ALL_TOOLS.filter(t => recent.includes(toolTitleClean(t.title))).slice(0, 5) : [];
-
-  function toolTitleClean(t: string) { return t.toLowerCase().trim(); }
 
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border bg-sidebar">

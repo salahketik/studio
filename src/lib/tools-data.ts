@@ -20,7 +20,7 @@ import {
   FileSpreadsheet, Clock, SearchCode, Braces, Table, AlignLeft,
   Waveform, Microscope, ScanEye, Brush, Waves, Volume2, 
   FileUp, Laptop, Globe2, Fingerprint, FileSearch, TerminalSquare,
-  Network, Share2, MousePointerClick, MessageSquareText
+  Network, Share2, MousePointerClick, MessageSquareText, PenTool
 } from 'lucide-react';
 
 export interface Tool {
@@ -100,7 +100,7 @@ export const ALL_TOOLS: Tool[] = [
   { title: 'CMYK Splitter', description: 'Pisahkan kanal warna untuk kebutuhan cetak.', href: '/cmyk-split', icon: PaletteIcon, category: 'advanced', useCase: 'Print' },
   { title: 'Histogram', description: 'Analisis distribusi tonal citra.', href: '/histogram', icon: Activity, category: 'advanced', useCase: 'Analyze' },
   { title: 'Bulge Warp', description: 'Distorsi lensa cembung/cekung.', href: '/bulge', icon: Maximize2, category: 'advanced', useCase: 'Distort' },
-  { title: 'Wave Distortion', description: 'Efek riak gelombang fungsional.', href: '/wave', icon: Waves, category: 'advanced', useCase: 'Liquid' },
+  { title: 'Wave Distortion', description: 'Efek riak gelombang air fungsional.', href: '/wave', icon: Waves, category: 'advanced', useCase: 'Liquid' },
   { title: 'Median Filter', description: 'Penghilang noise tingkat lanjut.', href: '/median', icon: Filter, category: 'advanced', useCase: 'Denoise' },
   { title: 'Emboss Pro', description: 'Efek tekstur relief 3D.', href: '/emboss', icon: Layers, category: 'advanced', useCase: 'Relief' },
 
@@ -147,5 +147,3 @@ export const ALL_TOOLS: Tool[] = [
   { title: 'Aspect Ratio', description: 'Kalkulator rasio dimensi gambar.', href: '/aspect-calculator', icon: Hash, category: 'utility', useCase: 'Math' },
   { title: 'Favicon Gen', description: 'Buat ikon browser standar 32x32.', href: '/favicon-generator', icon: Box, category: 'utility', useCase: 'Web' },
 ];
-
-import { PenTool } from 'lucide-react';

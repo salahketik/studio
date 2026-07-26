@@ -56,7 +56,6 @@ export default function DashboardPage() {
     <div className="min-h-full pb-20 bg-background text-foreground">
       <div className="container mx-auto px-4 sm:px-6 lg:px-10 py-10 space-y-12">
         
-        {/* Header Ribbon */}
         <div className="flex flex-col space-y-2">
             <h1 className="text-3xl sm:text-4xl font-black tracking-tighter uppercase">Workstation Dashboard</h1>
             <div className="flex items-center justify-between flex-wrap gap-4">
@@ -70,7 +69,6 @@ export default function DashboardPage() {
             </div>
         </div>
 
-        {/* Horizontal Stats Ribbon */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
             { label: 'Modul Aktif', value: `${ALL_TOOLS.length}`, sub: 'Total Terintegrasi', icon: Cpu, color: 'text-primary' },
@@ -95,7 +93,6 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        {/* Global Search Hub */}
         <div className="relative group max-w-3xl mx-auto">
            <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground opacity-30 group-focus-within:opacity-100 transition-opacity" />
            <Input 
@@ -106,7 +103,6 @@ export default function DashboardPage() {
            />
         </div>
 
-        {/* Tools Catalog */}
         <div className="space-y-8">
           <div className="flex items-center justify-between border-b border-border/50 pb-4">
              <div className="flex items-center gap-2">
@@ -167,7 +163,6 @@ export default function DashboardPage() {
                         </CardContent>
                       </Card>
                     </Link>
-                    {/* Favorite Button */}
                     <button 
                       onClick={(e) => {
                         e.preventDefault();

@@ -63,7 +63,6 @@ export default function Base64ToolPage() {
         <ImageUploader onUpload={handleUpload} />
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-in fade-in duration-500">
-          
           <div className="lg:col-span-5 space-y-6">
             <Card className="rounded-3xl border-none shadow-2xl overflow-hidden glass-panel">
               <CardHeader className="bg-muted/30 border-b py-4">
@@ -84,7 +83,6 @@ export default function Base64ToolPage() {
                 </div>
               </CardContent>
             </Card>
-            
             <Button variant="ghost" className="w-full text-[10px] uppercase font-bold tracking-widest text-muted-foreground" onClick={() => { setOriginalImage(null); setBase64String(''); }}>
               <RefreshCcw className="mr-2 h-3 w-3" /> Ganti Gambar
             </Button>
