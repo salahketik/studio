@@ -4,6 +4,8 @@ import { optimizeWebpCompression } from '@/ai/flows/optimize-webp-compression';
 import type { OptimizeWebpCompressionInput } from '@/ai/flows/optimize-webp-compression';
 import { generateBackground } from '@/ai/flows/generate-background';
 import type { GenerateBackgroundInput } from '@/ai/flows/generate-background';
+import { analyzeImage } from '@/ai/flows/analyze-image';
+import type { AnalyzeImageInput, AnalyzeImageOutput } from '@/ai/flows/analyze-image';
 
 interface AIResult {
     optimizedImageUri?: string;
@@ -48,6 +50,24 @@ export async function runAIGenerateBackground(
         console.error('AI Background Error:', error);
         return {
             error: error instanceof Error ? error.message : 'Gagal menghasilkan latar belakang AI.',
+        };
+    }
+}
+
+interface AIAnalysisResult extends Partial<AnalyzeImageOutput> {
+    error?: string;
+}
+
+export async function runAIAnalyzeImage(
+    input: AnalyzeImageInput
+): Promise<AIAnalysisResult> {
+    try {
+        const result = await analyzeImage(input);
+        return result;
+    } catch (error) {
+        console.error('AI Vision Error:', error);
+        return {
+            error: error instanceof Error ? error.message : 'Gagal menganalisis gambar dengan AI.',
         };
     }
 }

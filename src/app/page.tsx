@@ -12,7 +12,9 @@ import {
   Globe,
   LayoutGrid,
   Palette,
-  Info
+  Info,
+  Maximize2,
+  Search
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -35,6 +37,22 @@ const visualTools = [
     icon: Monitor,
     color: 'bg-purple-500/10 text-purple-600',
     badge: 'AI Background'
+  },
+  {
+    title: 'Resizer Pro',
+    description: 'Ubah ukuran gambar secara instan untuk format Instagram, TikTok, YouTube, dan platform lainnya.',
+    href: '/resizer',
+    icon: Maximize2,
+    color: 'bg-orange-500/10 text-orange-600',
+    badge: 'Multi-Format'
+  },
+  {
+    title: 'Vision Analyst AI',
+    description: 'Ekstrak palet warna, Alt-Text SEO, dan deskripsi cerdas dari gambar menggunakan visi AI.',
+    href: '/vision-analyst',
+    icon: Search,
+    color: 'bg-indigo-500/10 text-indigo-600',
+    badge: 'AI Vision'
   },
   {
     title: 'Potong Cerdas',
@@ -107,11 +125,11 @@ export default function DashboardPage() {
                       <tool.icon className="w-6 h-6 sm:w-7 sm:h-7" />
                     </div>
                     <div className="flex items-center justify-between mb-2">
-                      <CardTitle className="text-lg sm:text-2xl group-hover:text-accent transition-colors">
+                      <CardTitle className="text-lg sm:text-xl group-hover:text-accent transition-colors">
                         {tool.title}
                       </CardTitle>
                       {tool.badge && (
-                        <Badge variant="secondary" className="text-[8px] sm:text-[10px] uppercase tracking-wider font-bold bg-accent/10 text-accent border-none shrink-0">
+                        <Badge variant="secondary" className="text-[8px] sm:text-[9px] uppercase tracking-wider font-bold bg-accent/10 text-accent border-none shrink-0">
                           {tool.badge}
                         </Badge>
                       )}
@@ -154,10 +172,10 @@ export default function DashboardPage() {
                </div>
                <div className="glass-panel p-8 rounded-3xl space-y-4">
                   <h3 className="text-xl font-bold flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-accent" /> AI Background Mockup
+                    <Search className="w-5 h-5 text-accent" /> AI Vision SEO
                   </h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    Saat membuat mockup, tuliskan deskripsi latar belakang seperti *"minimalist high-end studio"* atau *"cinematic natural light"*. AI akan membuatkan latar belakang eksklusif untuk mockup Anda.
+                    Unggah gambar Anda ke **Vision Analyst** untuk mendapatkan Alt-Text instan. Sangat membantu untuk meningkatkan peringkat pencarian dan aksesibilitas situs web Anda tanpa harus menulis deskripsi secara manual.
                   </p>
                </div>
             </div>
