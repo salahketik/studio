@@ -3,51 +3,12 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { 
-  FileImage, 
-  Monitor, 
-  Crop, 
-  ArrowRight,
-  Sparkles,
-  Zap,
-  ShieldCheck,
-  LayoutGrid,
-  Maximize2,
-  SlidersHorizontal,
-  Pipette,
-  Stamp,
-  Grid3X3,
-  ShieldAlert,
-  Code2,
-  Search,
-  X,
-  CheckCircle2,
-  Box,
-  Image as ImageIcon,
-  RotateCcw,
-  Palette,
-  Calculator,
-  Layers,
-  Wind,
-  Square,
-  FileCode,
-  CornerDownRight,
-  Split,
-  Eye,
-  Type,
-  Scaling,
-  Ghost,
-  Contrast,
-  Aperture,
-  Paintbrush2,
-  Minimize2,
-  IterationCcw,
-  Frame,
-  Component,
-  Focus,
-  Sun,
-  Camera,
-  Download,
-  Filter
+  FileImage, Monitor, Crop, ArrowRight, Sparkles, Zap, ShieldCheck, 
+  LayoutGrid, Maximize2, SlidersHorizontal, Pipette, Stamp, Grid3X3, 
+  ShieldAlert, Code2, Search, Box, Image as ImageIcon, RotateCcw, 
+  Palette, Calculator, Layers, Wind, Square, FileCode, Split, Eye, 
+  Type, Scaling, Ghost, Contrast, Aperture, Paintbrush2, Minimize2, 
+  IterationCcw, Frame, Component, Focus, Sun, Camera, Download, Filter
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -65,7 +26,6 @@ const categories = [
 ];
 
 const visualTools = [
-  // 1-10 (Existing Core Tools)
   { title: 'Konverter Gambar', description: 'Konversi massal ke WebP, JPG, PNG.', href: '/image-converter', icon: FileImage, category: 'core', useCase: 'Batch' },
   { title: 'Generator Mockup', description: 'Presentasi produk dengan frame browser.', href: '/mockup', icon: Monitor, category: 'core', useCase: 'Showcase' },
   { title: 'Resizer Pro', description: 'Preset media sosial & kustom piksel.', href: '/resizer', icon: Maximize2, category: 'social', useCase: 'Resize' },
@@ -76,8 +36,6 @@ const visualTools = [
   { title: 'Grid Splitter', description: 'Potong gambar untuk grid Instagram.', href: '/grid-splitter', icon: Grid3X3, category: 'social', useCase: 'Instagram' },
   { title: 'Hapus Metadata', description: 'Bersihkan data privasi EXIF permanen.', href: '/metadata-cleaner', icon: ShieldAlert, category: 'utility', useCase: 'Security' },
   { title: 'Base64 Tool', description: 'Ubah gambar ke string data URI.', href: '/base64-tool', icon: Code2, category: 'utility', useCase: 'Dev' },
-  
-  // 11-20 (Added Previously)
   { title: 'Favicon Generator', description: 'Buat file .ico berbagai ukuran.', href: '/favicon-generator', icon: Box, category: 'utility', useCase: 'Web Icon' },
   { title: 'Shadow Studio', description: 'Drop-shadow lembut untuk aset PNG.', href: '/shadow-studio', icon: Layers, category: 'advanced', useCase: 'Depth' },
   { title: 'Image Flipper', description: 'Putar balik gambar secara instan.', href: '/image-flipper', icon: RotateCcw, category: 'social', useCase: 'Flip' },
@@ -88,8 +46,6 @@ const visualTools = [
   { title: 'Film Grain', description: 'Tekstur vintage grain artistik.', href: '/film-grain', icon: Wind, category: 'studio', useCase: 'Texture' },
   { title: 'Border Master', description: 'Tambahkan bingkai solid/gradien.', href: '/image-border', icon: Square, category: 'advanced', useCase: 'Frame' },
   { title: 'SVG Viewer', description: 'Inspeksi & pratinjau kode SVG.', href: '/svg-view', icon: FileCode, category: 'utility', useCase: 'Dev' },
-
-  // 21-40 (New Expansion)
   { title: 'Vignette Studio', description: 'Efek fokus tepian gelap dramatis.', href: '/vignette', icon: Aperture, category: 'studio', useCase: 'Mood' },
   { title: 'Pixelate Art', description: 'Sensor atau efek retro pixelation.', href: '/pixelate', icon: Component, category: 'studio', useCase: 'Creative' },
   { title: 'Noise Studio', description: 'Kurangi atau tambahkan noise visual.', href: '/noise', icon: Filter, category: 'studio', useCase: 'Detail' },
@@ -129,7 +85,6 @@ export default function DashboardPage() {
     <div className="min-h-full hero-gradient pb-24 overflow-x-hidden">
       <div className="container mx-auto px-4 sm:px-6 md:p-12 lg:px-24 space-y-12 sm:space-y-20">
         
-        {/* Workstation Identity */}
         <div className="flex flex-col items-center text-center space-y-6 sm:space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-1000 pt-10 sm:pt-6">
           <Badge variant="outline" className="px-5 py-1.5 text-[9px] sm:text-[10px] text-accent border-accent/20 bg-accent/5 rounded-full uppercase tracking-[0.25em] font-black">
             <Sparkles className="w-3.5 h-3.5 mr-2 text-accent" />
@@ -137,18 +92,17 @@ export default function DashboardPage() {
           </Badge>
           
           <h1 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] max-w-4xl">
-            40 Alat Visual. <br className="hidden sm:block" />
+            Workstation Efisien. <br className="hidden sm:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent via-primary/80 to-accent animate-gradient-x">
-              Kreativitas Tanpa Batas.
+              Performa Maksimal.
             </span>
           </h1>
           
           <p className="text-muted-foreground text-[11px] sm:text-sm md:text-lg max-w-2xl mx-auto leading-relaxed px-8 opacity-80 uppercase tracking-widest font-medium">
-            Workstation digital profesional berbasis browser. 100% Lokal. Cepat. Aman.
+            40 alat kreatif yang hanya berjalan saat Anda membutuhkannya. Hemat RAM, cepat, dan murni lokal.
           </p>
         </div>
 
-        {/* Categories & Search */}
         <div className="space-y-10">
           <div className="flex flex-col lg:flex-row items-center gap-6 justify-between border-b pb-8 border-border/10">
             <div className="flex flex-wrap justify-center lg:justify-start gap-1.5">
@@ -172,7 +126,7 @@ export default function DashboardPage() {
             <div className="relative w-full lg:w-[400px]">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input 
-                placeholder="Cari di antara 40 alat..." 
+                placeholder="Cari alat visual..." 
                 className="pl-12 h-14 rounded-2xl bg-white/40 backdrop-blur-md border-accent/5 focus:border-accent/40 transition-all text-xs"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -180,68 +134,60 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Results Grid */}
-          {filteredTools.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 animate-in fade-in duration-700">
-              {filteredTools.map((tool) => (
-                <Link key={tool.title} href={tool.href} className="group">
-                  <Card className="tool-card h-full flex flex-col border-border/5 bg-card/20 hover:bg-card/95 transition-all duration-500 rounded-[1.5rem]">
-                    <CardHeader className="p-5 pb-2">
-                      <div className="flex items-start justify-between mb-4">
-                        <div className={cn(
-                          "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-700 group-hover:scale-110 shadow-sm",
-                          tool.category === 'core' && 'bg-blue-500/10 text-blue-600',
-                          tool.category === 'social' && 'bg-orange-500/10 text-orange-600',
-                          tool.category === 'studio' && 'bg-pink-500/10 text-pink-600',
-                          tool.category === 'advanced' && 'bg-purple-500/10 text-purple-600',
-                          tool.category === 'utility' && 'bg-slate-500/10 text-slate-600',
-                        )}>
-                          <tool.icon className="w-5 h-5" />
-                        </div>
-                        <Badge variant="outline" className="text-[7px] uppercase tracking-widest font-black opacity-40 group-hover:opacity-100 transition-opacity">
-                          {tool.useCase}
-                        </Badge>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 animate-in fade-in duration-700">
+            {filteredTools.map((tool) => (
+              <Link key={tool.title} href={tool.href} className="group">
+                <Card className="tool-card h-full flex flex-col border-border/5 bg-card/20 hover:bg-card/95 transition-all duration-500 rounded-[1.5rem]">
+                  <CardHeader className="p-5 pb-2">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className={cn(
+                        "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-700 group-hover:scale-110 shadow-sm",
+                        tool.category === 'core' && 'bg-blue-500/10 text-blue-600',
+                        tool.category === 'social' && 'bg-orange-500/10 text-orange-600',
+                        tool.category === 'studio' && 'bg-pink-500/10 text-pink-600',
+                        tool.category === 'advanced' && 'bg-purple-500/10 text-purple-600',
+                        tool.category === 'utility' && 'bg-slate-500/10 text-slate-600',
+                      )}>
+                        <tool.icon className="w-5 h-5" />
                       </div>
-                      <div className="space-y-1">
-                        <CardTitle className="text-xs font-black tracking-tight uppercase leading-tight">
-                          {tool.title}
-                        </CardTitle>
-                        <CardDescription className="text-[10px] leading-snug text-muted-foreground/70 pt-1 line-clamp-2">
-                          {tool.description}
-                        </CardDescription>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="mt-auto pt-3 p-5 flex items-center justify-between">
-                      <span className="text-[8px] font-black text-muted-foreground/30 uppercase tracking-[0.2em]">Open Module</span>
-                      <div className="flex items-center text-[9px] font-black text-accent opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
-            </div>
-          ) : (
+                      <Badge variant="outline" className="text-[7px] uppercase tracking-widest font-black opacity-40 group-hover:opacity-100 transition-opacity">
+                        {tool.useCase}
+                      </Badge>
+                    </div>
+                    <div className="space-y-1">
+                      <CardTitle className="text-xs font-black tracking-tight uppercase leading-tight">
+                        {tool.title}
+                      </CardTitle>
+                      <CardDescription className="text-[10px] leading-snug text-muted-foreground/70 pt-1 line-clamp-2">
+                        {tool.description}
+                      </CardDescription>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="mt-auto pt-3 p-5 flex items-center justify-between">
+                    <span className="text-[8px] font-black text-muted-foreground/30 uppercase tracking-[0.2em]">Open Module</span>
+                    <div className="flex items-center text-[9px] font-black text-accent opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+
+          {filteredTools.length === 0 && (
             <div className="py-24 text-center space-y-4 glass-panel rounded-[2rem] border-dashed border-muted-foreground/10">
-               <div className="w-16 h-16 bg-muted/20 rounded-full flex items-center justify-center mx-auto">
-                 <Search className="w-8 h-8 text-muted-foreground/40" />
-               </div>
-               <div className="space-y-1">
-                 <p className="text-muted-foreground font-black uppercase tracking-widest">Pencarian Gagal</p>
-                 <p className="text-[10px] text-muted-foreground/60">Tidak ada alat yang cocok dengan kriteria Anda.</p>
-               </div>
-               <Button variant="outline" className="rounded-full h-10 px-8 text-[10px] font-bold uppercase tracking-widest" onClick={() => { setSearchQuery(''); setActiveCategory('all'); }}>Tampilkan Semua 40 Alat</Button>
+               <Search className="w-12 h-12 text-muted-foreground/20 mx-auto" />
+               <p className="text-muted-foreground font-black uppercase tracking-widest text-xs">Alat tidak ditemukan</p>
             </div>
           )}
         </div>
 
-        {/* Efficiency Trust */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 opacity-70">
             {[
-              { label: 'Local Processing', icon: ShieldCheck, desc: '100% Privacy' },
-              { label: 'High Fidelity', icon: Zap, desc: 'Lossless Quality' },
-              { label: 'Instant Export', icon: Download, desc: 'No Server Wait' },
-              { label: '40 Modules', icon: Component, desc: 'Full Creative Kit' }
+              { label: 'On-Demand Engine', icon: ShieldCheck, desc: 'Sangat Ringan' },
+              { label: 'Zero Latency', icon: Zap, desc: 'Instan Lokal' },
+              { label: 'Privacy 100%', icon: Download, desc: 'Tanpa Upload' },
+              { label: '40 Modular Tools', icon: Component, desc: 'Ekosistem Lengkap' }
             ].map((stat, i) => (
               <div key={i} className="glass-panel p-6 rounded-[2rem] flex flex-col items-center text-center gap-3 hover:bg-white/60 transition-colors">
                   <stat.icon className="w-5 h-5 text-accent" />
@@ -252,7 +198,6 @@ export default function DashboardPage() {
               </div>
             ))}
         </div>
-
       </div>
     </div>
   );
