@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -40,7 +39,8 @@ import {
   MousePointer2, Mail, Lock,
   Settings2, Bot, Video, Languages, Stamp, FileCode,
   Shield, Trash2, Scissors, ListChecks, FileType, 
-  FileSpreadsheet, Clock, Braces, Table, AlignLeft
+  FileSpreadsheet, Clock, Braces, Table, AlignLeft,
+  Waveform, Microscope, ScanEye, Brush, Waves, Activity
 } from 'lucide-react';
 
 import {
@@ -113,6 +113,8 @@ export function AppSidebar() {
         { title: "Seni ASCII", url: "/ascii-art" },
         { title: "Duotone Filter", url: "/duotone" },
         { title: "Posterize Art", url: "/posterize" },
+        { title: "Oil Paint Art", url: "/oil-paint" },
+        { title: "Pencil Sketch", url: "/sketch" },
       ],
     },
     {
@@ -121,7 +123,10 @@ export function AppSidebar() {
       items: [
         { title: "Sharpen Pro", url: "/sharpen" },
         { title: "Edge Detection", url: "/edge-detection" },
-        { title: "Loji Mixer", url: "/loji-mix" },
+        { title: "Histogram", url: "/histogram" },
+        { title: "Bulge Warp", url: "/bulge" },
+        { title: "Wave Distortion", url: "/wave" },
+        { title: "Luma Keyer", url: "/luma-key" },
       ],
     },
     {

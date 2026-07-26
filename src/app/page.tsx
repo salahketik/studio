@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useMemo } from 'react';
@@ -28,7 +27,8 @@ import {
   Layout, Info, CheckCircle2, RotateCcw,
   Smartphone, Barcode, Key, FileJson, Link as LinkIcon, Ruler,
   MousePointer2, BrainCircuit, Bot, FileText, Stamp, FileCode,
-  ListChecks, FileType, FileSpreadsheet, Clock, Braces, Table, AlignLeft
+  ListChecks, FileType, FileSpreadsheet, Clock, Braces, Table, AlignLeft,
+  Waveform, Microscope, ScanEye, Brush, Waves, Activity
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

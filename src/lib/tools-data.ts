@@ -1,4 +1,3 @@
-
 import { 
   FileImage, Crop, ArrowRight, Sparkles, Zap, 
   LayoutGrid, Maximize2, SlidersHorizontal, Pipette, Grid3X3, 
@@ -18,7 +17,8 @@ import {
   MousePointer2, ShieldCheck, Mail, Lock, BrainCircuit,
   Settings2, Bot, Video, FileText, Languages, Stamp, FileCode,
   Shield, Scale, Trash2, Scissors, ListChecks, FileType, 
-  FileSpreadsheet, Clock, SearchCode, Braces, Table, AlignLeft
+  FileSpreadsheet, Clock, SearchCode, Braces, Table, AlignLeft,
+  Waveform, Microscope, ScanEye, Brush, Waves
 } from 'lucide-react';
 
 export interface Tool {
@@ -45,6 +45,7 @@ export const ALL_TOOLS: Tool[] = [
   { title: 'Hapus Metadata', description: 'Bersihkan data privasi EXIF secara permanen.', href: '/metadata-cleaner', icon: ShieldAlert, category: 'core', useCase: 'Privacy' },
   { title: 'Base64 Tool', description: 'Ubah gambar menjadi string data URI.', href: '/base64-tool', icon: Code2, category: 'core', useCase: 'Dev' },
   { title: 'Base64 Decoder', description: 'Ubah string Base64 kembali menjadi file asli.', href: '/base64-decode', icon: Database, category: 'core', useCase: 'Extract' },
+  { title: 'EXIF Inspector', description: 'Inspeksi data teknis tersembunyi pada gambar.', href: '/exif-view', icon: Scan, category: 'core', useCase: 'Analytic' },
   
   // 2. Kreator & Layout
   { title: 'Resizer Pro', description: 'Preset media sosial & kustom resolusi.', href: '/resizer', icon: Maximize2, category: 'social', useCase: 'Resize' },
@@ -57,6 +58,7 @@ export const ALL_TOOLS: Tool[] = [
   { title: 'Canvas Text', description: 'Tambah teks caption pada kanvas gambar.', href: '/canvas-text', icon: Type, category: 'social', useCase: 'Text' },
   { title: 'Watermark Pro', description: 'Tambah logo/teks hak cipta pada gambar.', href: '/watermark', icon: Stamp, category: 'social', useCase: 'Copyright' },
   { title: 'Image Flipper', description: 'Putar balik gambar secara horisontal/vertikal.', href: '/image-flipper', icon: RotateCcw, category: 'social', useCase: 'Mirror' },
+  { title: 'Image Border', description: 'Tambahkan bingkai/border warna pada foto.', href: '/image-border', icon: Frame, category: 'social', useCase: 'Frame' },
 
   // 3. Studio FX (Artistic)
   { title: 'Filter Studio', description: 'Edit pencahayaan, kontras, & suasana.', href: '/filters', icon: SlidersHorizontal, category: 'studio', useCase: 'Editor' },
@@ -71,6 +73,11 @@ export const ALL_TOOLS: Tool[] = [
   { title: 'Kaleidoscope', description: 'Ciptakan geometri fraktal melingkar.', href: '/kaleido', icon: Focus, category: 'studio', useCase: 'Fractal' },
   { title: 'Pixelate Art', description: 'Ubah gambar menjadi gaya retro 8-bit.', href: '/pixelate', icon: Component, category: 'studio', useCase: 'Retro' },
   { title: 'Halftone Filter', description: 'Filter titik-titik koran retro klasik.', href: '/halftone', icon: Binary, category: 'studio', useCase: 'Print' },
+  { title: 'Oil Paint Art', description: 'Simulasi lukisan cat minyak tekstural.', href: '/oil-paint', icon: Brush, category: 'studio', useCase: 'Art' },
+  { title: 'Pencil Sketch', description: 'Konversi foto menjadi sketsa arsir.', href: '/sketch', icon: Paintbrush2, category: 'studio', useCase: 'Draft' },
+  { title: 'Solarize Filter', description: 'Efek artistik pembalikan warna.', href: '/solarize', icon: Sparkles, category: 'studio', useCase: 'Creative' },
+  { title: 'Bloom FX', description: 'Efek pendaran cahaya yang mewah.', href: '/bloom', icon: Sun, category: 'studio', useCase: 'Beauty' },
+  { title: 'Scan Line', description: 'Efek garis scan monitor retro.', href: '/scan-line', icon: Monitor, category: 'studio', useCase: 'CRT' },
 
   // 4. Editor Teknis (Precision)
   { title: 'Sharpen Pro', description: 'Tingkatkan ketajaman garis tepi gambar.', href: '/sharpen', icon: Wand2, category: 'advanced', useCase: 'Detail' },
@@ -85,6 +92,14 @@ export const ALL_TOOLS: Tool[] = [
   { title: 'Noise Studio', description: 'Analog grain texture studio.', href: '/noise', icon: Filter, category: 'advanced', useCase: 'Texture' },
   { title: 'Selective Gray', description: 'Isolasi warna tertentu dengan latar abu-abu.', href: '/selective-gray', icon: MousePointer2, category: 'advanced', useCase: 'Focus' },
   { title: 'Gamma Tuner', description: 'Koreksi pencahayaan mid-tone.', href: '/gamma', icon: Sun, category: 'advanced', useCase: 'Luma' },
+  { title: 'Luma Keyer', description: 'Ekstraksi matte berdasarkan luminansi.', href: '/luma-key', icon: Microscope, category: 'advanced', useCase: 'Matte' },
+  { title: 'RGB Splitter', description: 'Pisahkan saluran warna primer.', href: '/rgb-split', icon: Split, category: 'advanced', useCase: 'Split' },
+  { title: 'CMYK Splitter', description: 'Pisahkan kanal warna untuk kebutuhan cetak.', href: '/cmyk-split', icon: PaletteIcon, category: 'advanced', useCase: 'Print' },
+  { title: 'Histogram', description: 'Analisis distribusi tonal citra.', href: '/histogram', icon: Activity, category: 'advanced', useCase: 'Analyze' },
+  { title: 'Bulge Warp', description: 'Distorsi lensa cembung/cekung.', href: '/bulge', icon: Maximize2, category: 'advanced', useCase: 'Distort' },
+  { title: 'Wave Distortion', description: 'Efek riak gelombang fungsional.', href: '/wave', icon: Waves, category: 'advanced', useCase: 'Liquid' },
+  { title: 'Median Filter', description: 'Penghilang noise tingkat lanjut.', href: '/median', icon: Filter, category: 'advanced', useCase: 'Denoise' },
+  { title: 'Emboss Pro', description: 'Efek tekstur relief 3D.', href: '/emboss', icon: Layers, category: 'advanced', useCase: 'Relief' },
 
   // 5. Studio Audio
   { title: 'Audio FX Studio', description: 'Edit suara dengan profil studio musik.', href: '/audio-cleaner', icon: Music, category: 'audio', useCase: 'Studio' },
@@ -97,6 +112,8 @@ export const ALL_TOOLS: Tool[] = [
   { title: 'JWT Inspector', description: 'Dekode token JWT secara lokal dan aman.', href: '/jwt-inspector', icon: ShieldCheck, category: 'dev', useCase: 'Auth' },
   { title: 'HTML Entities', description: 'Enkode dan dekode entitas HTML.', href: '/html-entities', icon: Code2, category: 'dev', useCase: 'HTML' },
   { title: 'Flexbox Studio', description: 'Generator tata letak CSS Flexbox visual.', href: '/flexbox-studio', icon: Layout, category: 'dev', useCase: 'CSS' },
+  { title: 'CSS Glassmorphism', description: 'Generator efek kaca transparan untuk UI.', href: '/glassmorphism', icon: GlassWater, category: 'dev', useCase: 'Design' },
+  { title: 'Gradient Studio', description: 'Ciptakan gradasi warna linear CSS.', href: '/gradient-gen', icon: Palette, category: 'dev', useCase: 'Visual' },
   { title: 'JSON to YAML', description: 'Konversi JSON ke YAML secara instan.', href: '/json-yaml', icon: Braces, category: 'dev', useCase: 'Data' },
   { title: 'SQL Formatter', description: 'Rapikan kode SQL yang berantakan.', href: '/sql-formatter', icon: Database, category: 'dev', useCase: 'SQL' },
   { title: 'RegEx Lab', description: 'Uji ekspresi reguler secara langsung.', href: '/regex-lab', icon: SearchCode, category: 'dev', useCase: 'Logic' },
@@ -107,7 +124,7 @@ export const ALL_TOOLS: Tool[] = [
   { title: 'JSON Beautifier', description: 'Format dan rapikan kode JSON berantakan.', href: '/json-beautifier', icon: FileJson, category: 'dev', useCase: 'Code' },
   { title: 'Case Converter', description: 'Ubah teks ke UPPER, lower, camelCase.', href: '/case-converter', icon: Type, category: 'dev', useCase: 'Text' },
   { title: 'Hash Master', description: 'Generate hash SHA-256 secara lokal.', href: '/hash-master', icon: Lock, category: 'dev', useCase: 'Hash' },
-  { title: 'URL Tool', description: 'Encode dan decode string URL dengan aman.', href: '/url-tool', icon: LinkIcon, category: 'dev', useCase: 'URL' },
+  { title: 'URL Tool', description: 'Encode and decode string URL dengan aman.', href: '/url-tool', icon: LinkIcon, category: 'dev', useCase: 'URL' },
   { title: 'PX to REM', description: 'Kalkulator konversi unit desain UI.', href: '/px-rem', icon: Ruler, category: 'dev', useCase: 'CSS' },
   { title: 'SVG Viewer', description: 'Inspeksi kode sumber file vektor SVG.', href: '/svg-view', icon: FileCode, category: 'dev', useCase: 'Vector' },
   { title: 'QR Generator', description: 'Generate kode QR statis instan.', href: '/qr-gen', icon: Binary, category: 'utility', useCase: 'Scan' },
