@@ -28,7 +28,6 @@ import { useToast } from '@/hooks/use-toast';
 interface AppError {
   message: string;
   stack?: string;
-  componentStack?: string;
   timestamp: string;
 }
 
@@ -67,7 +66,7 @@ export function GlobalErrorHandler() {
     if (!error) return;
     const log = `ERROR LOG [${error.timestamp}]\nMessage: ${error.message}\nStack: ${error.stack || 'N/A'}`;
     navigator.clipboard.writeText(log).then(() => {
-      toast({ title: "Log Berhasil Disalin", description: "Anda dapat mengirimkan log ini ke tim teknis." });
+      toast({ title: "Log Berhasil Disalin", description: "Log teknis telah siap untuk dikirim." });
     });
   };
 
@@ -83,7 +82,7 @@ export function GlobalErrorHandler() {
       <Alert variant="destructive" className="bg-destructive text-destructive-foreground shadow-2xl border-none">
         <AlertCircle className="h-4 w-4" />
         <AlertTitle className="font-bold flex items-center justify-between">
-          Sesuatu Terjadi
+          System Anomaly Detected
           <Button variant="ghost" size="icon" className="h-6 w-6 rounded-full hover:bg-white/20 text-white" onClick={() => setError(null)}>
             <X className="h-4 w-4" />
           </Button>
@@ -95,7 +94,7 @@ export function GlobalErrorHandler() {
               Detail Log
             </Button>
             <Button size="sm" variant="secondary" className="text-[10px] h-7 bg-white/10 hover:bg-white/20 text-white border-none" onClick={contactDev}>
-              <MessageSquare className="h-3 w-3 mr-1" /> Hubungi Dev
+              <MessageSquare className="h-3 w-3 mr-1" /> WhatsApp Dev
             </Button>
           </div>
         </AlertDescription>
@@ -104,30 +103,27 @@ export function GlobalErrorHandler() {
       <Dialog open={showDetails} onOpenChange={setShowDetails}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-destructive">
+            <DialogTitle className="flex items-center gap-2 text-destructive font-black uppercase tracking-tight">
               <AlertCircle className="h-5 w-5" />
-              Laporan Kesalahan Teknis
+              Technical Error Report
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
              <div className="p-3 bg-muted rounded-lg border">
-                <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1">Pesan Kesalahan</p>
+                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Message</p>
                 <p className="text-sm font-medium">{error.message}</p>
              </div>
              <div>
-                <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2">Stack Trace</p>
+                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">Stack Trace</p>
                 <ScrollArea className="h-60 bg-black text-green-500 p-4 rounded-lg font-mono text-[10px] leading-relaxed">
-                  {error.stack || 'Informasi stack tidak tersedia.'}
+                  {error.stack || 'No stack trace available.'}
                 </ScrollArea>
              </div>
           </div>
           <DialogFooter className="mt-4 flex flex-col sm:flex-row gap-2">
-            <Button variant="outline" className="flex-1" onClick={() => setShowDetails(false)}>Tutup</Button>
-            <Button className="flex-1 bg-green-600 hover:bg-green-700 text-white" onClick={contactDev}>
-              <Phone className="h-4 w-4 mr-2" /> WhatsApp Dev
-            </Button>
-            <Button className="flex-1 bg-accent hover:bg-accent/90" onClick={copyToClipboard}>
-              <Copy className="h-4 w-4 mr-2" /> Salin Log
+            <Button variant="outline" className="flex-1 rounded-xl text-[10px] font-bold uppercase" onClick={() => setShowDetails(false)}>Close</Button>
+            <Button className="flex-1 bg-accent hover:bg-accent/90 rounded-xl text-[10px] font-bold uppercase" onClick={copyToClipboard}>
+              <Copy className="h-4 w-4 mr-2" /> Copy Log
             </Button>
           </DialogFooter>
         </DialogContent>

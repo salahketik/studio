@@ -6,18 +6,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { 
   ChevronLeft, 
-  Code2, 
   Copy, 
   RefreshCcw, 
   FileImage, 
   Loader2,
   Terminal,
-  CheckCircle2,
   Braces
 } from 'lucide-react';
 import Link from 'next/link';
 import { ImageUploader } from '@/features/image-converter/components/image-uploader';
-import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 
 export default function Base64ToolPage() {
@@ -84,10 +81,6 @@ export default function Base64ToolPage() {
                       <span className="text-muted-foreground">Ukuran:</span>
                       <span>{(originalImage.file.size / 1024).toFixed(2)} KB</span>
                    </div>
-                   <div className="flex justify-between text-[11px] font-mono">
-                      <span className="text-muted-foreground">Tipe:</span>
-                      <span className="uppercase">{originalImage.file.type.split('/')[1]}</span>
-                   </div>
                 </div>
               </CardContent>
             </Card>
@@ -123,7 +116,7 @@ export default function Base64ToolPage() {
                     <div className="p-4 bg-muted/50 rounded-2xl border flex items-center gap-3">
                        <Terminal className="w-4 h-4 text-muted-foreground" />
                        <p className="text-[10px] text-muted-foreground leading-relaxed italic">
-                         String ini dapat digunakan langsung dalam atribut `src` pada tag `<img>` atau dalam CSS background-image.
+                         String ini dapat digunakan langsung dalam atribut src pada tag img atau dalam CSS background-image.
                        </p>
                     </div>
                   </div>
@@ -131,7 +124,6 @@ export default function Base64ToolPage() {
               </CardContent>
             </Card>
           </div>
-
         </div>
       )}
     </div>
