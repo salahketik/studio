@@ -91,7 +91,7 @@ export const ALL_TOOLS: Tool[] = [
   { title: 'Dead Air Remover', description: 'Hapus jeda sunyi secara otomatis.', href: '/dead-air-remover', icon: TimerOff, category: 'audio', useCase: 'Podcast' },
   { title: 'Subtitle Workstation', description: 'Workstation subtitle manual presisi.', href: '/voice-to-srt', icon: Captions, category: 'audio', useCase: 'Video' },
 
-  // 6. Developer & Utility (Ekspansi Baru)
+  // 6. Developer & Utility
   { title: 'List Cleaner', description: 'Deduplikasi dan sortir daftar teks Anda.', href: '/list-cleaner', icon: ListChecks, category: 'dev', useCase: 'Text' },
   { title: 'Markdown Studio', description: 'Tulis dan pratinjau markdown secara real-time.', href: '/markdown-studio', icon: FileType, category: 'dev', useCase: 'Docs' },
   { title: 'JWT Inspector', description: 'Dekode token JWT secara lokal dan aman.', href: '/jwt-inspector', icon: ShieldCheck, category: 'dev', useCase: 'Auth' },
