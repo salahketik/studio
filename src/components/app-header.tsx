@@ -21,7 +21,9 @@ const navItems = [
   { href: '/', label: 'Dashboard' },
   { href: '/image-converter', label: 'Konverter' },
   { href: '/mockup', label: 'Mockup' },
-  { href: '/trim', label: 'Potong Cerdas' },
+  { href: '/resizer', label: 'Resizer' },
+  { href: '/filters', label: 'Filter' },
+  { href: '/palette-extractor', label: 'Palet' },
 ];
 
 export function AppHeader() {
@@ -103,7 +105,7 @@ export function AppHeader() {
                 
                 <div className="p-6 border-t border-border/10 bg-muted/30">
                     <p className="text-[10px] text-muted-foreground text-center font-medium uppercase tracking-widest">
-                        Digital Workstation v1.5
+                        Digital Workstation v1.8
                     </p>
                 </div>
             </SheetContent>
