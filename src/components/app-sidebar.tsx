@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -23,7 +24,9 @@ import {
   Key,
   ShieldAlert,
   Terminal,
-  Code2
+  Code2,
+  BrainCircuit,
+  Bot
 } from 'lucide-react';
 
 import {
@@ -50,6 +53,16 @@ const navMain = [
     icon: LayoutDashboard,
   },
   {
+    title: "AI Command Center",
+    icon: BrainCircuit,
+    items: [
+      { title: "AI Image Analyst", url: "/ai-analyst" },
+      { title: "AI Background Gen", url: "/ai-background" },
+      { title: "AI Voice-to-SRT", url: "/voice-to-srt" },
+      { title: "AI Doc Helper", url: "/pdf-converter" },
+    ],
+  },
+  {
     title: "Berkas Core",
     icon: Folder,
     items: [
@@ -73,6 +86,7 @@ const navMain = [
       { title: "Studio Mockup", url: "/mockup" },
       { title: "Watermark Pro", url: "/watermark" },
       { title: "Image Flipper", url: "/image-flipper" },
+      { title: "Avatar Circle", url: "/avatar-circle" },
     ],
   },
   {
@@ -85,23 +99,23 @@ const navMain = [
       { title: "Kaleidoskop", url: "/kaleido" },
       { title: "Seni Pixelate", url: "/pixelate" },
       { title: "Halftone Art", url: "/halftone" },
-      { title: "Oil Paint", url: "/oil-paint" },
-      { title: "Bloom FX", url: "/bloom" },
-      { title: "Scanline TV", url: "/scanline" },
+      { title: "Duotone Filter", url: "/duotone" },
+      { title: "Posterize Art", url: "/posterize" },
+      { title: "Vignette Studio", url: "/vignette" },
     ],
   },
   {
     title: "Editor Teknis",
     icon: Wand2,
     items: [
+      { title: "Sharpen Pro", url: "/sharpen" },
       { title: "Kontrol Luminansi", url: "/luminance" },
       { title: "Studio Bayangan", url: "/shadow-studio" },
       { title: "Warp Perspektif", url: "/perspective" },
-      { title: "Sharpen Pro", url: "/sharpen" },
       { title: "Edge Detection", url: "/edge-detection" },
-      { title: "Sobel Contour", url: "/sobel-edge" },
       { title: "Color Balance", url: "/color-balance" },
-      { title: "Selective Gray", url: "/selective-gray" },
+      { title: "Loji Mixer", url: "/loji-mix" },
+      { title: "Threshold B&W", url: "/threshold" },
     ],
   },
   {
@@ -112,8 +126,7 @@ const navMain = [
       { title: "Case Converter", url: "/case-converter" },
       { title: "URL Encode/Decode", url: "/url-tool" },
       { title: "PX to REM Calc", url: "/px-rem" },
-      { title: "CSS Box Shadow", url: "/box-shadow" },
-      { title: "Meta Tag Gen", url: "/meta-gen" },
+      { title: "SVG Viewer", url: "/svg-view" },
     ],
   },
   {
@@ -135,7 +148,6 @@ const navMain = [
       { title: "Barcode Maker", url: "/barcode-gen" },
       { title: "Favicon Gen", url: "/favicon-generator" },
       { title: "Lorem Ipsum", url: "/lorem-ipsum" },
-      { title: "Heatmap Visual", url: "/heatmap" },
     ],
   },
 ];
@@ -164,7 +176,7 @@ export function AppSidebar() {
             {navMain.map((item) => (
               <SidebarMenuItem key={item.title}>
                 {item.items ? (
-                  <Collapsible defaultOpen={item.items.some(sub => sub.url === pathname)}>
+                  <Collapsible defaultOpen={item.items.some(sub => sub.url === pathname)} className="group/collapsible">
                     <CollapsibleTrigger asChild>
                       <SidebarMenuButton 
                         tooltip={item.title}
@@ -225,8 +237,8 @@ export function AppSidebar() {
              <Cpu className="w-4 h-4 text-primary" />
           </div>
           <div className="flex flex-col truncate group-data-[collapsible=icon]:hidden">
-             <span className="text-[9px] font-black uppercase tracking-tight text-sidebar-foreground">Node Lokal</span>
-             <span className="text-[7px] text-green-500 font-bold uppercase tracking-widest">v4.8.0 STABIL</span>
+             <span className="text-[9px] font-black uppercase tracking-tight text-sidebar-foreground">AI Node Active</span>
+             <span className="text-[7px] text-green-500 font-bold uppercase tracking-widest">GEMINI 2.0 FLASH</span>
           </div>
         </div>
       </SidebarFooter>
