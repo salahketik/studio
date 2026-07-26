@@ -11,18 +11,11 @@ import {
   LayoutDashboard,
   Box,
   Github,
-  MessageCircle,
   Heart,
   Folder,
   Palette,
   Globe,
-  Scissors,
   Wand2,
-  Terminal,
-  Code2,
-  Activity,
-  Layers,
-  Database
 } from 'lucide-react';
 
 import {
@@ -44,36 +37,36 @@ import { Button } from '@/components/ui/button';
 
 const navMain = [
   {
-    title: "Dashboard",
+    title: "Dasbor",
     url: "/",
     icon: LayoutDashboard,
   },
   {
-    title: "File Tools",
+    title: "Alat Berkas",
     url: "/image-converter",
     icon: Folder,
     items: [
-      { title: "Batch Converter", url: "/image-converter" },
-      { title: "PNG Optimizer", url: "/png-opt" },
-      { title: "PDF Suite", url: "/pdf-converter" },
-      { title: "DPI Adjuster", url: "/dpi-adjuster" },
-      { title: "Metadata Cleaner", url: "/metadata-cleaner" },
-      { title: "Base64 Tool", url: "/base64-tool" },
+      { title: "Konverter Massal", url: "/image-converter" },
+      { title: "Optimasi PNG", url: "/png-opt" },
+      { title: "Suite PDF", url: "/pdf-converter" },
+      { title: "Atur DPI", url: "/dpi-adjuster" },
+      { title: "Hapus Metadata", url: "/metadata-cleaner" },
+      { title: "Alat Base64", url: "/base64-tool" },
     ],
   },
   {
-    title: "Creator",
+    title: "Kreator",
     url: "/resizer",
     icon: Palette,
     items: [
       { title: "Resizer Pro", url: "/resizer" },
       { title: "Grid Splitter", url: "/grid-splitter" },
-      { title: "Smart Trim", url: "/trim" },
+      { title: "Potong Cerdas", url: "/trim" },
       { title: "Image Stitcher", url: "/stitcher" },
-      { title: "Mockup Studio", url: "/mockup" },
-      { title: "Avatar Circle", url: "/avatar-circle" },
+      { title: "Studio Mockup", url: "/mockup" },
+      { title: "Avatar Bulat", url: "/avatar-circle" },
       { title: "Corner Rounder", url: "/corners" },
-      { title: "Pattern Maker", url: "/pattern" },
+      { title: "Pembuat Pola", url: "/pattern" },
       { title: "Canvas Text", url: "/canvas-text" },
     ],
   },
@@ -82,48 +75,48 @@ const navMain = [
     url: "/filters",
     icon: Box,
     items: [
-      { title: "Filter Room", url: "/filters" },
-      { title: "Palette Lab", url: "/palette-extractor" },
-      { title: "Glitch Maker", url: "/glitch" },
-      { title: "ASCII Art", url: "/ascii-art" },
-      { title: "Kaleidoscope", url: "/kaleido" },
-      { title: "Duotone Art", url: "/duotone" },
+      { title: "Ruang Filter", url: "/filters" },
+      { title: "Lab Palet Warna", url: "/palette-extractor" },
+      { title: "Pembuat Glitch", url: "/glitch" },
+      { title: "Seni ASCII", url: "/ascii-art" },
+      { title: "Kaleidoskop", url: "/kaleido" },
+      { title: "Seni Duotone", url: "/duotone" },
       { title: "Grayscale Pro", url: "/grayscale-pro" },
       { title: "Film Grain", url: "/film-grain" },
-      { title: "Posterize Art", url: "/posterize" },
-      { title: "Pixelate Art", url: "/pixelate" },
-      { title: "Vignette Studio", url: "/vignette" },
+      { title: "Seni Posterize", url: "/posterize" },
+      { title: "Seni Pixelate", url: "/pixelate" },
+      { title: "Studio Vignette", url: "/vignette" },
       { title: "Threshold B&W", url: "/threshold" },
       { title: "Loji Mixer", url: "/loji-mix" },
-      { title: "Halftone Art", url: "/halftone" },
+      { title: "Seni Halftone", url: "/halftone" },
     ],
   },
   {
-    title: "Technical Editor",
+    title: "Editor Teknis",
     url: "/luminance",
     icon: Wand2,
     items: [
-      { title: "Luminance Control", url: "/luminance" },
+      { title: "Kontrol Luminansi", url: "/luminance" },
       { title: "Opacity Pro", url: "/opacity" },
-      { title: "Shadow Studio", url: "/shadow-studio" },
-      { title: "Perspective Warp", url: "/perspective" },
-      { title: "Mirror Studio", url: "/mirror" },
-      { title: "Color Inverter", url: "/invert" },
+      { title: "Studio Bayangan", url: "/shadow-studio" },
+      { title: "Warp Perspektif", url: "/perspective" },
+      { title: "Studio Cermin", url: "/mirror" },
+      { title: "Invert Warna", url: "/invert" },
       { title: "Blur Pro", url: "/blur" },
-      { title: "Noise Studio", url: "/noise" },
-      { title: "Image Border", url: "/image-border" },
-      { title: "Overlay Studio", url: "/overlay" },
+      { title: "Studio Noise", url: "/noise" },
+      { title: "Bingkai Gambar", url: "/image-border" },
+      { title: "Studio Overlay", url: "/overlay" },
       { title: "CMYK Splitter", url: "/cmyk-split" },
     ],
   },
   {
-    title: "Audio Studio",
+    title: "Studio Audio",
     url: "/audio-cleaner",
     icon: Music,
     items: [
-      { title: "FX Studio", url: "/audio-cleaner" },
-      { title: "Dead Air Remover", url: "/dead-air-remover" },
-      { title: "Subtitles", url: "/voice-to-srt" },
+      { title: "Studio FX Audio", url: "/audio-cleaner" },
+      { title: "Hapus Jeda Sunyi", url: "/dead-air-remover" },
+      { title: "Subtitle Workstation", url: "/voice-to-srt" },
     ],
   },
   {
@@ -131,12 +124,12 @@ const navMain = [
     url: "/svg-view",
     icon: Globe,
     items: [
-      { title: "SVG Inspector", url: "/svg-view" },
+      { title: "Inspektur SVG", url: "/svg-view" },
       { title: "QR Generator", url: "/qr-gen" },
       { title: "Favicon Gen", url: "/favicon-generator" },
-      { title: "Aspect Calc", url: "/aspect-calculator" },
-      { title: "EXIF Viewer", url: "/exif-view" },
-      { title: "Color Mixer", url: "/color-mixer" },
+      { title: "Kalkulator Aspek", url: "/aspect-calculator" },
+      { title: "Penampil EXIF", url: "/exif-view" },
+      { title: "Mixer Warna", url: "/color-mixer" },
     ],
   },
 ];
@@ -160,7 +153,7 @@ export function AppSidebar() {
       
       <SidebarContent className="px-2">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[9px] uppercase tracking-[0.2em] font-black px-4 mb-4 mt-2 opacity-40">Main Menu</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-[9px] uppercase tracking-[0.2em] font-black px-4 mb-4 mt-2 opacity-40">Menu Utama</SidebarGroupLabel>
           <SidebarMenu className="gap-1">
             {navMain.map((item) => (
               <SidebarMenuItem key={item.title}>
@@ -208,26 +201,19 @@ export function AppSidebar() {
                  <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-accent shadow-[0_0_8px_rgba(37,99,235,0.8)] animate-pulse" />
                     <span className="text-[10px] font-black uppercase tracking-widest text-accent flex items-center gap-1">
-                       <Zap className="w-3 h-3" /> Vibe Coder
+                       <Zap className="w-3 h-3" /> Ran Dev
                     </span>
                  </div>
-                 <Github className="w-3.5 h-3.5 text-muted-foreground/40" />
               </div>
               <p className="text-[10px] text-muted-foreground italic leading-relaxed">
-                 "Precision tools for digital masters."
+                 "Alat presisi untuk para master digital lokal."
               </p>
-              <div className="pt-1">
-                 <p className="text-[9px] font-bold uppercase tracking-widest">— RonzX7 Developer</p>
-              </div>
-              <div className="flex gap-1.5">
+              <div className="flex gap-1.5 pt-2">
                  <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg bg-white/5 hover:bg-accent/20 hover:text-white transition-all">
-                    <MessageCircle className="w-3.5 h-3.5" />
+                    <Github className="w-3.5 h-3.5" />
                  </Button>
                  <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg bg-white/5 hover:bg-accent/20 hover:text-white transition-all">
                     <Heart className="w-3.5 h-3.5" />
-                 </Button>
-                 <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg bg-white/5 hover:bg-accent/20 hover:text-white transition-all">
-                    <Github className="w-3.5 h-3.5" />
                  </Button>
               </div>
            </div>
@@ -240,8 +226,8 @@ export function AppSidebar() {
              <Settings className="w-4 h-4 text-accent" />
           </div>
           <div className="flex flex-col truncate group-data-[collapsible=icon]:hidden">
-             <span className="text-[10px] font-black uppercase tracking-tight">System Node</span>
-             <span className="text-[8px] text-green-500 font-bold uppercase tracking-widest">v2.8.5 STABLE</span>
+             <span className="text-[10px] font-black uppercase tracking-tight">Node Sistem</span>
+             <span className="text-[8px] text-green-500 font-bold uppercase tracking-widest">v2.8.5 STABIL</span>
           </div>
         </div>
       </SidebarFooter>

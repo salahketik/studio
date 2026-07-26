@@ -38,7 +38,7 @@
     line-height: 1.4;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply tracking-tight font-bold;
+    @apply tracking-tighter font-bold;
   }
 }
 
@@ -52,10 +52,6 @@
 
 .tool-card:hover {
   @apply shadow-[0_20px_50px_rgba(0,0,0,0.3)] -translate-y-1 bg-[#161827] border-accent/30;
-}
-
-.sidebar-item-active {
-  @apply bg-accent/10 text-accent border-r-2 border-accent;
 }
 
 @keyframes pulse-green {
