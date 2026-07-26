@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -61,6 +60,11 @@ export default function PosterizePage() {
     };
   };
 
+  // Pre-calculate SVG filter values for live preview
+  const l = levels[0];
+  const stepSize = 1 / (l - 1);
+  const tableValues = Array.from({ length: l }, (_, i) => i * stepSize).join(' ');
+
   return (
     <div className="container mx-auto p-4 sm:p-8 max-w-6xl space-y-10">
       <div className="flex items-center gap-4">
@@ -92,17 +96,31 @@ export default function PosterizePage() {
                 <Button className="w-full h-12 bg-accent hover:bg-accent/90 rounded-xl font-bold" onClick={processImage} disabled={isProcessing}>
                   {isProcessing ? <Loader2 className="animate-spin mr-2" /> : <Download className="mr-2" />} Export Art
                 </Button>
+                <Button variant="ghost" className="w-full text-xs" onClick={() => setOriginalImage(null)}>
+                  <RefreshCcw className="mr-2 h-3 w-3" /> Ganti Gambar
+                </Button>
               </CardContent>
             </Card>
-            <Button variant="ghost" className="w-full text-[10px] uppercase font-bold" onClick={() => setOriginalImage(null)}>
-              <RefreshCcw className="mr-2 h-3 w-3" /> New Image
-            </Button>
           </div>
 
           <div className="lg:col-span-8">
             <Card className="rounded-3xl border-none shadow-2xl glass-panel overflow-hidden">
-              <CardContent className="p-0 flex items-center justify-center min-h-[400px] bg-muted/20">
-                 <img src={originalImage.url} alt="Preview" className="max-w-full h-auto" />
+              <CardContent className="p-0 flex items-center justify-center min-h-[400px] bg-muted/20 relative">
+                 <svg className="absolute w-0 h-0 invisible">
+                    <filter id="live-posterize">
+                      <feComponentTransfer>
+                        <feFuncR type="discrete" tableValues={tableValues} />
+                        <feFuncG type="discrete" tableValues={tableValues} />
+                        <feFuncB type="discrete" tableValues={tableValues} />
+                      </feComponentTransfer>
+                    </filter>
+                 </svg>
+                 <img 
+                    src={originalImage.url} 
+                    alt="Preview" 
+                    className="max-w-full h-auto" 
+                    style={{ filter: 'url(#live-posterize)' }}
+                 />
               </CardContent>
             </Card>
           </div>

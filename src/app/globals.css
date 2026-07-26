@@ -24,15 +24,6 @@
     --input: 240 5.9% 90%;
     --ring: 240 10% 3.9%;
     --radius: 1rem;
-    
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
@@ -55,15 +46,6 @@
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 217.2 91.2% 59.8%;
-    
-    --sidebar-background: 240 10% 4%;
-    --sidebar-foreground: 240 5% 64.9%;
-    --sidebar-primary: 217.2 91.2% 59.8%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 5% 64.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 
@@ -77,23 +59,32 @@
     letter-spacing: -0.015em;
     line-height: 1.4;
   }
-  h1, h2, h3, h4, h5, h6 {
-    @apply tracking-tighter font-bold;
-  }
 }
 
 .glass-panel {
-  @apply bg-card/60 backdrop-blur-xl border border-white/5 shadow-2xl;
+  background-color: hsl(var(--card) / 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid hsl(var(--border) / 0.1);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
 .tool-card {
-  @apply relative overflow-hidden transition-all duration-500 border-white/5 bg-card/40 backdrop-blur-md;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: hsl(var(--card) / 0.4);
+  backdrop-filter: blur(8px);
+  border: 1px solid transparent;
 }
 
 .tool-card:hover {
-  @apply shadow-[0_20px_50px_rgba(0,0,0,0.3)] -translate-y-1 bg-card/60 border-accent/30;
+  transform: translateY(-4px);
+  background-color: hsl(var(--card) / 0.6);
+  border-color: hsl(var(--accent) / 0.3);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.3);
 }
 
 ::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-track { @apply bg-transparent; }
-::-webkit-scrollbar-thumb { @apply bg-accent/40 rounded-full hover:bg-accent/60 transition-colors; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: hsl(var(--accent) / 0.4); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--accent) / 0.6); }

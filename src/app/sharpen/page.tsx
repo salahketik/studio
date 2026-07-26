@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -45,7 +44,7 @@ export default function SharpenPage() {
       const h = canvas.height;
       const mix = amount[0];
 
-      // Sharpen Kernel [[0, -1, 0], [-1, 5, -1], [0, -1, 0]]
+      // Sharpen Kernel
       const kernel = [0, -mix, 0, -mix, 1 + 4 * mix, -mix, 0, -mix, 0];
       const output = new Uint8ClampedArray(data.length);
 
@@ -58,7 +57,7 @@ export default function SharpenPage() {
                 res += data[((y + ky) * w + (x + kx)) * 4 + c] * kernel[(ky + 1) * 3 + (kx + 1)];
               }
             }
-            output[(y * w + x) * 4 + c] = res;
+            output[(y * w + x) * 4 + c] = Math.min(255, Math.max(0, res));
           }
           output[(y * w + x) * 4 + 3] = 255;
         }
@@ -75,6 +74,8 @@ export default function SharpenPage() {
       }, originalImage.file.type);
     };
   };
+
+  const a = amount[0];
 
   return (
     <div className="container mx-auto p-4 sm:p-8 max-w-6xl space-y-10">
@@ -102,10 +103,13 @@ export default function SharpenPage() {
               <CardContent className="p-6 space-y-8">
                 <div className="space-y-4">
                   <Label className="text-[10px] uppercase font-bold text-muted-foreground">Intensity: {amount[0]}x</Label>
-                  <Slider value={amount} onValueChange={setAmount} min={0} max={5} step={0.1} />
+                  <Slider value={amount} onValueChange={setAmount} min={0} max={4} step={0.1} />
                 </div>
                 <Button className="w-full h-12 bg-accent hover:bg-accent/90 rounded-xl font-bold" onClick={processImage} disabled={isProcessing}>
                   {isProcessing ? <Loader2 className="animate-spin mr-2" /> : <Download className="mr-2" />} Export Sharp Image
+                </Button>
+                <Button variant="ghost" className="w-full text-xs" onClick={() => setOriginalImage(null)}>
+                  <RefreshCcw className="mr-2 h-3 w-3" /> Ganti Gambar
                 </Button>
               </CardContent>
             </Card>
@@ -113,8 +117,23 @@ export default function SharpenPage() {
 
           <div className="lg:col-span-8">
             <Card className="rounded-3xl border-none shadow-2xl glass-panel overflow-hidden">
-              <CardContent className="p-0 flex items-center justify-center min-h-[400px] bg-muted/20">
-                 <img src={originalImage.url} alt="Preview" className="max-w-full h-auto" />
+              <CardContent className="p-0 flex items-center justify-center min-h-[400px] bg-muted/20 relative">
+                 {/* Live SVG Filter for Real-time Preview */}
+                 <svg className="absolute w-0 h-0 invisible">
+                    <filter id="live-sharpen">
+                      <feConvolveMatrix 
+                        order="3" 
+                        preserveAlpha="true" 
+                        matrix={`0 -${a} 0 -${a} ${1 + 4*a} -${a} 0 -${a} 0`}
+                      />
+                    </filter>
+                 </svg>
+                 <img 
+                    src={originalImage.url} 
+                    alt="Preview" 
+                    className="max-w-full h-auto transition-all" 
+                    style={{ filter: 'url(#live-sharpen)' }}
+                 />
               </CardContent>
             </Card>
           </div>

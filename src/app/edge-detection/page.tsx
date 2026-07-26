@@ -106,8 +106,22 @@ export default function EdgeDetectionPage() {
 
           <div className="lg:col-span-8">
             <Card className="rounded-3xl border-none shadow-2xl glass-panel overflow-hidden">
-              <CardContent className="p-0 flex items-center justify-center min-h-[400px] bg-black">
-                 <img src={originalImage.url} alt="Preview" className="max-w-full h-auto" />
+              <CardContent className="p-0 flex items-center justify-center min-h-[400px] bg-black relative">
+                 <svg className="absolute w-0 h-0 invisible">
+                    <filter id="live-edge">
+                      <feConvolveMatrix 
+                        order="3" 
+                        preserveAlpha="true" 
+                        matrix="-1 -1 -1 -1 8 -1 -1 -1 -1"
+                      />
+                    </filter>
+                 </svg>
+                 <img 
+                    src={originalImage.url} 
+                    alt="Preview" 
+                    className="max-w-full h-auto" 
+                    style={{ filter: 'url(#live-edge)' }}
+                 />
               </CardContent>
             </Card>
           </div>
