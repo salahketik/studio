@@ -24,6 +24,8 @@ const navItems = [
   { href: '/resizer', label: 'Resizer' },
   { href: '/filters', label: 'Filter' },
   { href: '/palette-extractor', label: 'Palet' },
+  { href: '/watermark', label: 'Watermark' },
+  { href: '/grid-splitter', label: 'Grid' },
 ];
 
 export function AppHeader() {
@@ -55,7 +57,7 @@ export function AppHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/10 bg-background/80 backdrop-blur-xl transition-all">
       <div className="container mx-auto flex h-16 items-center px-6">
-        <div className="mr-8 hidden md:flex items-center gap-8">
+        <div className="mr-8 hidden lg:flex items-center gap-8">
           <Link href="/" className="flex items-center space-x-3 group">
             <div className="bg-accent p-2 rounded-lg transition-transform group-hover:scale-110 shadow-lg shadow-accent/20">
               <Layers className="h-5 w-5 text-white" />
@@ -65,7 +67,7 @@ export function AppHeader() {
           <NavLinks />
         </div>
         
-        <div className="md:hidden flex flex-1 items-center justify-between">
+        <div className="lg:hidden flex flex-1 items-center justify-between">
             <Link href="/" className="flex items-center space-x-3">
                 <div className="bg-accent p-2 rounded-lg shadow-lg shadow-accent/20">
                     <Layers className="h-5 w-5 text-white" />
@@ -77,7 +79,7 @@ export function AppHeader() {
         <div className="flex flex-1 items-center justify-end gap-3">
           <ThemeToggle />
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-            <SheetTrigger asChild className="md:hidden">
+            <SheetTrigger asChild className="lg:hidden">
               <Button variant="ghost" size="icon" className="rounded-full hover:bg-accent/10">
                 <Menu className="h-6 w-6" />
                 <span className="sr-only">Menu</span>
@@ -105,7 +107,7 @@ export function AppHeader() {
                 
                 <div className="p-6 border-t border-border/10 bg-muted/30">
                     <p className="text-[10px] text-muted-foreground text-center font-medium uppercase tracking-widest">
-                        Digital Workstation v1.8
+                        Digital Workstation v2.0
                     </p>
                 </div>
             </SheetContent>

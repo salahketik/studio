@@ -15,7 +15,9 @@ import {
   Info,
   Maximize2,
   SlidersHorizontal,
-  Pipette
+  Pipette,
+  Stamp,
+  Grid3X3
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -71,6 +73,22 @@ const visualTools = [
     color: 'bg-indigo-500/10 text-indigo-600',
     badge: 'Color Picker'
   },
+  {
+    title: 'Watermark Pro',
+    description: 'Lindungi karya Anda dengan menambahkan logo atau teks hak cipta secara instan.',
+    href: '/watermark',
+    icon: Stamp,
+    color: 'bg-red-500/10 text-red-600',
+    badge: 'Branding'
+  },
+  {
+    title: 'Grid Splitter',
+    description: 'Bagi satu gambar menjadi grid 3x3 atau 3x1 untuk tampilan profil media sosial yang estetik.',
+    href: '/grid-splitter',
+    icon: Grid3X3,
+    color: 'bg-yellow-500/10 text-yellow-600',
+    badge: 'Content Kit'
+  },
 ];
 
 export default function DashboardPage() {
@@ -93,7 +111,7 @@ export default function DashboardPage() {
           </h1>
           
           <p className="text-muted-foreground text-sm sm:text-lg md:text-2xl max-w-3xl mx-auto leading-relaxed px-4">
-            Ekosistem alat pengolahan gambar profesional yang dirancang untuk mempercepat alur kerja desain Anda secara lokal, cepat, dan murni tanpa AI.
+            Ekosistem alat pengolahan gambar profesional yang dirancang untuk mempercepat alur kerja desain Anda secara lokal, cepat, dan 100% aman.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 pt-4 w-full sm:w-auto px-6 sm:px-0">
@@ -123,7 +141,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
             {visualTools.map((tool) => (
               <Link key={tool.title} href={tool.href} className="group">
                 <Card className="tool-card h-full flex flex-col border-border/10 bg-card/60">
@@ -144,7 +162,7 @@ export default function DashboardPage() {
                         </Badge>
                       )}
                     </div>
-                    <CardDescription className="text-sm sm:text-base leading-relaxed text-muted-foreground/80">
+                    <CardDescription className="text-sm sm:text-base leading-relaxed text-muted-foreground/80 line-clamp-3">
                       {tool.description}
                     </CardDescription>
                   </CardHeader>
@@ -182,10 +200,10 @@ export default function DashboardPage() {
                </div>
                <div className="glass-panel p-8 rounded-3xl space-y-4">
                   <h3 className="text-xl font-bold flex items-center gap-2">
-                    <Maximize2 className="w-5 h-5 text-accent" /> Optimalisasi Konten
+                    <Maximize2 className="w-5 h-5 text-accent" /> Branding & Media Sosial
                   </h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    Gunakan **Resizer Pro** untuk menyesuaikan satu aset ke berbagai platform sekaligus, lalu gunakan **Filter Studio** untuk menyempurnakan mood gambar sebelum dipublikasikan.
+                    Gunakan **Watermark Pro** untuk melindungi hak cipta gambar Anda, lalu pecahkan gambar menggunakan **Grid Splitter** untuk tampilan profil Instagram yang kohesif dan estetik.
                   </p>
                </div>
             </div>
