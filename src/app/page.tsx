@@ -3,218 +3,280 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { 
-  FileImage, Monitor, Crop, ArrowRight, Sparkles, Zap, ShieldCheck, 
+  FileImage, Monitor, Crop, ArrowRight, Sparkles, Zap, 
   LayoutGrid, Maximize2, SlidersHorizontal, Pipette, Stamp, Grid3X3, 
-  ShieldAlert, Code2, Search, Box, Image as ImageIcon, RotateCcw, 
-  Palette, Calculator, Layers, Wind, Square, FileCode, Split, Eye, 
+  ShieldAlert, Code2, ImageIcon, Palette, 
+  Layers, Wind, Box, Split, Eye, 
   Type, Scaling, Ghost, Contrast, Aperture, Paintbrush2, Minimize2, 
-  IterationCcw, Frame, Component, Focus, Sun, Camera, Download, Filter,
-  Music, Mic2, TimerOff, Captions, QrCode, Barcode, Terminal, UserCircle,
-  Hash, Disc, Binary, Share2, ScanLine, Layers2, MousePointer2, Settings2,
-  Tv2, Waves, Heart, Globe, SearchCode
+  IterationCcw, Frame, Component, Focus, Sun, Download, Filter,
+  Music, TimerOff, Captions, Terminal, UserCircle,
+  Hash, Disc, Binary, Share2, Search,
+  Database, Clock, Heart, Monitor as Screen, Smartphone, Globe
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-const categories = [
-  { id: 'all', label: 'Semua Alat', icon: LayoutGrid },
-  { id: 'core', label: 'Core & Export', icon: Zap },
-  { id: 'social', label: 'Social & Layout', icon: Grid3X3 },
-  { id: 'studio', label: 'Studio & Filter', icon: Palette },
-  { id: 'advanced', label: 'Pro Graphics', icon: Layers2 },
-  { id: 'utility', label: 'Utility & Dev', icon: Code2 },
-  { id: 'audio', label: 'Audio & Voice', icon: Music },
-];
-
-const visualTools = [
-  // CORE & EXPORT (10)
+const allTools = [
   { title: 'Konverter Gambar', description: 'Konversi massal ke WebP, JPG, PNG.', href: '/image-converter', icon: FileImage, category: 'core', useCase: 'Batch' },
   { title: 'PNG Optimizer', description: 'Optimasi aset PNG tanpa kehilangan.', href: '/png-opt', icon: Minimize2, category: 'core', useCase: 'Size' },
   { title: 'Generator Mockup', description: 'Presentasi produk dengan frame browser.', href: '/mockup', icon: Monitor, category: 'core', useCase: 'Showcase' },
-  { title: 'PDF Converter', description: 'Transformasi PDF ke Word/Excel/PPT.', href: '/pdf-converter', icon: Globe, category: 'core', useCase: 'Docs' },
+  { title: 'PDF Suite', description: 'Transformasi PDF ke Word/Excel/PPT.', href: '/pdf-converter', icon: Globe, category: 'core', useCase: 'Docs' },
   { title: 'DPI Adjuster', description: 'Atur resolusi cetak (DPI) gambar.', href: '/dpi-adjuster', icon: Hash, category: 'core', useCase: 'Print' },
-  { title: 'WebP Tester', description: 'Bandingkan kualitas vs ukuran WebP.', href: '/webp-test', icon: SearchCode, category: 'core', useCase: 'Analyze' },
-  { title: 'SVG Viewer', description: 'Inspeksi & pratinjau kode SVG.', href: '/svg-view', icon: FileCode, category: 'core', useCase: 'Vector' },
-  { title: 'Favicon Maker', description: 'Buat file .ico standar web.', href: '/favicon-generator', icon: Box, category: 'core', useCase: 'Web Icon' },
   { title: 'Hapus Metadata', description: 'Bersihkan data privasi EXIF permanen.', href: '/metadata-cleaner', icon: ShieldAlert, category: 'core', useCase: 'Privacy' },
   { title: 'Base64 Tool', description: 'Ubah gambar ke string data URI.', href: '/base64-tool', icon: Code2, category: 'core', useCase: 'Dev' },
-
-  // SOCIAL & LAYOUT (10)
   { title: 'Resizer Pro', description: 'Preset media sosial & kustom piksel.', href: '/resizer', icon: Maximize2, category: 'social', useCase: 'Resize' },
   { title: 'Grid Splitter', description: 'Potong gambar untuk grid Instagram.', href: '/grid-splitter', icon: Grid3X3, category: 'social', useCase: 'IG Feed' },
   { title: 'Potong Cerdas', description: 'Hapus margin kosong secara otomatis.', href: '/trim', icon: Crop, category: 'social', useCase: 'Cleanup' },
   { title: 'Image Stitcher', description: 'Gabungkan gambar secara vertikal.', href: '/stitcher', icon: Split, category: 'social', useCase: 'Layout' },
   { title: 'Circular Avatar', description: 'Potong gambar menjadi profil bulat.', href: '/avatar-circle', icon: UserCircle, category: 'social', useCase: 'Profile' },
-  { title: 'Image Flipper', description: 'Putar balik gambar secara instan.', href: '/image-flipper', icon: RotateCcw, category: 'social', useCase: 'Flip' },
   { title: 'Corner Rounder', description: 'Bulatkan sudut gambar secara presisi.', href: '/corners', icon: Frame, category: 'social', useCase: 'UI/UX' },
   { title: 'Mirror Studio', description: 'Efek cermin reflektif horizontal.', href: '/mirror', icon: IterationCcw, category: 'social', useCase: 'Symmetry' },
-  { title: 'Canvas Text', description: 'Tambahkan teks minimalis ke gambar.', href: '/canvas-text', icon: Type, category: 'social', useCase: 'Banner' },
-  { title: 'Aspect Ratio', description: 'Kalkulator proporsi & dimensi.', href: '/aspect-calculator', icon: Calculator, category: 'social', useCase: 'Logic' },
-
-  // STUDIO & FILTERS (20)
   { title: 'Filter Studio', description: 'Edit kecerahan, kontras, & mood.', href: '/filters', icon: SlidersHorizontal, category: 'studio', useCase: 'Editor' },
   { title: 'Ekstrak Palet', description: 'Ambil kode HEX warna dari gambar.', href: '/palette-extractor', icon: Pipette, category: 'studio', useCase: 'Colors' },
   { title: 'Grayscale Pro', description: 'Kontrol monokrom kontras tinggi.', href: '/grayscale-pro', icon: ImageIcon, category: 'studio', useCase: 'B&W' },
   { title: 'Duotone Filter', description: 'Efek gradasi dua warna modern.', href: '/duotone', icon: Sparkles, category: 'studio', useCase: 'Art' },
   { title: 'Film Grain', description: 'Tekstur vintage grain artistik.', href: '/film-grain', icon: Wind, category: 'studio', useCase: 'Texture' },
-  { title: 'Vignette Studio', description: 'Efek fokus tepian gelap dramatis.', href: '/vignette', icon: Aperture, category: 'studio', useCase: 'Focus' },
-  { title: 'Pixelate Art', description: 'Sensor atau efek retro pixelation.', href: '/pixelate', icon: Component, category: 'studio', useCase: 'Retro' },
   { title: 'Glitch Maker', description: 'Efek distorsi digital artistik.', href: '/glitch', icon: IterationCcw, category: 'studio', useCase: 'Digital' },
-  { title: 'Noise Studio', description: 'Kurangi atau tambahkan noise visual.', href: '/noise', icon: Filter, category: 'studio', useCase: 'Grain' },
-  { title: 'Threshold B&W', description: 'Ubah ke hitam putih murni (biner).', href: '/threshold', icon: Contrast, category: 'studio', useCase: 'Shape' },
-  { title: 'Posterize Filter', description: 'Kurangi palet warna bergaya poster.', href: '/posterize', icon: Paintbrush2, category: 'studio', useCase: 'Art' },
-  { title: 'Loji Mixer', description: 'Pencampuran warna logaritma murni.', href: '/loji-mix', icon: Camera, category: 'studio', useCase: 'Tone' },
-  { title: 'Color Inverter', description: 'Balikkan warna gambar (negatif).', href: '/invert', icon: IterationCcw, category: 'studio', useCase: 'Logic' },
   { title: 'ASCII Art Pro', description: 'Ubah gambar menjadi karakter teks.', href: '/ascii-art', icon: Terminal, category: 'studio', useCase: 'Text' },
-  { title: 'Halftone Filter', description: 'Efek titik cetak retro koran.', href: '/halftone', icon: Binary, category: 'studio', useCase: 'Print' },
-  { title: 'Lomo Cam', description: 'Filter vintage saturasi tinggi.', href: '/lomo', icon: Disc, category: 'studio', useCase: 'Toy' },
-  { title: 'Scanline FX', description: 'Efek garis monitor CRT lama.', href: '/scanline', icon: ScanLine, category: 'studio', useCase: 'TV' },
-  { title: 'Solarize Art', description: 'Efek pembalikan warna artistik.', href: '/solarize', icon: Sun, category: 'studio', useCase: 'Neon' },
-  { title: 'Emboss Effect', description: 'Ubah gambar menjadi tekstur 3D.', href: '/emboss', icon: MousePointer2, category: 'studio', useCase: 'Relief' },
-  { title: 'Sharpen Tool', description: 'Perjelas detail dan tepian gambar.', href: '/sharpen', icon: Settings2, category: 'studio', useCase: 'Details' },
-
-  // PRO GRAPHICS & LAYERS (10)
-  { title: 'Watermark Pro', description: 'Tambahkan logo/teks hak cipta.', href: '/watermark', icon: Stamp, category: 'advanced', useCase: 'Protect' },
-  { title: 'Shadow Studio', description: 'Drop-shadow lembut untuk aset PNG.', href: '/shadow-studio', icon: Layers, category: 'advanced', useCase: 'Depth' },
-  { title: 'Border Master', description: 'Tambahkan bingkai artistik.', href: '/image-border', icon: Square, category: 'advanced', useCase: 'Frame' },
-  { title: 'Image Overlay', description: 'Tumpuk gambar dengan blend mode.', href: '/overlay', icon: Layers, category: 'advanced', useCase: 'Composite' },
-  { title: 'Blur Pro', description: 'Gaussian blur dengan radius kustom.', href: '/blur', icon: Ghost, category: 'advanced', useCase: 'Depth' },
-  { title: 'Opacity Adjuster', description: 'Atur transparansi aset visual.', href: '/opacity', icon: Ghost, category: 'advanced', useCase: 'Alpha' },
-  { title: 'Pattern Maker', description: 'Ubah gambar menjadi pola berulang.', href: '/pattern', icon: Scaling, category: 'advanced', useCase: 'Texture' },
-  { title: 'Kaleidoscope', description: 'Efek geometri fraktal reaktif.', href: '/kaleido', icon: Focus, category: 'advanced', useCase: 'Fractal' },
-  { title: 'Luminance Tool', description: 'Kontrol pencahayaan tingkat lanjut.', href: '/luminance', icon: Sun, category: 'advanced', useCase: 'Light' },
-  { title: 'Perspective Warp', description: 'Ubah sudut pandang gambar (Skew).', href: '/perspective', icon: Share2, category: 'advanced', useCase: 'Transform' },
-
-  // UTILITY & DEV (5)
-  { title: 'QR Code Maker', description: 'Buat kode QR untuk link/teks.', href: '/qr-gen', icon: QrCode, category: 'utility', useCase: 'Contact' },
-  { title: 'Barcode Studio', description: 'Generate barcode standar produk.', href: '/barcode-gen', icon: Barcode, category: 'utility', useCase: 'Retail' },
-  { title: 'EXIF Inspector', description: 'Lihat metadata detail tanpa hapus.', href: '/exif-view', icon: Eye, category: 'utility', useCase: 'Metadata' },
-  { title: 'Color Blind Sim', description: 'Simulasi penglihatan buta warna.', href: '/color-blind', icon: Heart, category: 'utility', useCase: 'A11y' },
-  { title: 'CMYK Splitter', description: 'Visualisasi kanal warna cetak.', href: '/cmyk-split', icon: Palette, category: 'utility', useCase: 'Preview' },
-
-  // AUDIO & VOICE (5)
+  { title: 'Kaleidoscope', description: 'Ciptakan geometri fraktal melingkar.', href: '/kaleido', icon: Focus, category: 'studio', useCase: 'Fractal' },
+  { title: 'Posterize Art', description: 'Reduksi warna gaya seni pop.', href: '/posterize', icon: Paintbrush2, category: 'studio', useCase: 'Pop Art' },
+  { title: 'Pixelate Art', description: 'Ubah gambar menjadi gaya 8-bit.', href: '/pixelate', icon: Component, category: 'studio', useCase: 'Retro' },
+  { title: 'Vignette Studio', description: 'Fokus dramatis pada tepian gambar.', href: '/vignette', icon: Aperture, category: 'studio', useCase: 'Drama' },
+  { title: 'Threshold B&W', description: 'Konversi biner hitam putih murni.', href: '/threshold', icon: Contrast, category: 'studio', useCase: 'Binary' },
+  { title: 'Loji Mixer', description: 'Pencampuran warna logaritmik.', href: '/loji-mix', icon: Smartphone, category: 'studio', useCase: 'Tone' },
   { title: 'Audio FX Studio', description: 'Edit suara dengan profil studio.', href: '/audio-cleaner', icon: Music, category: 'audio', useCase: 'Studio' },
   { title: 'Dead Air Remover', description: 'Hapus bagian diam secara otomatis.', href: '/dead-air-remover', icon: TimerOff, category: 'audio', useCase: 'Podcast' },
   { title: 'Voice to SRT', description: 'Workstation subtitle manual presisi.', href: '/voice-to-srt', icon: Captions, category: 'audio', useCase: 'Video' },
-  { title: 'Voice Enhancer', description: 'Meningkatkan kejernihan vokal.', href: '/voice-boost', icon: Mic2, category: 'audio', useCase: 'Voice' },
-  { title: 'Vintage Radio', description: 'Filter suara radio lama retro.', href: '/audio-vintage', icon: Tv2, category: 'audio', useCase: 'SFX' },
+  { title: 'QR Code Maker', description: 'Generate kode QR statis instan.', href: '/qr-gen', icon: Binary, category: 'utility', useCase: 'Scan' },
+  { title: 'Favicon Gen', description: 'Buat ikon situs web .ico standar.', href: '/favicon-generator', icon: Box, category: 'utility', useCase: 'Web' },
+  { title: 'SVG Viewer', description: 'Inspeksi & pratinjau kode vektor.', href: '/svg-view', icon: Code2, category: 'utility', useCase: 'Vector' },
+  { title: 'Luminance Tool', description: 'Kontrol pencahayaan tingkat lanjut.', href: '/luminance', icon: Sun, category: 'studio', useCase: 'Light' },
+  { title: 'Opacity Pro', description: 'Kontrol saluran alfa transparansi.', href: '/opacity', icon: Ghost, category: 'advanced', useCase: 'Alpha' },
+  { title: 'Pattern Maker', description: 'Hasilkan tekstur pola berulang.', href: '/pattern', icon: Scaling, category: 'social', useCase: 'Texture' },
+  { title: 'Shadow Studio', description: 'Tambah kedalaman bayangan drop.', href: '/shadow-studio', icon: Layers, category: 'advanced', useCase: 'Depth' },
+  { title: 'Aspect Calc', description: 'Kalkulator proporsi dimensi.', href: '/aspect-calculator', icon: Hash, category: 'utility', useCase: 'Math' },
+  { title: 'EXIF Inspector', description: 'Baca atribut data gambar biner.', href: '/exif-view', icon: Eye, category: 'utility', useCase: 'Metadata' },
+  { title: 'Canvas Text', description: 'Tambah caption teks pada kanvas.', href: '/canvas-text', icon: Type, category: 'social', useCase: 'Text' },
 ];
 
 export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeCategory, setActiveCategory] = useState('all');
 
   const filteredTools = useMemo(() => {
-    return visualTools.filter(tool => {
-      const matchesSearch = tool.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          tool.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          tool.useCase.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory = activeCategory === 'all' || tool.category === activeCategory;
-      return matchesSearch && matchesCategory;
-    });
-  }, [searchQuery, activeCategory]);
+    return allTools.filter(tool => 
+      tool.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      tool.description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery]);
 
   return (
-    <div className="min-h-full pb-24 overflow-x-hidden workstation-content">
-      <div className="container mx-auto px-6 lg:px-12 py-10 space-y-12">
+    <div className="min-h-full pb-20 workstation-content">
+      <div className="container mx-auto px-6 lg:px-10 py-10 space-y-12">
         
-        <div className="space-y-4">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-             <div className="space-y-1">
-                <h1 className="text-3xl sm:text-5xl font-black tracking-tighter uppercase">
-                  Workstation <span className="text-accent">Hub</span>
-                </h1>
-                <p className="text-muted-foreground text-[11px] uppercase tracking-widest font-bold opacity-60">
-                   60 Modular Creative Modules • 100% Local Processing
-                </p>
-             </div>
-             <div className="flex items-center gap-2">
-                <Badge variant="outline" className="h-10 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest border-accent/20 bg-accent/5 text-accent">
-                   <Zap className="w-3 h-3 mr-2" /> All Systems Nominal
-                </Badge>
-             </div>
-          </div>
+        {/* Top Header Section */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+           <div className="space-y-1">
+              <h1 className="text-4xl font-black tracking-tighter uppercase">Dashboard</h1>
+              <p className="text-muted-foreground text-[12px] font-medium opacity-60">
+                 Welcome back, Zeron. Your workstation is fully optimized.
+              </p>
+           </div>
+           <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 px-4 py-1.5 bg-green-500/10 border border-green-500/20 rounded-full">
+                 <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse-green" />
+                 <span className="text-[10px] font-black uppercase text-green-500 tracking-widest">System Online</span>
+              </div>
+           </div>
         </div>
 
-        <div className="space-y-8">
-          <div className="flex flex-col lg:flex-row items-center gap-4 justify-between bg-card/50 p-2 rounded-[2rem] border border-border/10 backdrop-blur-md">
-            <div className="flex flex-wrap justify-center lg:justify-start gap-1 p-1">
-              {categories.map((cat) => (
-                <Button 
-                  key={cat.id}
-                  variant={activeCategory === cat.id ? 'secondary' : 'ghost'}
-                  size="sm"
-                  className={cn(
-                    "rounded-[1.25rem] px-5 h-10 text-[10px] font-black uppercase tracking-widest transition-all",
-                    activeCategory === cat.id ? "bg-accent text-white shadow-xl shadow-accent/20" : "text-muted-foreground hover:bg-accent/5"
-                  )}
-                  onClick={() => setActiveCategory(cat.id)}
-                >
-                  <cat.icon className="w-3.5 h-3.5 mr-2" />
-                  {cat.label}
-                </Button>
+        {/* Main Grid Layout: Stats + Profile */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          {/* Left Column: Stats Cards */}
+          <div className="lg:col-span-8 space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {[
+                { label: 'Total Tools', value: '40+', sub: '60+ variations active', icon: Sparkles, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+                { label: 'Favorites', value: '0', sub: 'Tap heart to add', icon: Heart, color: 'text-pink-500', bg: 'bg-pink-500/10' },
+                { label: 'Storage Use', value: '1.2 KB', sub: 'Local DB active', icon: Database, color: 'text-cyan-500', bg: 'bg-cyan-500/10' },
+                { label: 'Uptime', value: '100%', sub: 'Local Processing', icon: Zap, color: 'text-orange-500', bg: 'bg-orange-500/10' },
+              ].map((stat, i) => (
+                <Card key={i} className="bg-[#11121d] border-white/5 rounded-2xl p-5 hover:border-white/10 transition-all group overflow-hidden relative">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-white/5 to-transparent -translate-y-12 translate-x-12 rounded-full group-hover:scale-150 transition-transform duration-700" />
+                    <div className="flex justify-between items-start relative z-10">
+                      <div className="space-y-1">
+                          <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-50">{stat.label}</p>
+                          <p className="text-2xl font-black tracking-tight">{stat.value}</p>
+                      </div>
+                      <div className={cn("p-2 rounded-xl", stat.bg)}>
+                        <stat.icon className={cn("w-4 h-4", stat.color)} />
+                      </div>
+                    </div>
+                    <div className="mt-4 flex items-center gap-2 text-[9px] font-bold uppercase tracking-widest text-muted-foreground relative z-10">
+                      <ArrowRight className={cn("w-3 h-3", stat.color)} /> {stat.sub}
+                    </div>
+                </Card>
               ))}
             </div>
 
-            <div className="relative w-full lg:w-[350px] mr-2">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground opacity-30" />
-              <Input 
-                placeholder="Cari alat spesifik..." 
-                className="pl-12 h-11 rounded-2xl bg-background/50 border-none focus-visible:ring-1 focus-visible:ring-accent/30 text-[11px] font-bold"
+            {/* Search Bar Hub */}
+            <div className="relative group">
+               <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground opacity-30 group-focus-within:opacity-100 transition-opacity" />
+               <Input 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-              />
+                placeholder="Search modules (e.g. converter, audio, palette)..." 
+                className="h-16 pl-14 pr-6 rounded-[2rem] bg-[#11121d] border-white/5 focus-visible:ring-1 focus-visible:ring-accent/40 text-sm font-bold tracking-tight shadow-xl"
+               />
+            </div>
+
+            {/* Recently Used */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                 <div className="flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-accent" />
+                    <h2 className="text-[11px] font-black uppercase tracking-[0.2em]">Recently Used</h2>
+                 </div>
+                 <Button variant="ghost" className="text-[9px] font-black uppercase tracking-widest text-accent">Clear History</Button>
+              </div>
+              <div className="bg-[#11121d] border border-white/5 rounded-2xl divide-y divide-white/5">
+                 {[
+                   { name: 'Batch Image Converter', icon: FileImage, time: '2m ago', id: '01' },
+                   { name: 'Palette Extractor', icon: Pipette, time: '15m ago', id: '02' },
+                 ].map((item) => (
+                   <div key={item.id} className="flex items-center justify-between p-4 group hover:bg-white/[0.02] transition-colors cursor-pointer">
+                      <div className="flex items-center gap-4">
+                         <span className="text-[10px] font-mono text-muted-foreground/30">{item.id}</span>
+                         <div className="p-2 bg-white/5 rounded-xl text-muted-foreground group-hover:text-accent transition-colors">
+                            <item.icon className="w-4 h-4" />
+                         </div>
+                         <span className="text-[12px] font-bold tracking-tight">{item.name}</span>
+                      </div>
+                      <span className="text-[10px] font-mono text-muted-foreground/40">{item.time}</span>
+                   </div>
+                 ))}
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 animate-in fade-in duration-700">
-            {filteredTools.map((tool) => (
-              <Link key={tool.title} href={tool.href} className="group">
-                <Card className="tool-card h-full flex flex-col border-border/5 bg-card/40 hover:bg-card/95 transition-all duration-500 rounded-[1.5rem] overflow-hidden">
-                  <CardHeader className="p-5 pb-2">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className={cn(
-                        "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-700 group-hover:scale-110 shadow-sm",
-                        tool.category === 'core' && 'bg-blue-500/10 text-blue-600',
-                        tool.category === 'social' && 'bg-orange-500/10 text-orange-600',
-                        tool.category === 'studio' && 'bg-pink-500/10 text-pink-600',
-                        tool.category === 'advanced' && 'bg-purple-500/10 text-purple-600',
-                        tool.category === 'utility' && 'bg-slate-500/10 text-slate-600',
-                        tool.category === 'audio' && 'bg-emerald-500/10 text-emerald-600',
-                      )}>
-                        <tool.icon className="w-5 h-5" />
-                      </div>
-                      <Badge variant="outline" className="text-[7px] uppercase tracking-widest font-black opacity-30 group-hover:opacity-100 transition-opacity">
-                        {tool.useCase}
-                      </Badge>
-                    </div>
-                    <div className="space-y-1">
-                      <CardTitle className="text-xs font-black tracking-tight uppercase leading-tight">
-                        {tool.title}
-                      </CardTitle>
-                      <CardDescription className="text-[10px] leading-snug text-muted-foreground/70 pt-1 line-clamp-2">
-                        {tool.description}
-                      </CardDescription>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="mt-auto pt-3 p-5 flex items-center justify-between border-t border-border/5">
-                    <span className="text-[8px] font-black text-muted-foreground/20 uppercase tracking-[0.2em]">Open Module</span>
-                    <div className="flex items-center text-[9px] font-black text-accent opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
+          {/* Right Column: Developer Info Card */}
+          <div className="lg:col-span-4">
+            <Card className="bg-[#11121d] border-white/5 rounded-[2.5rem] p-8 space-y-8 sticky top-24 shadow-2xl relative overflow-hidden group">
+               <div className="absolute top-0 right-0 w-40 h-40 bg-accent/5 blur-[80px] -translate-y-20 translate-x-20 group-hover:bg-accent/10 transition-all duration-700" />
+               
+               <div className="flex items-center gap-2 text-muted-foreground/40">
+                  <div className="p-1.5 bg-white/5 rounded-lg"><Screen className="w-3.5 h-3.5" /></div>
+                  <span className="text-[10px] font-black uppercase tracking-widest">Master Node</span>
+               </div>
+
+               <div className="flex items-center gap-5">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-accent blur-xl opacity-20 animate-pulse" />
+                    <Avatar className="h-16 w-16 border-2 border-accent/20 relative z-10 rounded-2xl rotate-3 group-hover:rotate-0 transition-transform duration-500">
+                      <AvatarImage src="https://picsum.photos/seed/zeron/200/200" />
+                      <AvatarFallback>AZ</AvatarFallback>
+                    </Avatar>
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="text-lg font-black tracking-tight leading-none">Agler Zeroun (Zeron)</h3>
+                    <p className="text-[10px] font-bold text-accent uppercase tracking-wider">Lead Digital Architect</p>
+                  </div>
+               </div>
+
+               <p className="text-[11px] text-muted-foreground/60 leading-relaxed font-medium">
+                  Founder of RonzX7 Developer. Specialized in building high-performance local workstations that prioritize user privacy and professional speed.
+               </p>
+
+               <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-white/5 p-4 rounded-[1.5rem] space-y-2 border border-white/5 hover:border-white/10 transition-colors text-center">
+                     <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Engine</p>
+                     <p className="text-[13px] font-black">Local Canvas</p>
+                  </div>
+                  <div className="bg-white/5 p-4 rounded-[1.5rem] space-y-2 border border-white/5 hover:border-white/10 transition-colors text-center">
+                     <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Build</p>
+                     <p className="text-[13px] font-black">v2.8.0 Stable</p>
+                  </div>
+               </div>
+
+               <div className="pt-4 flex items-center justify-between">
+                  <div className="flex -space-x-2">
+                     {[1,2,3,4].map(i => (
+                       <div key={i} className="w-7 h-7 rounded-full border-2 border-[#11121d] bg-white/5 flex items-center justify-center overflow-hidden">
+                          <img src={`https://picsum.photos/seed/${i+50}/50/50`} className="w-full h-full object-cover grayscale opacity-50" />
+                       </div>
+                     ))}
+                     <div className="w-7 h-7 rounded-full border-2 border-[#11121d] bg-accent/20 flex items-center justify-center text-[8px] font-black text-accent">+{allTools.length}</div>
+                  </div>
+                  <Button variant="ghost" size="icon" className="rounded-full hover:bg-accent/10 hover:text-accent">
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+               </div>
+            </Card>
           </div>
 
-          {filteredTools.length === 0 && (
-            <div className="py-24 text-center space-y-4 glass-panel rounded-[2rem] border-dashed border-muted-foreground/10">
-               <Search className="w-12 h-12 text-muted-foreground/20 mx-auto" />
-               <p className="text-muted-foreground font-black uppercase tracking-widest text-[10px]">Alat tidak ditemukan</p>
+        </div>
+
+        {/* Tools Hub Grid */}
+        <div className="space-y-8 pt-8">
+          <div className="flex items-center justify-between">
+             <div className="flex items-center gap-2">
+                <LayoutGrid className="w-4 h-4 text-accent" />
+                <h2 className="text-[11px] font-black uppercase tracking-[0.2em]">Explore Modules</h2>
+             </div>
+             <Badge variant="secondary" className="bg-accent/10 text-accent text-[9px] uppercase tracking-widest font-black px-4 py-1 border-none">
+                {filteredTools.length} Result{filteredTools.length !== 1 ? 's' : ''}
+             </Badge>
+          </div>
+
+          {filteredTools.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 animate-in fade-in duration-1000">
+              {filteredTools.map((tool) => (
+                <Link key={tool.title} href={tool.href} className="group">
+                  <Card className="tool-card h-full flex flex-col border-white/5 bg-[#11121d]/40 hover:bg-[#161827] rounded-[2rem] overflow-hidden transition-all duration-500">
+                    <CardHeader className="p-6 pb-2">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className={cn(
+                          "w-11 h-11 rounded-[1.25rem] flex items-center justify-center transition-all duration-700 group-hover:scale-110 shadow-sm border border-white/5",
+                          tool.category === 'core' && 'bg-blue-500/10 text-blue-500',
+                          tool.category === 'social' && 'bg-orange-500/10 text-orange-500',
+                          tool.category === 'studio' && 'bg-pink-500/10 text-pink-500',
+                          tool.category === 'advanced' && 'bg-purple-500/10 text-purple-500',
+                          tool.category === 'utility' && 'bg-slate-500/10 text-slate-500',
+                          tool.category === 'audio' && 'bg-emerald-500/10 text-emerald-500',
+                        )}>
+                          <tool.icon className="w-5 h-5" />
+                        </div>
+                        <Badge variant="outline" className="text-[8px] uppercase tracking-[0.2em] font-black opacity-30 group-hover:opacity-100 transition-opacity border-white/10">
+                          {tool.useCase}
+                        </Badge>
+                      </div>
+                      <div className="space-y-1">
+                        <CardTitle className="text-[13px] font-black tracking-tight uppercase leading-tight">
+                          {tool.title}
+                        </CardTitle>
+                        <CardDescription className="text-[10px] leading-snug text-muted-foreground/60 pt-1 line-clamp-2">
+                          {tool.description}
+                        </CardDescription>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="mt-auto pt-4 p-6 flex items-center justify-between border-t border-white/5">
+                      <span className="text-[8px] font-black text-muted-foreground/20 uppercase tracking-[0.3em]">Load Module</span>
+                      <div className="flex items-center text-[10px] font-black text-accent opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="py-20 text-center space-y-4 bg-[#11121d]/40 rounded-[3rem] border border-dashed border-white/5">
+               <div className="p-4 bg-white/5 rounded-full inline-block"><Search className="w-8 h-8 text-muted-foreground opacity-20" /></div>
+               <p className="text-muted-foreground text-[11px] font-bold uppercase tracking-widest">No tools found matching your search.</p>
             </div>
           )}
         </div>
