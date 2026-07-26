@@ -7,20 +7,19 @@ import {
   Zap,
   Music,
   ChevronRight,
-  Settings,
   LayoutDashboard,
   Box,
   Folder,
-  Palette,
   Wand2,
   Smartphone,
   Binary,
-  Monitor,
-  Camera,
-  Layers2,
-  ShieldCheck,
   Cpu,
-  History
+  Settings,
+  ShieldCheck,
+  History,
+  FileCode,
+  Palette,
+  Image as ImageIcon
 } from 'lucide-react';
 
 import {
@@ -42,7 +41,7 @@ import { cn } from '@/lib/utils';
 
 const navMain = [
   {
-    title: "Dasbor",
+    title: "Dasbor Utama",
     url: "/",
     icon: LayoutDashboard,
   },
@@ -120,14 +119,14 @@ export function AppSidebar() {
   const pathname = usePathname();
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-border/50 bg-[#07080d]">
-      <SidebarHeader className="h-16 flex items-center justify-center border-b border-border/50">
+    <Sidebar collapsible="icon" className="border-r border-sidebar-border bg-sidebar">
+      <SidebarHeader className="h-16 flex items-center justify-center border-b border-sidebar-border">
         <Link href="/" className="flex items-center gap-3 px-4 group w-full">
-          <div className="bg-primary p-1.5 rounded-lg transition-all group-hover:scale-110 shadow-lg shadow-primary/20">
+          <div className="bg-primary p-1.5 rounded-lg transition-all group-hover:scale-110 shadow-lg shadow-primary/20 shrink-0">
             <Zap className="h-4 w-4 text-white" />
           </div>
           <div className="flex flex-col truncate group-data-[collapsible=icon]:hidden">
-            <span className="font-black text-xs tracking-tighter uppercase leading-none">Visual Suite</span>
+            <span className="font-black text-xs tracking-tighter uppercase leading-none text-sidebar-foreground">Visual Suite</span>
             <span className="text-[7px] font-bold text-muted-foreground uppercase tracking-[0.3em] mt-0.5">RAN DEV</span>
           </div>
         </Link>
@@ -135,7 +134,7 @@ export function AppSidebar() {
       
       <SidebarContent className="px-2 pt-4">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[9px] uppercase tracking-[0.2em] font-black px-4 mb-2 opacity-40">Modul Kerja</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-[9px] uppercase tracking-[0.2em] font-black px-4 mb-2 opacity-40 text-sidebar-foreground">Modul Kerja</SidebarGroupLabel>
           <SidebarMenu className="gap-1">
             {navMain.map((item) => (
               <SidebarMenuItem key={item.title}>
@@ -145,8 +144,8 @@ export function AppSidebar() {
                       <SidebarMenuButton 
                         tooltip={item.title}
                         className={cn(
-                          "h-10 rounded-xl px-4 transition-all hover:bg-white/5",
-                          item.items.some(sub => sub.url === pathname) && "bg-primary/10 text-primary"
+                          "h-10 rounded-xl px-4 transition-all hover:bg-sidebar-accent",
+                          item.items.some(sub => sub.url === pathname) && "bg-sidebar-accent text-primary"
                         )}
                       >
                         <item.icon className="w-4 h-4" />
@@ -155,7 +154,7 @@ export function AppSidebar() {
                       </SidebarMenuButton>
                     </CollapsibleTrigger>
                     <CollapsibleContent>
-                      <SidebarMenuSub className="ml-4 border-l border-border/50 mt-1 py-1 gap-1">
+                      <SidebarMenuSub className="ml-4 border-l border-sidebar-border mt-1 py-1 gap-1">
                         {item.items.map((subItem) => (
                           <SidebarMenuSubItem key={subItem.title}>
                             <SidebarMenuSubButton 
@@ -163,7 +162,7 @@ export function AppSidebar() {
                                 isActive={pathname === subItem.url}
                                 className={cn(
                                   "h-8 rounded-lg text-[9px] font-bold uppercase tracking-widest px-4 transition-colors",
-                                  pathname === subItem.url ? "text-primary bg-primary/5" : "text-muted-foreground hover:text-white"
+                                  pathname === subItem.url ? "text-primary bg-primary/5" : "text-muted-foreground hover:text-sidebar-foreground"
                                 )}
                             >
                               <Link href={subItem.url}>{subItem.title}</Link>
@@ -179,8 +178,8 @@ export function AppSidebar() {
                     tooltip={item.title}
                     isActive={pathname === item.url}
                     className={cn(
-                      "h-10 rounded-xl px-4 transition-all hover:bg-white/5",
-                      pathname === item.url && "bg-primary/10 text-primary"
+                      "h-10 rounded-xl px-4 transition-all hover:bg-sidebar-accent",
+                      pathname === item.url && "bg-sidebar-accent text-primary"
                     )}
                   >
                     <Link href={item.url}>
@@ -195,13 +194,13 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-4 border-t border-border/50">
+      <SidebarFooter className="p-4 border-t border-sidebar-border">
         <div className="flex items-center gap-3 px-2 group-data-[collapsible=icon]:justify-center">
           <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 border border-primary/20">
              <Cpu className="w-4 h-4 text-primary" />
           </div>
           <div className="flex flex-col truncate group-data-[collapsible=icon]:hidden">
-             <span className="text-[9px] font-black uppercase tracking-tight">Node Lokal</span>
+             <span className="text-[9px] font-black uppercase tracking-tight text-sidebar-foreground">Node Lokal</span>
              <span className="text-[7px] text-green-500 font-bold uppercase tracking-widest">v4.5.0 STABIL</span>
           </div>
         </div>

@@ -14,7 +14,9 @@ import {
   Database, Activity,
   Wand2, Layers2, RefreshCcw, Flame, Coins,
   ImagePlus, Monitor,
-  GlassWater, Camera, Cpu, Globe
+  GlassWater, Camera, Cpu, Globe,
+  Layout, Info, CheckCircle2, History, RotateCcw,
+  Smartphone, Heart, Stars, Palette as PaletteIcon
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -41,7 +43,7 @@ const allTools = [
   { title: 'Corner Rounder', description: 'Bulatkan sudut gambar dengan presisi.', href: '/corners', icon: Frame, category: 'social', useCase: 'UI/UX' },
   { title: 'Canvas Text', description: 'Tambah teks caption pada kanvas gambar.', href: '/canvas-text', icon: Type, category: 'social', useCase: 'Text' },
   { title: 'Watermark Pro', description: 'Tambah logo/teks hak cipta pada gambar.', href: '/watermark', icon: ImagePlus, category: 'social', useCase: 'Copyright' },
-  { title: 'Image Flipper', description: 'Putar balik gambar secara horisontal/vertikal.', href: '/image-flipper', icon: RefreshCcw, category: 'social', useCase: 'Mirror' },
+  { title: 'Image Flipper', description: 'Putar balik gambar secara horisontal/vertikal.', href: '/image-flipper', icon: RotateCcw, category: 'social', useCase: 'Mirror' },
 
   // 3. Studio FX (Artistic)
   { title: 'Filter Studio', description: 'Edit pencahayaan, kontras, & suasana.', href: '/filters', icon: SlidersHorizontal, category: 'studio', useCase: 'Editor' },
@@ -90,6 +92,18 @@ const allTools = [
   { title: 'Blur Pro', description: 'Filter blur Gaussian presisi tinggi.', href: '/blur', icon: Ghost, category: 'utility', useCase: 'Depth' },
   { title: 'Noise Studio', description: 'Tekstur grain analog kustom.', href: '/noise', icon: Filter, category: 'utility', useCase: 'Analog' },
   { title: 'Overlay Studio', description: 'Gabungkan dua gambar dengan transparansi.', href: '/overlay', icon: Layers, category: 'utility', useCase: 'Merge' },
+
+  // 7. Penambahan 10 Modul Baru (Unique)
+  { title: 'Oil Paint Art', description: 'Transformasi foto menjadi lukisan minyak.', href: '/oil-paint', icon: PaletteIcon, category: 'studio', useCase: 'Art' },
+  { title: 'Sobel Edge', description: 'Deteksi kontur teknis algoritma Sobel.', href: '/sobel-edge', icon: Activity, category: 'advanced', useCase: 'Tech' },
+  { title: 'Median Noise', description: 'Pembersihan noise piksel cerdas.', href: '/median-noise', icon: ShieldAlert, category: 'advanced', useCase: 'Clean' },
+  { title: 'Bloom FX', description: 'Efek cahaya berpendar pada area terang.', href: '/bloom', icon: Stars, category: 'studio', useCase: 'Glow' },
+  { title: 'Pencil Sketch', description: 'Sketsa pensil hitam-putih artistik.', href: '/pencil-sketch', icon: Paintbrush2, category: 'studio', useCase: 'Sketch' },
+  { title: 'Sepia Matang', description: 'Karakter foto klasik tahun 1920-an.', href: '/sepia-vintage', icon: Heart, category: 'studio', useCase: 'Legacy' },
+  { title: 'Luma Keyer', description: 'Isolasi area berdasarkan intensitas cahaya.', href: '/luma-key', icon: Sun, category: 'advanced', useCase: 'Mask' },
+  { title: 'RGB Offset', description: 'Geser kanal warna untuk efek 3D unik.', href: '/rgb-offset', icon: IterationCcw, category: 'studio', useCase: 'Shift' },
+  { title: 'Pincushion', description: 'Distorsi lensa melengkung ke dalam.', href: '/pincushion', icon: Focus, category: 'utility', useCase: 'Lens' },
+  { title: 'Fisheye Lens', description: 'Simulasi lensa mata ikan ultra-lebar.', href: '/fisheye', icon: Aperture, category: 'utility', useCase: 'Wide' },
 ];
 
 export default function DashboardPage() {
@@ -115,7 +129,7 @@ export default function DashboardPage() {
                  Workstation aktif. {allTools.length}+ modul operasional siap digunakan 100% lokal.
                </p>
                <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full">
-                 <div className="w-1.5 h-1.2 rounded-full bg-green-500 animate-pulse" />
+                 <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
                  <span className="text-[9px] font-black uppercase text-primary tracking-widest">Node Stabil v4.5</span>
                </div>
             </div>
