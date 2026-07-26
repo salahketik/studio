@@ -25,16 +25,16 @@ export function AppHeader() {
     )}>
       <div className="container mx-auto px-6 flex items-center justify-between gap-4">
         <div className="flex items-center gap-4 flex-1">
-          <SidebarTrigger className="h-10 w-10 rounded-full hover:bg-white/5 transition-colors" />
+          <SidebarTrigger className="h-10 w-10 rounded-full hover:bg-white/5 transition-colors border-none" />
           <div className="relative w-full max-w-xl hidden md:block">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground opacity-30" />
             <Input 
-              placeholder="Cari alat di workstation..." 
+              placeholder="Cari alat cepat..." 
               className="pl-11 h-10 rounded-2xl bg-white/5 border-none focus-visible:ring-1 focus-visible:ring-accent/30 text-[11px] font-bold tracking-tight"
             />
             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-20 pointer-events-none">
                <Command className="w-3 h-3" />
-               <span className="text-[10px] font-mono">K</span>
+               <span className="text-[10px] font-mono uppercase">K</span>
             </div>
           </div>
         </div>
@@ -43,7 +43,6 @@ export function AppHeader() {
           <Badge variant="outline" className="hidden lg:flex px-4 py-1.5 text-[9px] font-black uppercase tracking-widest border-white/5 text-muted-foreground bg-white/5">
             <Globe className="w-3 h-3 mr-2" /> ID
           </Badge>
-          <ThemeToggle />
           <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-accent to-blue-600 p-0.5 ml-2 cursor-pointer hover:scale-105 transition-transform shadow-lg shadow-accent/10">
              <div className="w-full h-full bg-[#0d0e16] rounded-[10px] flex items-center justify-center">
                 <Avatar className="h-7 w-7">

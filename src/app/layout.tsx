@@ -10,9 +10,9 @@ import { GlobalErrorHandler } from '@/components/global-error-handler';
 
 
 export const metadata: Metadata = {
-  title: 'Visual Creative Suite - Ultimate 60-in-1 Workstation',
-  description: 'Workstation digital murni terlengkap dengan 60 alat visual, audio studio, subtitle generator, dan utilitas dev lokal tanpa bantuan AI eksternal.',
-  keywords: 'image converter, audio cleaner, subtitle generator, qr code generator, barcode maker, photo filters, metadata cleaner, privacy tools, local workstation, 60-in-1 tools',
+  title: 'Visual Creative Suite - Ultimate 80-in-1 Workstation',
+  description: 'Workstation digital murni terlengkap dengan 80 alat visual, audio studio, subtitle generator, dan utilitas dev lokal oleh Ran Dev.',
+  keywords: 'image converter, audio cleaner, subtitle generator, qr code generator, barcode maker, photo filters, metadata cleaner, privacy tools, local workstation, 80-in-1 tools, ran dev',
 };
 
 export default function RootLayout({
@@ -30,8 +30,8 @@ export default function RootLayout({
       <body className="font-body antialiased h-full bg-background selection:bg-accent/20 selection:text-accent">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="dark"
+          enableSystem={false}
           disableTransitionOnChange
         >
           <SidebarProvider>

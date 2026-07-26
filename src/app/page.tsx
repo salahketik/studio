@@ -14,7 +14,18 @@ import {
   Database, Globe,
   Monitor as Screen,
   Move3d,
-  Layers2
+  Layers2,
+  Activity,
+  Cpu,
+  GlassWater,
+  Eraser,
+  Wand2,
+  CircleDashed,
+  Compass,
+  Trello,
+  Layout,
+  HardDrive,
+  RefreshCcw
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -24,15 +35,16 @@ import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const allTools = [
-  // Alat Berkas & Core
+  // 1. Berkas Core
   { title: 'Konverter Gambar', description: 'Konversi massal ke WebP, JPG, PNG secara lokal.', href: '/image-converter', icon: FileImage, category: 'core', useCase: 'Batch' },
   { title: 'Optimasi PNG', description: 'Kompresi aset PNG tanpa mengurangi kualitas.', href: '/png-opt', icon: Minimize2, category: 'core', useCase: 'Ukuran' },
-  { title: 'PDF Suite', description: 'Transformasi PDF ke Word, Excel, atau PPT.', href: '/pdf-converter', icon: Globe, category: 'core', useCase: 'Dokumen' },
+  { title: 'Suite PDF', description: 'Transformasi PDF ke Word, Excel, atau PPT.', href: '/pdf-converter', icon: Globe, category: 'core', useCase: 'Dokumen' },
   { title: 'Atur DPI', description: 'Ubah resolusi cetak metadata gambar.', href: '/dpi-adjuster', icon: Hash, category: 'core', useCase: 'Cetak' },
   { title: 'Hapus Metadata', description: 'Bersihkan data privasi EXIF secara permanen.', href: '/metadata-cleaner', icon: ShieldAlert, category: 'core', useCase: 'Privasi' },
   { title: 'Base64 Tool', description: 'Ubah gambar menjadi string data URI.', href: '/base64-tool', icon: Code2, category: 'core', useCase: 'Dev' },
+  { title: 'Smart Compress', description: 'Optimasi cerdas untuk memori rendah.', href: '/smart-compress', icon: HardDrive, category: 'core', useCase: 'Memori' },
   
-  // Kreator & Sosial
+  // 2. Kreator & Layout
   { title: 'Resizer Pro', description: 'Preset media sosial & kustom resolusi.', href: '/resizer', icon: Maximize2, category: 'social', useCase: 'Resize' },
   { title: 'Grid Splitter', description: 'Potong gambar untuk grid profil Instagram.', href: '/grid-splitter', icon: Grid3X3, category: 'social', useCase: 'IG Feed' },
   { title: 'Potong Cerdas', description: 'Hapus margin kosong secara otomatis.', href: '/trim', icon: Crop, category: 'social', useCase: 'Bersih' },
@@ -40,10 +52,10 @@ const allTools = [
   { title: 'Generator Mockup', description: 'Presentasi produk dengan frame browser.', href: '/mockup', icon: Screen, category: 'social', useCase: 'Showcase' },
   { title: 'Avatar Bulat', description: 'Potong foto menjadi profil lingkaran.', href: '/avatar-circle', icon: UserCircle, category: 'social', useCase: 'Profil' },
   { title: 'Corner Rounder', description: 'Bulatkan sudut gambar dengan presisi.', href: '/corners', icon: Frame, category: 'social', useCase: 'UI/UX' },
-  { title: 'Pembuat Pola', description: 'Hasilkan tekstur pola berulang (Pattern).', href: '/pattern', icon: Scaling, category: 'social', useCase: 'Tekstur' },
   { title: 'Canvas Text', description: 'Tambah teks caption pada kanvas gambar.', href: '/canvas-text', icon: Type, category: 'social', useCase: 'Teks' },
-  
-  // Studio Seni (Filters)
+  { title: 'Watermark Pro', description: 'Tambah logo/teks hak cipta pada gambar.', href: '/watermark', icon: Compass, category: 'social', useCase: 'Copyright' },
+
+  // 3. Studio FX
   { title: 'Filter Studio', description: 'Edit pencahayaan, kontras, & suasana.', href: '/filters', icon: SlidersHorizontal, category: 'studio', useCase: 'Editor' },
   { title: 'Ekstrak Palet', description: 'Ambil kode HEX warna dari piksel foto.', href: '/palette-extractor', icon: Pipette, category: 'studio', useCase: 'Warna' },
   { title: 'Grayscale Pro', description: 'Kontrol monokrom kontras tinggi.', href: '/grayscale-pro', icon: ImageIcon, category: 'studio', useCase: 'Hitam Putih' },
@@ -52,14 +64,12 @@ const allTools = [
   { title: 'Glitch Maker', description: 'Efek distorsi digital bergaya cyberpunk.', href: '/glitch', icon: IterationCcw, category: 'studio', useCase: 'Digital' },
   { title: 'ASCII Art Pro', description: 'Ubah gambar menjadi karakter teks unik.', href: '/ascii-art', icon: Terminal, category: 'studio', useCase: 'Retro' },
   { title: 'Kaleidoscope', description: 'Ciptakan geometri fraktal melingkar.', href: '/kaleido', icon: Focus, category: 'studio', useCase: 'Fraktal' },
-  { title: 'Posterize Art', description: 'Reduksi warna untuk gaya seni pop art.', href: '/posterize', icon: Paintbrush2, category: 'studio', useCase: 'Pop Art' },
   { title: 'Pixelate Art', description: 'Ubah gambar menjadi gaya retro 8-bit.', href: '/pixelate', icon: Component, category: 'studio', useCase: 'Retro' },
   { title: 'Vignette Studio', description: 'Fokus dramatis pada tepian gambar.', href: '/vignette', icon: Aperture, category: 'studio', useCase: 'Drama' },
-  { title: 'Threshold B&W', description: 'Konversi biner hitam putih murni.', href: '/threshold', icon: Contrast, category: 'studio', useCase: 'Biner' },
   { title: 'Loji Mixer', description: 'Pencampuran warna logaritmik eksklusif.', href: '/loji-mix', icon: Zap, category: 'studio', useCase: 'Tonasi' },
   { title: 'Halftone Art', description: 'Efek titik koran klasik (Newsprint).', href: '/halftone', icon: Binary, category: 'studio', useCase: 'Retro' },
-  
-  // Editor Teknis
+
+  // 4. Editor Teknis
   { title: 'Mirror Studio', description: 'Efek cermin reflektif horizontal.', href: '/mirror', icon: IterationCcw, category: 'advanced', useCase: 'Simetri' },
   { title: 'Luminance Tool', description: 'Kontrol pencahayaan tingkat lanjut.', href: '/luminance', icon: Sun, category: 'advanced', useCase: 'Cahaya' },
   { title: 'Opacity Pro', description: 'Kontrol saluran alfa transparansi.', href: '/opacity', icon: Ghost, category: 'advanced', useCase: 'Alpha' },
@@ -72,18 +82,18 @@ const allTools = [
   { title: 'Overlay Studio', description: 'Gabungkan dua gambar dalam satu kanvas.', href: '/overlay', icon: Layers2, category: 'advanced', useCase: 'Merge' },
   { title: 'CMYK Splitter', description: 'Pisahkan kanal warna cetak profesional.', href: '/cmyk-split', icon: Palette, category: 'advanced', useCase: 'Cetak' },
 
-  // Studio Audio
+  // 5. Studio Audio
   { title: 'Audio FX Studio', description: 'Edit suara dengan profil studio musik.', href: '/audio-cleaner', icon: Music, category: 'audio', useCase: 'Studio' },
   { title: 'Dead Air Remover', description: 'Hapus jeda sunyi secara otomatis.', href: '/dead-air-remover', icon: TimerOff, category: 'audio', useCase: 'Podcast' },
-  { title: 'Voice to SRT', description: 'Workstation subtitle manual presisi.', href: '/voice-to-srt', icon: Captions, category: 'audio', useCase: 'Video' },
-  
-  // Dev & Utilitas Web
-  { title: 'Pembuat QR Code', description: 'Generate kode QR statis instan.', href: '/qr-gen', icon: Binary, category: 'utility', useCase: 'Scan' },
+  { title: 'Subtitle Workstation', description: 'Workstation subtitle manual presisi.', href: '/voice-to-srt', icon: Captions, category: 'audio', useCase: 'Video' },
+
+  // 6. Utilitas Dev
+  { title: 'QR Generator', description: 'Generate kode QR statis instan.', href: '/qr-gen', icon: Binary, category: 'utility', useCase: 'Scan' },
   { title: 'Favicon Gen', description: 'Buat ikon situs web .ico standar.', href: '/favicon-generator', icon: Box, category: 'utility', useCase: 'Web' },
   { title: 'SVG Inspector', description: 'Inspeksi & pratinjau kode vektor SVG.', href: '/svg-view', icon: Code2, category: 'utility', useCase: 'Vektor' },
-  { title: 'Kalkulator Aspek', description: 'Hitung proporsi dimensi gambar.', href: '/aspect-calculator', icon: Hash, category: 'utility', useCase: 'Matematika' },
+  { title: 'Kalkulator Aspek', description: 'Hitung proporsi dimensi gambar.', href: '/aspect-calculator', icon: Hash, category: 'utility', useCase: 'Desain' },
   { title: 'Inspektur EXIF', description: 'Baca atribut data biner asli foto.', href: '/exif-view', icon: Eye, category: 'utility', useCase: 'Metadata' },
-  { title: 'Color Mixer', description: 'Eksperimen RGB channel lab.', href: '/color-mixer', icon: Palette, category: 'utility', useCase: 'Mix' },
+  { title: 'Color Mixer', description: 'Eksperimen RGB channel lab.', href: '/color-mixer', icon: Palette, category: 'utility', useCase: 'Lab' },
 ];
 
 export default function DashboardPage() {
@@ -101,12 +111,12 @@ export default function DashboardPage() {
     <div className="min-h-full pb-20 workstation-content">
       <div className="container mx-auto px-6 lg:px-10 py-10 space-y-12">
         
-        {/* Header Dashboard */}
+        {/* Dashboard Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
            <div className="space-y-1">
               <h1 className="text-4xl font-black tracking-tighter uppercase">Dasbor</h1>
               <p className="text-muted-foreground text-[12px] font-medium opacity-60">
-                 Selamat datang kembali, Ran. 60+ modul terpasang dengan optimal.
+                 Selamat datang kembali, Ran. {allTools.length} modul aktif & optimal.
               </p>
            </div>
            <div className="flex items-center gap-3">
@@ -117,18 +127,18 @@ export default function DashboardPage() {
            </div>
         </div>
 
-        {/* Statistik Workstation */}
+        {/* Workstation Statistics */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
           <div className="lg:col-span-8 space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {[
-                { label: 'Total Modul', value: '60+', sub: 'Terverifikasi', icon: Sparkles, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+                { label: 'Total Modul', value: `${allTools.length}+`, sub: 'Terverifikasi', icon: Sparkles, color: 'text-blue-500', bg: 'bg-blue-500/10' },
                 { label: 'Latensi', value: '0ms', sub: 'Pemrosesan Lokal', icon: Zap, color: 'text-orange-500', bg: 'bg-orange-500/10' },
                 { label: 'Memori Cache', value: '2.4 MB', sub: 'Buffer Optimal', icon: Database, color: 'text-cyan-500', bg: 'bg-cyan-500/10' },
-                { label: 'Status Build', value: 'Stabil', sub: 'v2.8.5 Pro', icon: Zap, color: 'text-green-500', bg: 'bg-green-500/10' },
+                { label: 'Status Build', value: 'Stabil', sub: 'v3.5.0 Pro', icon: Activity, color: 'text-green-500', bg: 'bg-green-500/10' },
               ].map((stat, i) => (
-                <Card key={i} className="bg-[#11121d] border-white/5 rounded-2xl p-5 hover:border-white/10 transition-all group overflow-hidden relative shadow-lg">
+                <Card key={i} className="stat-card group">
                     <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-white/5 to-transparent -translate-y-12 translate-x-12 rounded-full group-hover:scale-150 transition-transform duration-700" />
                     <div className="flex justify-between items-start relative z-10">
                       <div className="space-y-1">
@@ -146,25 +156,25 @@ export default function DashboardPage() {
               ))}
             </div>
 
-            {/* Pencarian Global */}
+            {/* Global Search Hub */}
             <div className="relative group">
                <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground opacity-30 group-focus-within:opacity-100 transition-opacity" />
                <Input 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Cari di antara 60+ modul workstation..." 
+                placeholder="Cari di antara modul workstation..." 
                 className="h-16 pl-14 pr-6 rounded-[2rem] bg-[#11121d] border-white/5 focus-visible:ring-1 focus-visible:ring-accent/40 text-sm font-bold tracking-tight shadow-xl"
                />
             </div>
           </div>
 
-          {/* Profil Pengembang */}
+          {/* Developer Profile (Ran Dev) */}
           <div className="lg:col-span-4">
-            <Card className="bg-[#11121d] border-white/5 rounded-[2.5rem] p-8 space-y-8 sticky top-24 shadow-2xl relative overflow-hidden group">
+            <Card className="bg-[#11121d] border-white/5 rounded-[2.5rem] p-8 space-y-8 sticky top-24 shadow-2xl relative overflow-hidden group h-full">
                <div className="absolute top-0 right-0 w-40 h-40 bg-accent/5 blur-[80px] -translate-y-20 translate-x-20 group-hover:bg-accent/10 transition-all duration-700" />
                
                <div className="flex items-center gap-2 text-muted-foreground/40">
-                  <div className="p-1.5 bg-white/5 rounded-lg"><Screen className="w-3.5 h-3.5" /></div>
+                  <Screen className="w-3.5 h-3.5" />
                   <span className="text-[10px] font-black uppercase tracking-widest">Master Node</span>
                </div>
 
@@ -172,7 +182,7 @@ export default function DashboardPage() {
                   <div className="relative">
                     <div className="absolute inset-0 bg-accent blur-xl opacity-20 animate-pulse" />
                     <Avatar className="h-16 w-16 border-2 border-accent/20 relative z-10 rounded-2xl rotate-3 group-hover:rotate-0 transition-transform duration-500">
-                      <AvatarImage src="https://picsum.photos/seed/ran/200/200" />
+                      <AvatarImage src="https://picsum.photos/seed/ran-dev/200/200" />
                       <AvatarFallback>RD</AvatarFallback>
                     </Avatar>
                   </div>
@@ -183,17 +193,17 @@ export default function DashboardPage() {
                </div>
 
                <p className="text-[11px] text-muted-foreground/60 leading-relaxed font-medium">
-                  Pengembang di Ran Dev. Spesialisasi dalam membangun workstation lokal berperforma tinggi yang mengutamakan privasi pengguna dan kecepatan profesional.
+                  Pengembang di Ran Dev. Spesialisasi dalam membangun workstation lokal berperformas tinggi yang mengutamakan privasi dan kecepatan profesional.
                </p>
 
                <div className="grid grid-cols-2 gap-3">
                   <div className="bg-white/5 p-4 rounded-[1.5rem] space-y-2 border border-white/5 hover:border-white/10 transition-colors text-center">
                      <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Engine</p>
-                     <p className="text-[13px] font-black">Pure Canvas</p>
+                     <p className="text-[13px] font-black">Pure Local</p>
                   </div>
                   <div className="bg-white/5 p-4 rounded-[1.5rem] space-y-2 border border-white/5 hover:border-white/10 transition-colors text-center">
                      <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Akses</p>
-                     <p className="text-[13px] font-black">100% Lokal</p>
+                     <p className="text-[13px] font-black">Tanpa Login</p>
                   </div>
                </div>
 
@@ -201,7 +211,7 @@ export default function DashboardPage() {
                   <div className="flex -space-x-2">
                      {[1,2,3,4].map(i => (
                        <div key={i} className="w-7 h-7 rounded-full border-2 border-[#11121d] bg-white/5 flex items-center justify-center overflow-hidden">
-                          <img src={`https://picsum.photos/seed/${i+50}/50/50`} className="w-full h-full object-cover grayscale opacity-50" alt="Tool" />
+                          <img src={`https://picsum.photos/seed/${i+200}/50/50`} className="w-full h-full object-cover grayscale opacity-50" alt="Tool" />
                        </div>
                      ))}
                      <div className="w-7 h-7 rounded-full border-2 border-[#11121d] bg-accent/20 flex items-center justify-center text-[8px] font-black text-accent">+{allTools.length}</div>
@@ -215,7 +225,7 @@ export default function DashboardPage() {
 
         </div>
 
-        {/* Eksplorasi Modul */}
+        {/* Tools Exploration Grid */}
         <div className="space-y-8 pt-8">
           <div className="flex items-center justify-between">
              <div className="flex items-center gap-2">
@@ -231,7 +241,7 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 animate-in fade-in duration-1000">
               {filteredTools.map((tool) => (
                 <Link key={tool.title} href={tool.href} className="group">
-                  <Card className="tool-card h-full flex flex-col border-white/5 bg-[#11121d]/40 hover:bg-[#161827] rounded-[2rem] overflow-hidden transition-all duration-500 shadow-sm">
+                  <Card className="tool-card h-full flex flex-col rounded-[2rem]">
                     <CardHeader className="p-6 pb-2">
                       <div className="flex items-start justify-between mb-4">
                         <div className={cn(

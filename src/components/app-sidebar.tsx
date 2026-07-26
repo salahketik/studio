@@ -16,6 +16,10 @@ import {
   Palette,
   Globe,
   Wand2,
+  Smartphone,
+  ShieldCheck,
+  Binary,
+  Monitor
 } from 'lucide-react';
 
 import {
@@ -42,7 +46,7 @@ const navMain = [
     icon: LayoutDashboard,
   },
   {
-    title: "Alat Berkas",
+    title: "Berkas Core",
     url: "/image-converter",
     icon: Folder,
     items: [
@@ -52,12 +56,13 @@ const navMain = [
       { title: "Atur DPI", url: "/dpi-adjuster" },
       { title: "Hapus Metadata", url: "/metadata-cleaner" },
       { title: "Alat Base64", url: "/base64-tool" },
+      { title: "Smart Compress", url: "/smart-compress" },
     ],
   },
   {
-    title: "Kreator",
+    title: "Kreator Sosial",
     url: "/resizer",
-    icon: Palette,
+    icon: Smartphone,
     items: [
       { title: "Resizer Pro", url: "/resizer" },
       { title: "Grid Splitter", url: "/grid-splitter" },
@@ -66,8 +71,7 @@ const navMain = [
       { title: "Studio Mockup", url: "/mockup" },
       { title: "Avatar Bulat", url: "/avatar-circle" },
       { title: "Corner Rounder", url: "/corners" },
-      { title: "Pembuat Pola", url: "/pattern" },
-      { title: "Canvas Text", url: "/canvas-text" },
+      { title: "Watermark Pro", url: "/watermark" },
     ],
   },
   {
@@ -80,14 +84,7 @@ const navMain = [
       { title: "Pembuat Glitch", url: "/glitch" },
       { title: "Seni ASCII", url: "/ascii-art" },
       { title: "Kaleidoskop", url: "/kaleido" },
-      { title: "Seni Duotone", url: "/duotone" },
-      { title: "Grayscale Pro", url: "/grayscale-pro" },
-      { title: "Film Grain", url: "/film-grain" },
-      { title: "Seni Posterize", url: "/posterize" },
       { title: "Seni Pixelate", url: "/pixelate" },
-      { title: "Studio Vignette", url: "/vignette" },
-      { title: "Threshold B&W", url: "/threshold" },
-      { title: "Loji Mixer", url: "/loji-mix" },
       { title: "Seni Halftone", url: "/halftone" },
     ],
   },
@@ -100,13 +97,8 @@ const navMain = [
       { title: "Opacity Pro", url: "/opacity" },
       { title: "Studio Bayangan", url: "/shadow-studio" },
       { title: "Warp Perspektif", url: "/perspective" },
-      { title: "Studio Cermin", url: "/mirror" },
       { title: "Invert Warna", url: "/invert" },
-      { title: "Blur Pro", url: "/blur" },
-      { title: "Studio Noise", url: "/noise" },
-      { title: "Bingkai Gambar", url: "/image-border" },
-      { title: "Studio Overlay", url: "/overlay" },
-      { title: "CMYK Splitter", url: "/cmyk-split" },
+      { title: "Edge Detection", url: "/edge-detection" },
     ],
   },
   {
@@ -117,19 +109,6 @@ const navMain = [
       { title: "Studio FX Audio", url: "/audio-cleaner" },
       { title: "Hapus Jeda Sunyi", url: "/dead-air-remover" },
       { title: "Subtitle Workstation", url: "/voice-to-srt" },
-    ],
-  },
-  {
-    title: "Dev & Website",
-    url: "/svg-view",
-    icon: Globe,
-    items: [
-      { title: "Inspektur SVG", url: "/svg-view" },
-      { title: "QR Generator", url: "/qr-gen" },
-      { title: "Favicon Gen", url: "/favicon-generator" },
-      { title: "Kalkulator Aspek", url: "/aspect-calculator" },
-      { title: "Penampil EXIF", url: "/exif-view" },
-      { title: "Mixer Warna", url: "/color-mixer" },
     ],
   },
 ];
@@ -146,7 +125,7 @@ export function AppSidebar() {
           </div>
           <div className="flex flex-col truncate group-data-[collapsible=icon]:hidden">
             <span className="font-black text-sm tracking-tighter uppercase leading-none">Visual Suite</span>
-            <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-[0.3em] mt-1">60-IN-1 WORKSTATION</span>
+            <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-[0.3em] mt-1">RAN DEV WORKSTATION</span>
           </div>
         </Link>
       </SidebarHeader>
@@ -206,16 +185,8 @@ export function AppSidebar() {
                  </div>
               </div>
               <p className="text-[10px] text-muted-foreground italic leading-relaxed">
-                 "Alat presisi untuk para master digital lokal."
+                 "Workstation lokal murni yang mengutamakan privasi dan kecepatan."
               </p>
-              <div className="flex gap-1.5 pt-2">
-                 <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg bg-white/5 hover:bg-accent/20 hover:text-white transition-all">
-                    <Github className="w-3.5 h-3.5" />
-                 </Button>
-                 <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg bg-white/5 hover:bg-accent/20 hover:text-white transition-all">
-                    <Heart className="w-3.5 h-3.5" />
-                 </Button>
-              </div>
            </div>
         </div>
       </SidebarContent>
@@ -226,8 +197,8 @@ export function AppSidebar() {
              <Settings className="w-4 h-4 text-accent" />
           </div>
           <div className="flex flex-col truncate group-data-[collapsible=icon]:hidden">
-             <span className="text-[10px] font-black uppercase tracking-tight">Node Sistem</span>
-             <span className="text-[8px] text-green-500 font-bold uppercase tracking-widest">v2.8.5 STABIL</span>
+             <span className="text-[10px] font-black uppercase tracking-tight">Sistem Node</span>
+             <span className="text-[8px] text-green-500 font-bold uppercase tracking-widest">v3.5.0 STABIL</span>
           </div>
         </div>
       </SidebarFooter>
