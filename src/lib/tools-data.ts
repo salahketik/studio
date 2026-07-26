@@ -1,3 +1,4 @@
+
 import { 
   FileImage, Crop, ArrowRight, Sparkles, Zap, 
   LayoutGrid, Maximize2, SlidersHorizontal, Pipette, Grid3X3, 
@@ -12,15 +13,15 @@ import {
   ImagePlus, Monitor,
   GlassWater, Camera, Cpu, Globe,
   Layout, Info, CheckCircle2, History, RotateCcw,
-  Smartphone, Heart, Stars, Palette as PaletteIcon,
-  Barcode, Key, FileJson, Link as LinkIcon, Ruler, Scan,
-  MousePointer2, ShieldCheck, Mail, Lock, BrainCircuit,
-  Settings2, Bot, Video, FileText, Languages, Stamp, FileCode,
+  Smartphone, Barcode, Key, FileJson, Link as LinkIcon, Ruler, Scan,
+  MousePointer2, ShieldCheck, Lock, BrainCircuit,
+  Settings2, Bot, Video, FileText, Languages, FileCode,
   Shield, Scale, Trash2, Scissors, ListChecks, FileType, 
   FileSpreadsheet, Clock, SearchCode, Braces, Table, AlignLeft,
   Waveform, Microscope, ScanEye, Brush, Waves, Volume2, 
   FileUp, Laptop, Globe2, Fingerprint, FileSearch, TerminalSquare,
-  Network, Share2, MousePointerClick, MessageSquareText, PenTool
+  Network, Share2, MousePointerClick, MessageSquareText, PenTool,
+  Sticker
 } from 'lucide-react';
 
 export interface Tool {
@@ -58,7 +59,7 @@ export const ALL_TOOLS: Tool[] = [
   { title: 'Avatar Bulat', description: 'Potong foto menjadi profil lingkaran.', href: '/avatar-circle', icon: UserCircle, category: 'social', useCase: 'Profile' },
   { title: 'Corner Rounder', description: 'Bulatkan sudut gambar dengan presisi.', href: '/corners', icon: Frame, category: 'social', useCase: 'UI/UX' },
   { title: 'Canvas Text', description: 'Tambah teks caption pada kanvas gambar.', href: '/canvas-text', icon: Type, category: 'social', useCase: 'Text' },
-  { title: 'Watermark Pro', description: 'Tambah logo/teks hak cipta pada gambar.', href: '/watermark', icon: Stamp, category: 'social', useCase: 'Copyright' },
+  { title: 'Watermark Pro', description: 'Tambah logo/teks hak cipta pada gambar.', href: '/watermark', icon: Sticker, category: 'social', useCase: 'Copyright' },
   { title: 'Image Flipper', description: 'Putar balik gambar secara horisontal/vertikal.', href: '/image-flipper', icon: RotateCcw, category: 'social', useCase: 'Mirror' },
   { title: 'Image Border', description: 'Tambahkan bingkai/border warna pada foto.', href: '/image-border', icon: Frame, category: 'social', useCase: 'Frame' },
   { title: 'Image to PDF', description: 'Ubah gambar Anda menjadi dokumen PDF.', href: '/image-to-pdf', icon: FileUp, category: 'social', useCase: 'Package' },

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo } from 'react';
@@ -26,11 +27,12 @@ import {
   GlassWater, Camera, Globe,
   Layout, Info, CheckCircle2, RotateCcw,
   Smartphone, Barcode, Key, FileJson, Link as LinkIcon, Ruler,
-  MousePointer2, BrainCircuit, Bot, FileText, Stamp, FileCode,
+  MousePointer2, BrainCircuit, Bot, FileText, FileCode,
   ListChecks, FileType, FileSpreadsheet, Clock, Braces, Table, AlignLeft,
-  Waveform, Microscope, ScanEye, Brush, Waves, Activity,
+  Waveform, Microscope, ScanEye, Brush, Waves,
   Volume2, FileUp, Laptop, Globe2, Fingerprint, FileSearch, TerminalSquare,
-  Network, Share2, MousePointerClick, MessageSquareText, PenTool
+  Network, Share2, MousePointerClick, MessageSquareText, PenTool,
+  Sticker
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -98,7 +100,7 @@ export default function DashboardPage() {
            <Input 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Cari 100+ modul visual, audio, atau AI..." 
+            placeholder="Cari 100 modul visual, audio, atau AI..." 
             className="h-16 pl-14 pr-8 rounded-2xl bg-card/80 border-border/50 focus-visible:ring-1 focus-visible:ring-primary/40 text-sm font-bold tracking-tight shadow-xl"
            />
         </div>
@@ -118,7 +120,7 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {filteredTools.map((tool) => {
                 const isFav = mounted && favorites.includes(tool.title.toLowerCase().trim());
-                const Icon = tool.icon;
+                const ToolIcon = tool.icon;
                 return (
                   <div key={tool.title} className="relative group">
                     <Link 
@@ -140,7 +142,7 @@ export default function DashboardPage() {
                               tool.category === 'utility' && 'bg-slate-500/10 text-slate-500',
                               tool.category === 'audio' && 'bg-emerald-500/10 text-emerald-500',
                             )}>
-                              <Icon className="w-5 h-5" />
+                              <ToolIcon className="w-5 h-5" />
                             </div>
                             <Badge variant="outline" className="text-[8px] uppercase font-black opacity-30 group-hover:opacity-100 transition-opacity px-2 py-0.5 rounded-full">
                               {tool.useCase}

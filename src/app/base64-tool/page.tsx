@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -41,6 +42,7 @@ export default function Base64ToolPage() {
   };
 
   const copyToClipboard = () => {
+    if (!base64String) return;
     navigator.clipboard.writeText(base64String);
     toast({ title: "Tersalin!", description: "String Base64 telah disalin ke papan klip." });
   };
