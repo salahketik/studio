@@ -2,8 +2,6 @@
 
 import { optimizeWebpCompression } from '@/ai/flows/optimize-webp-compression';
 import type { OptimizeWebpCompressionInput } from '@/ai/flows/optimize-webp-compression';
-import { generateBackground } from '@/ai/flows/generate-background';
-import type { GenerateBackgroundInput } from '@/ai/flows/generate-background';
 
 interface AIResult {
     optimizedImageUri?: string;
@@ -13,6 +11,7 @@ interface AIResult {
 
 /**
  * Menjalankan optimisasi WebP menggunakan AI Genkit.
+ * Dipertahankan hanya untuk Konverter Gambar jika pengguna memilih Bantuan AI.
  */
 export async function runAIOptimization(
   input: OptimizeWebpCompressionInput
@@ -34,26 +33,4 @@ export async function runAIOptimization(
       error: error instanceof Error ? error.message : 'An unknown error occurred during AI optimization.',
     };
   }
-}
-
-interface AIImageResult {
-    imageUrl?: string;
-    error?: string;
-}
-
-/**
- * Menghasilkan latar belakang artistik untuk mockup menggunakan Imagen 4.
- */
-export async function runAIGenerateBackground(
-    input: GenerateBackgroundInput
-): Promise<AIImageResult> {
-    try {
-        const result = await generateBackground(input);
-        return { imageUrl: result.imageUrl };
-    } catch (error) {
-        console.error('AI Background Error:', error);
-        return {
-            error: error instanceof Error ? error.message : 'Gagal menghasilkan latar belakang AI.',
-        };
-    }
 }

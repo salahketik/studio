@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { 
   FileImage, 
@@ -18,17 +19,20 @@ import {
   Grid3X3,
   ShieldAlert,
   Code2,
+  Search,
+  X,
   CheckCircle2
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 
 const visualTools = [
   {
     title: 'Konverter Gambar',
-    description: 'Transformasi massal gambar ke WebP, JPG, atau PNG dengan optimasi instan.',
+    description: 'Transformasi massal gambar ke WebP, JPG, atau PNG dengan optimisasi instan.',
     href: '/image-converter',
     icon: FileImage,
     color: 'bg-blue-500/10 text-blue-600',
@@ -119,6 +123,16 @@ const visualTools = [
 ];
 
 export default function DashboardPage() {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredTools = useMemo(() => {
+    return visualTools.filter(tool => 
+      tool.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      tool.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      tool.useCase.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery]);
+
   return (
     <div className="min-h-full hero-gradient pb-24 overflow-x-hidden">
       <div className="container mx-auto px-4 sm:px-6 md:p-12 lg:px-24 space-y-16 sm:space-y-24">
@@ -156,8 +170,8 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Workstation Grid */}
-        <div id="tools" className="space-y-10">
+        {/* Search & Tool Grid */}
+        <div id="tools" className="space-y-10 scroll-mt-24">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b pb-6 border-border/10">
             <div className="flex items-center gap-4">
               <div className="p-3 rounded-2xl bg-accent text-white shadow-xl shadow-accent/20">
@@ -168,45 +182,69 @@ export default function DashboardPage() {
                 <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold opacity-60">Pilih alat yang Anda butuhkan</p>
               </div>
             </div>
-            <div className="flex items-center gap-3 bg-muted/30 px-4 py-2 rounded-full border border-white/10">
-               <ShieldCheck className="w-4 h-4 text-green-500" />
-               <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">100% Local & Secure</span>
+
+            <div className="relative w-full md:w-[350px]">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input 
+                placeholder="Cari alat visual..." 
+                className="pl-11 h-12 rounded-2xl bg-white/50 backdrop-blur-sm border-accent/10 focus:border-accent/30 transition-all"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full h-8 w-8" 
+                  onClick={() => setSearchQuery('')}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              )}
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
-            {visualTools.map((tool, idx) => (
-              <Link key={tool.title} href={tool.href} className="group">
-                <Card className="tool-card h-full flex flex-col border-border/10 bg-card/30 hover:bg-card/90 transition-all duration-500 rounded-3xl">
-                  <CardHeader className="p-6">
-                    <div className={cn(
-                      "w-12 h-12 rounded-2xl flex items-center justify-center mb-5 transition-all duration-700 group-hover:scale-110 group-hover:rotate-6 shadow-sm",
-                      tool.color
-                    )}>
-                      <tool.icon className="w-6 h-6" />
-                    </div>
-                    <div className="space-y-1.5">
-                      <CardTitle className="text-sm font-black group-hover:text-accent transition-colors tracking-tight uppercase">
-                        {tool.title}
-                      </CardTitle>
-                      <Badge variant="secondary" className="text-[8px] uppercase tracking-[0.15em] font-black bg-accent/5 text-accent/50 border-none">
-                        {tool.useCase}
-                      </Badge>
-                    </div>
-                    <CardDescription className="text-[11px] leading-relaxed text-muted-foreground/80 pt-3 line-clamp-2">
-                      {tool.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="mt-auto pt-0 p-6 flex items-center justify-between">
-                    <span className="text-[9px] font-bold text-muted-foreground/40 uppercase tracking-tighter">Ready to use</span>
-                    <div className="flex items-center text-[10px] font-black text-accent opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">
-                      BUKA <ArrowRight className="ml-1 w-3 h-3" />
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
+          {filteredTools.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 animate-in fade-in duration-700">
+              {filteredTools.map((tool) => (
+                <Link key={tool.title} href={tool.href} className="group">
+                  <Card className="tool-card h-full flex flex-col border-border/10 bg-card/30 hover:bg-card/90 transition-all duration-500 rounded-3xl">
+                    <CardHeader className="p-6">
+                      <div className={cn(
+                        "w-12 h-12 rounded-2xl flex items-center justify-center mb-5 transition-all duration-700 group-hover:scale-110 group-hover:rotate-6 shadow-sm",
+                        tool.color
+                      )}>
+                        <tool.icon className="w-6 h-6" />
+                      </div>
+                      <div className="space-y-1.5">
+                        <CardTitle className="text-sm font-black group-hover:text-accent transition-colors tracking-tight uppercase">
+                          {tool.title}
+                        </CardTitle>
+                        <Badge variant="secondary" className="text-[8px] uppercase tracking-[0.15em] font-black bg-accent/5 text-accent/50 border-none">
+                          {tool.useCase}
+                        </Badge>
+                      </div>
+                      <CardDescription className="text-[11px] leading-relaxed text-muted-foreground/80 pt-3 line-clamp-2">
+                        {tool.description}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="mt-auto pt-0 p-6 flex items-center justify-between">
+                      <span className="text-[9px] font-bold text-muted-foreground/40 uppercase tracking-tighter">Ready to use</span>
+                      <div className="flex items-center text-[10px] font-black text-accent opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">
+                        BUKA <ArrowRight className="ml-1 w-3 h-3" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="py-20 text-center space-y-4 glass-panel rounded-3xl border-dashed">
+               <Search className="w-12 h-12 text-muted-foreground/20 mx-auto" />
+               <p className="text-muted-foreground font-medium">Tidak ada alat yang cocok dengan pencarian "{searchQuery}"</p>
+               <Button variant="outline" className="rounded-full" onClick={() => setSearchQuery('')}>Lihat Semua Alat</Button>
+            </div>
+          )}
         </div>
 
         {/* Feature Highlights */}
