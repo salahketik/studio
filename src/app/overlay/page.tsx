@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { saveAs } from 'file-saver';
-import { ChevronLeft, Layers, Download, RefreshCcw, Loader2, UploadCloud } from 'lucide-react';
+import { ChevronLeft, Layers, Download, RefreshCcw, Loader2, UploadCloud, Layers2 } from 'lucide-react';
 import Link from 'next/link';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
@@ -76,7 +76,7 @@ export default function OverlayPage() {
             <Card className="rounded-3xl border-none shadow-xl">
               <CardHeader className="bg-muted/50 border-b py-4">
                 <CardTitle className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
-                  <Layers className="w-4 h-4 text-accent" /> Layer Manager
+                  <Layers2 className="w-4 h-4 text-accent" /> Layer Manager
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6 space-y-6">
@@ -108,7 +108,7 @@ export default function OverlayPage() {
           <div className="lg:col-span-8">
             <Card className="rounded-3xl border-none shadow-2xl glass-panel overflow-hidden min-h-[500px] flex items-center justify-center">
               {!baseImg ? (
-                <div className="text-center opacity-20"><UploadCloud className="w-16 h-16 mx-auto mb-2" /><p className="font-bold uppercase tracking-widest">Awaiting Assets</p></div>
+                <div className="text-center opacity-20"><UploadCloud className="w-16 h-16 mx-auto mb-2" /><p className="font-black tracking-widest uppercase">Awaiting Assets</p></div>
               ) : (
                 <div className="relative p-8 max-w-full">
                   <img src={baseImg.url} alt="Base" className="max-w-full h-auto" />

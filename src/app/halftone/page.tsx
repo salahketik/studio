@@ -53,6 +53,7 @@ export default function HalftonePage() {
       for (let y = 0; y < canvas.height; y += size) {
         for (let x = 0; x < canvas.width; x += size) {
           const offset = (y * canvas.width + x) * 4;
+          if (offset >= data.length) continue;
           const r = data[offset];
           const g = data[offset + 1];
           const b = data[offset + 2];
@@ -60,7 +61,7 @@ export default function HalftonePage() {
           const radius = (size / 2) * (1 - avg / 255);
 
           ctx.beginPath();
-          ctx.arc(x + size / 2, y + size / 2, radius, 0, Math.PI * 2);
+          ctx.arc(x + size / 2, y + size / 2, Math.max(0, radius), 0, Math.PI * 2);
           ctx.fill();
         }
       }

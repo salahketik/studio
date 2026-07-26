@@ -55,6 +55,7 @@ export default function CmykSplitterPage() {
         if (type === 'k') val = k * 255;
 
         data[i] = data[i+1] = data[i+2] = 255 - val; // Invert to show intensity as grayscale
+        data[i+3] = 255;
       }
 
       ctx.putImageData(imageData, 0, 0);

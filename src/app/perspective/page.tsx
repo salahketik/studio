@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { saveAs } from 'file-saver';
-import { ChevronLeft, Share2, Download, RefreshCcw, Loader2 } from 'lucide-react';
+import { ChevronLeft, Share2, Download, RefreshCcw, Loader2, Move3d } from 'lucide-react';
 import Link from 'next/link';
 import { ImageUploader } from '@/features/image-converter/components/image-uploader';
 import { Label } from '@/components/ui/label';
@@ -30,7 +30,7 @@ export default function PerspectivePage() {
     setIsProcessing(true);
     
     // Using simple HTML-to-image concept since perspective warp in raw canvas
-    // requires complex 3D math. For the MVP, we use CSS preview & DOM capture.
+    // is complex. We use CSS preview & DOM capture for the MVP.
     const { toPng } = await import('html-to-image');
     const el = document.getElementById('perspective-preview');
     if (el) {
@@ -38,6 +38,10 @@ export default function PerspectivePage() {
         .then(dataUrl => {
           saveAs(dataUrl, `perspective_${Date.now()}.png`);
           toast({ title: "Selesai", description: "Gambar perspektif telah diunduh." });
+          setIsProcessing(false);
+        })
+        .catch(() => {
+          toast({ variant: 'destructive', title: "Gagal", description: "Terjadi kesalahan saat mengekspor." });
           setIsProcessing(false);
         });
     }
@@ -63,7 +67,7 @@ export default function PerspectivePage() {
             <Card className="rounded-3xl border-none shadow-xl">
               <CardHeader className="bg-muted/50 border-b py-4">
                 <CardTitle className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
-                  <Share2 className="w-4 h-4 text-accent" /> Transform Rack
+                  <Move3d className="w-4 h-4 text-accent" /> Transform Rack
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6 space-y-8">

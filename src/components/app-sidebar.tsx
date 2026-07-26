@@ -16,6 +16,13 @@ import {
   Folder,
   Palette,
   Globe,
+  Scissors,
+  Wand2,
+  Terminal,
+  Code2,
+  Activity,
+  Layers,
+  Database
 } from 'lucide-react';
 
 import {
@@ -51,6 +58,7 @@ const navMain = [
       { title: "PDF Suite", url: "/pdf-converter" },
       { title: "DPI Adjuster", url: "/dpi-adjuster" },
       { title: "Metadata Cleaner", url: "/metadata-cleaner" },
+      { title: "Base64 Tool", url: "/base64-tool" },
     ],
   },
   {
@@ -65,6 +73,8 @@ const navMain = [
       { title: "Mockup Studio", url: "/mockup" },
       { title: "Avatar Circle", url: "/avatar-circle" },
       { title: "Corner Rounder", url: "/corners" },
+      { title: "Pattern Maker", url: "/pattern" },
+      { title: "Canvas Text", url: "/canvas-text" },
     ],
   },
   {
@@ -77,7 +87,33 @@ const navMain = [
       { title: "Glitch Maker", url: "/glitch" },
       { title: "ASCII Art", url: "/ascii-art" },
       { title: "Kaleidoscope", url: "/kaleido" },
-      { title: "Duotone", url: "/duotone" },
+      { title: "Duotone Art", url: "/duotone" },
+      { title: "Grayscale Pro", url: "/grayscale-pro" },
+      { title: "Film Grain", url: "/film-grain" },
+      { title: "Posterize Art", url: "/posterize" },
+      { title: "Pixelate Art", url: "/pixelate" },
+      { title: "Vignette Studio", url: "/vignette" },
+      { title: "Threshold B&W", url: "/threshold" },
+      { title: "Loji Mixer", url: "/loji-mix" },
+      { title: "Halftone Art", url: "/halftone" },
+    ],
+  },
+  {
+    title: "Technical Editor",
+    url: "/luminance",
+    icon: Wand2,
+    items: [
+      { title: "Luminance Control", url: "/luminance" },
+      { title: "Opacity Pro", url: "/opacity" },
+      { title: "Shadow Studio", url: "/shadow-studio" },
+      { title: "Perspective Warp", url: "/perspective" },
+      { title: "Mirror Studio", url: "/mirror" },
+      { title: "Color Inverter", url: "/invert" },
+      { title: "Blur Pro", url: "/blur" },
+      { title: "Noise Studio", url: "/noise" },
+      { title: "Image Border", url: "/image-border" },
+      { title: "Overlay Studio", url: "/overlay" },
+      { title: "CMYK Splitter", url: "/cmyk-split" },
     ],
   },
   {
@@ -86,19 +122,21 @@ const navMain = [
     icon: Music,
     items: [
       { title: "FX Studio", url: "/audio-cleaner" },
-      { title: "Dead Air", url: "/dead-air-remover" },
+      { title: "Dead Air Remover", url: "/dead-air-remover" },
       { title: "Subtitles", url: "/voice-to-srt" },
     ],
   },
   {
-    title: "Website",
+    title: "Dev & Website",
     url: "/svg-view",
     icon: Globe,
     items: [
       { title: "SVG Inspector", url: "/svg-view" },
-      { title: "Base64 Tool", url: "/base64-tool" },
-      { title: "Favicon Gen", url: "/favicon-generator" },
       { title: "QR Generator", url: "/qr-gen" },
+      { title: "Favicon Gen", url: "/favicon-generator" },
+      { title: "Aspect Calc", url: "/aspect-calculator" },
+      { title: "EXIF Viewer", url: "/exif-view" },
+      { title: "Color Mixer", url: "/color-mixer" },
     ],
   },
 ];
@@ -115,7 +153,7 @@ export function AppSidebar() {
           </div>
           <div className="flex flex-col truncate group-data-[collapsible=icon]:hidden">
             <span className="font-black text-sm tracking-tighter uppercase leading-none">Visual Suite</span>
-            <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-[0.3em] mt-1">ALL TOOLS · V2.0</span>
+            <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-[0.3em] mt-1">60-IN-1 WORKSTATION</span>
           </div>
         </Link>
       </SidebarHeader>
@@ -176,10 +214,10 @@ export function AppSidebar() {
                  <Github className="w-3.5 h-3.5 text-muted-foreground/40" />
               </div>
               <p className="text-[10px] text-muted-foreground italic leading-relaxed">
-                 "Code. Create. Learn. Improve. Repeat."
+                 "Precision tools for digital masters."
               </p>
               <div className="pt-1">
-                 <p className="text-[9px] font-bold uppercase tracking-widest">— Agler Zeroun</p>
+                 <p className="text-[9px] font-bold uppercase tracking-widest">— RonzX7 Developer</p>
               </div>
               <div className="flex gap-1.5">
                  <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg bg-white/5 hover:bg-accent/20 hover:text-white transition-all">
@@ -203,7 +241,7 @@ export function AppSidebar() {
           </div>
           <div className="flex flex-col truncate group-data-[collapsible=icon]:hidden">
              <span className="text-[10px] font-black uppercase tracking-tight">System Node</span>
-             <span className="text-[8px] text-green-500 font-bold uppercase tracking-widest">Active & Secure</span>
+             <span className="text-[8px] text-green-500 font-bold uppercase tracking-widest">v2.8.5 STABLE</span>
           </div>
         </div>
       </SidebarFooter>
