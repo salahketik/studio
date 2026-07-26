@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -203,7 +204,7 @@ export function AppSidebar() {
             {navMain.map((item) => (
               <SidebarMenuItem key={item.title}>
                 {item.items ? (
-                  <Collapsible defaultOpen={item.items.some(sub => sub.url === pathname)} className="group/collapsible">
+                  <Collapsible className="group/collapsible">
                     <CollapsibleTrigger asChild>
                       <SidebarMenuButton 
                         tooltip={item.title}
