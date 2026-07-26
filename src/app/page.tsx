@@ -13,8 +13,7 @@ import {
   LayoutGrid,
   Palette,
   Info,
-  Maximize2,
-  Search
+  Maximize2
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -24,15 +23,15 @@ import { cn } from '@/lib/utils';
 const visualTools = [
   {
     title: 'Konverter Gambar',
-    description: 'Transformasi gambar ke WebP, JPG, atau PNG dengan analisis cerdas AI untuk hasil optimal.',
+    description: 'Transformasi gambar ke WebP, JPG, atau PNG dengan analisis cerdas untuk hasil optimal.',
     href: '/image-converter',
     icon: FileImage,
     color: 'bg-blue-500/10 text-blue-600',
-    badge: 'Optimasi AI'
+    badge: 'Multi-Batch'
   },
   {
     title: 'Generator Mockup',
-    description: 'Ciptakan visual produk profesional dengan latar belakang artistik yang dihasilkan oleh Imagen 4 AI.',
+    description: 'Ciptakan visual produk profesional dengan latar belakang artistik yang dihasilkan oleh AI Imagen 4.',
     href: '/mockup',
     icon: Monitor,
     color: 'bg-purple-500/10 text-purple-600',
@@ -44,15 +43,7 @@ const visualTools = [
     href: '/resizer',
     icon: Maximize2,
     color: 'bg-orange-500/10 text-orange-600',
-    badge: 'Multi-Format'
-  },
-  {
-    title: 'Vision Analyst AI',
-    description: 'Ekstrak palet warna, Alt-Text SEO, dan deskripsi cerdas dari gambar menggunakan visi AI.',
-    href: '/vision-analyst',
-    icon: Search,
-    color: 'bg-indigo-500/10 text-indigo-600',
-    badge: 'AI Vision'
+    badge: 'Social Media'
   },
   {
     title: 'Potong Cerdas',
@@ -60,13 +51,14 @@ const visualTools = [
     href: '/trim',
     icon: Crop,
     color: 'bg-teal-500/10 text-teal-600',
+    badge: 'Pixel Perfect'
   },
 ];
 
 export default function DashboardPage() {
   return (
     <div className="min-h-full hero-gradient pb-20 overflow-x-hidden">
-      <div className="container mx-auto px-4 sm:px-6 md:p-16 lg:p-24 space-y-16 sm:space-y-24">
+      <div className="container mx-auto px-4 sm:px-6 md:p-16 lg:p-24 space-y-16 sm:y-24">
         
         {/* Hero Section */}
         <div className="flex flex-col items-center text-center space-y-6 sm:space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-1000 pt-10 sm:pt-0">
@@ -83,7 +75,7 @@ export default function DashboardPage() {
           </h1>
           
           <p className="text-muted-foreground text-sm sm:text-lg md:text-2xl max-w-3xl mx-auto leading-relaxed px-4">
-            Ekosistem alat pengolahan gambar profesional yang dikelompokkan untuk mempercepat alur kerja desain Anda secara lokal dan cerdas.
+            Ekosistem alat pengolahan gambar profesional yang dirancang untuk mempercepat alur kerja desain Anda secara lokal, cepat, dan cerdas.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 pt-4 w-full sm:w-auto px-6 sm:px-0">
@@ -107,13 +99,13 @@ export default function DashboardPage() {
                 <Palette className="w-6 h-6 sm:w-8 h-8" />
               </div>
               <div>
-                <h2 className="text-xl sm:text-3xl font-bold tracking-tight">Visual & Gambar</h2>
-                <p className="text-xs sm:text-sm text-muted-foreground">Alat pengolahan gambar dan pembuatan aset desain profesional.</p>
+                <h2 className="text-xl sm:text-3xl font-bold tracking-tight">Alat Kreatif</h2>
+                <p className="text-xs sm:text-sm text-muted-foreground">Pengolahan gambar dan pembuatan aset desain profesional.</p>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6 sm:gap-8">
             {visualTools.map((tool) => (
               <Link key={tool.title} href={tool.href} className="group">
                 <Card className="tool-card h-full flex flex-col border-border/10 bg-card/60">
@@ -164,18 +156,18 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                <div className="glass-panel p-8 rounded-3xl space-y-4">
                   <h3 className="text-xl font-bold flex items-center gap-2">
-                    <Zap className="w-5 h-5 text-accent" /> Ekspor WebP Cerdas
+                    <Zap className="w-5 h-5 text-accent" /> Ekspor Cepat & Aman
                   </h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    Gunakan **Bantuan AI** saat mengonversi ke WebP. AI kami akan menganalisis konten gambar dan menyarankan parameter kompresi yang menyeimbangkan antara kejernihan dan ukuran file yang super kecil.
+                    Seluruh proses konversi dan pemotongan gambar dilakukan secara **lokal di browser Anda**. Tidak ada data yang dikirim ke server, sehingga privasi Anda terjamin 100% dan proses berjalan sangat instan.
                   </p>
                </div>
                <div className="glass-panel p-8 rounded-3xl space-y-4">
                   <h3 className="text-xl font-bold flex items-center gap-2">
-                    <Search className="w-5 h-5 text-accent" /> AI Vision SEO
+                    <Maximize2 className="w-5 h-5 text-accent" /> Optimalisasi Media Sosial
                   </h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    Unggah gambar Anda ke **Vision Analyst** untuk mendapatkan Alt-Text instan. Sangat membantu untuk meningkatkan peringkat pencarian dan aksesibilitas situs web Anda tanpa harus menulis deskripsi secara manual.
+                    Gunakan **Resizer Pro** untuk menyesuaikan satu aset ke berbagai platform sekaligus. Fitur *Center Crop* otomatis memastikan subjek utama gambar Anda tetap berada di tengah bingkai.
                   </p>
                </div>
             </div>
