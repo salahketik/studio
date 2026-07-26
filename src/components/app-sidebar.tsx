@@ -40,7 +40,9 @@ import {
   Settings2, Bot, Video, Languages, Stamp, FileCode,
   Shield, Trash2, Scissors, ListChecks, FileType, 
   FileSpreadsheet, Clock, Braces, Table, AlignLeft,
-  Waveform, Microscope, ScanEye, Brush, Waves, Activity
+  Waveform, Microscope, ScanEye, Brush, Waves, Activity,
+  Volume2, FileUp, Laptop, Globe2, Fingerprint, FileSearch, TerminalSquare,
+  Network, Share2, MousePointerClick, MessageSquareText, PenTool
 } from 'lucide-react';
 
 import {
@@ -78,7 +80,7 @@ export function AppSidebar() {
       items: [
         { title: "AI Image Analyst", url: "/ai-analyst" },
         { title: "AI Background Gen", url: "/ai-background" },
-        { title: "AI Voice-to-SRT", url: "/voice-to-srt" },
+        { title: "AI Audio Subtitle", url: "/voice-to-srt" },
         { title: "AI Doc Helper", url: "/pdf-converter" },
       ],
     },
@@ -103,6 +105,7 @@ export function AppSidebar() {
         { title: "Potong Cerdas", url: "/trim" },
         { title: "Studio Mockup", url: "/mockup" },
         { title: "Watermark Pro", url: "/watermark" },
+        { title: "Image to PDF", url: "/image-to-pdf" },
       ],
     },
     {
@@ -130,7 +133,7 @@ export function AppSidebar() {
       ],
     },
     {
-      title: "Developer Hub",
+      title: "Data Hub & Utility",
       icon: Code2,
       items: [
         { title: "JSON Beautifier", url: "/json-beautifier" },
@@ -138,6 +141,7 @@ export function AppSidebar() {
         { title: "Markdown Studio", url: "/markdown-studio" },
         { title: "JWT Inspector", url: "/jwt-inspector" },
         { title: "PX to REM Calc", url: "/px-rem" },
+        { title: "QR Generator", url: "/qr-gen" },
       ],
     },
   ];

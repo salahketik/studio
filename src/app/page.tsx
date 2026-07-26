@@ -28,7 +28,9 @@ import {
   Smartphone, Barcode, Key, FileJson, Link as LinkIcon, Ruler,
   MousePointer2, BrainCircuit, Bot, FileText, Stamp, FileCode,
   ListChecks, FileType, FileSpreadsheet, Clock, Braces, Table, AlignLeft,
-  Waveform, Microscope, ScanEye, Brush, Waves, Activity
+  Waveform, Microscope, ScanEye, Brush, Waves, Activity,
+  Volume2, FileUp, Laptop, Globe2, Fingerprint, FileSearch, TerminalSquare,
+  Network, Share2, MousePointerClick, MessageSquareText, PenTool
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -52,14 +54,14 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-full pb-20 bg-background text-foreground">
-      <div className="container mx-auto px-6 lg:px-10 py-10 space-y-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-10 py-10 space-y-12">
         
         {/* Header Ribbon */}
         <div className="flex flex-col space-y-2">
-            <h1 className="text-4xl font-black tracking-tighter uppercase">Workstation Dashboard</h1>
+            <h1 className="text-3xl sm:text-4xl font-black tracking-tighter uppercase">Workstation Dashboard</h1>
             <div className="flex items-center justify-between flex-wrap gap-4">
                <p className="text-muted-foreground text-xs font-medium opacity-60">
-                 Sistem Aktif. {ALL_TOOLS.length}+ modul operasional siap digunakan 100% lokal.
+                 Sistem Aktif. {ALL_TOOLS.length} modul operasional siap digunakan 100% lokal.
                </p>
                <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full">
                  <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
@@ -73,7 +75,7 @@ export default function DashboardPage() {
           {[
             { label: 'Modul Aktif', value: `${ALL_TOOLS.length}`, sub: 'Total Terintegrasi', icon: Cpu, color: 'text-primary' },
             { label: 'Latensi Node', value: '0ms', sub: 'Pemrosesan Lokal', icon: Zap, color: 'text-orange-500' },
-            { label: 'Cache Buffer', value: '1.8 GB', sub: 'Optimasi RAM', icon: Database, color: 'text-cyan-500' },
+            { label: 'Cache Buffer', value: '2.4 GB', sub: 'Optimasi RAM', icon: Database, color: 'text-cyan-500' },
             { label: 'Privasi', value: '100%', sub: 'Sisi Klien', icon: ShieldCheck, color: 'text-green-500' },
           ].map((stat, i) => (
             <Card key={i} className="bg-card/40 border-border/50 rounded-2xl p-5 shadow-sm group hover:border-primary/30 transition-all">
@@ -99,7 +101,7 @@ export default function DashboardPage() {
            <Input 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Cari modul visual, audio, atau AI (cth: list, markdown, jwt)..." 
+            placeholder="Cari 100+ modul visual, audio, atau AI..." 
             className="h-16 pl-14 pr-8 rounded-2xl bg-card/80 border-border/50 focus-visible:ring-1 focus-visible:ring-primary/40 text-sm font-bold tracking-tight shadow-xl"
            />
         </div>
@@ -109,7 +111,7 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between border-b border-border/50 pb-4">
              <div className="flex items-center gap-2">
                 <LayoutGrid className="w-4 h-4 text-primary" />
-                <h2 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40">Katalog Modul</h2>
+                <h2 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40">Katalog Modul Platinum</h2>
              </div>
              <Badge variant="secondary" className="bg-primary/5 text-primary text-[8px] uppercase font-black px-4 py-0.5 border-none rounded-full">
                 {filteredTools.length} Unit
