@@ -11,6 +11,9 @@ interface AIResult {
     error?: string;
 }
 
+/**
+ * Menjalankan optimisasi WebP menggunakan AI Genkit.
+ */
 export async function runAIOptimization(
   input: OptimizeWebpCompressionInput
 ): Promise<AIResult> {
@@ -38,6 +41,9 @@ interface AIImageResult {
     error?: string;
 }
 
+/**
+ * Menghasilkan latar belakang artistik untuk mockup menggunakan Imagen 4.
+ */
 export async function runAIGenerateBackground(
     input: GenerateBackgroundInput
 ): Promise<AIImageResult> {
