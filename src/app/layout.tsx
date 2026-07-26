@@ -8,8 +8,9 @@ import { GlobalErrorHandler } from '@/components/global-error-handler';
 
 
 export const metadata: Metadata = {
-  title: 'Visual Creative Suite - Professional Visual Workstation',
-  description: 'Workstation digital profesional untuk pengolahan gambar, konversi massal, dan proteksi aset desain dengan pemrosesan 100% lokal.',
+  title: 'Visual Creative Suite - Ultimate Workstation 40-in-1',
+  description: 'Workstation digital profesional terlengkap dengan 40 alat pengolahan gambar, konversi massal, dan utilitas desain 100% lokal di browser.',
+  keywords: 'image converter, mockup generator, resize image, local image tools, privacy image editor, batch conversion, professional designer tools',
 };
 
 export default function RootLayout({
