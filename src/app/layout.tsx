@@ -8,8 +8,8 @@ import { GlobalErrorHandler } from '@/components/global-error-handler';
 
 
 export const metadata: Metadata = {
-  title: 'Visual Creative Suite - Professional Image Workstation',
-  description: 'Workstation digital profesional untuk konversi gambar, pembuatan mockup AI, dan pemotongan aset cerdas dengan teknologi AI terbaru.',
+  title: 'Visual Creative Suite - Professional Visual Workstation',
+  description: 'Workstation digital profesional untuk pengolahan gambar, konversi massal, dan proteksi aset desain dengan pemrosesan 100% lokal.',
 };
 
 export default function RootLayout({
@@ -22,9 +22,9 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased h-full bg-background">
+      <body className="font-body antialiased h-full bg-background selection:bg-accent/20 selection:text-accent">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

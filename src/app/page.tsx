@@ -11,15 +11,14 @@ import {
   ShieldCheck,
   Globe,
   LayoutGrid,
-  Palette,
-  Info,
   Maximize2,
   SlidersHorizontal,
   Pipette,
   Stamp,
   Grid3X3,
   ShieldAlert,
-  Code2
+  Code2,
+  CheckCircle2
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -33,157 +32,174 @@ const visualTools = [
     href: '/image-converter',
     icon: FileImage,
     color: 'bg-blue-500/10 text-blue-600',
-    badge: 'Multi-Batch'
+    badge: 'Paling Populer',
+    useCase: 'Batch Processing'
   },
   {
     title: 'Generator Mockup',
-    description: 'Presentasi produk profesional dengan bingkai browser dan latar AI.',
+    description: 'Presentasi produk profesional dengan bingkai browser dan latar belakang premium.',
     href: '/mockup',
     icon: Monitor,
     color: 'bg-purple-500/10 text-purple-600',
-    badge: 'Presentation'
+    badge: 'Desain Produk',
+    useCase: 'Presentation'
   },
   {
     title: 'Resizer Pro',
-    description: 'Ubah ukuran gambar untuk Instagram, TikTok, YouTube secara instan.',
+    description: 'Ubah ukuran gambar untuk Instagram, TikTok, YouTube secara instan & presisi.',
     href: '/resizer',
     icon: Maximize2,
     color: 'bg-orange-500/10 text-orange-600',
-    badge: 'Social Media'
+    badge: 'Sosial Media',
+    useCase: 'Content Resize'
   },
   {
     title: 'Potong Cerdas',
-    description: 'Hapus area kosong atau margin transparan secara otomatis.',
+    description: 'Hapus area kosong atau margin transparan secara otomatis berbasis piksel.',
     href: '/trim',
     icon: Crop,
     color: 'bg-teal-500/10 text-teal-600',
-    badge: 'Pixel-Clean'
+    badge: 'Pembersih Aset',
+    useCase: 'Auto Crop'
   },
   {
     title: 'Filter Studio',
-    description: 'Edit kecerahan, kontras, dan terapkan filter artistik profesional.',
+    description: 'Edit kecerahan, kontras, dan terapkan filter artistik tanpa software berat.',
     href: '/filters',
     icon: SlidersHorizontal,
     color: 'bg-pink-500/10 text-pink-600',
-    badge: 'Photo Editor'
+    badge: 'Editor Cepat',
+    useCase: 'Enhancement'
   },
   {
     title: 'Ekstrak Palet',
-    description: 'Ambil skema warna HEX dari gambar untuk referensi desain.',
+    description: 'Ambil skema warna HEX dari gambar untuk referensi desain brand Anda.',
     href: '/palette-extractor',
     icon: Pipette,
     color: 'bg-indigo-500/10 text-indigo-600',
-    badge: 'Branding'
+    badge: 'Branding Kit',
+    useCase: 'Color Picking'
   },
   {
     title: 'Watermark Pro',
-    description: 'Lindungi karya Anda dengan logo atau teks hak cipta.',
+    description: 'Lindungi karya Anda dengan logo atau teks hak cipta secara profesional.',
     href: '/watermark',
     icon: Stamp,
     color: 'bg-red-500/10 text-red-600',
-    badge: 'Protection'
+    badge: 'Proteksi Karya',
+    useCase: 'Copyright'
   },
   {
     title: 'Grid Splitter',
-    description: 'Bagi gambar menjadi grid 3x3 atau 3x1 untuk profil estetik.',
+    description: 'Bagi gambar menjadi grid 3x3 atau 3x1 untuk tampilan profil estetik.',
     href: '/grid-splitter',
     icon: Grid3X3,
     color: 'bg-yellow-500/10 text-yellow-600',
-    badge: 'Content Kit'
+    badge: 'Layout Kit',
+    useCase: 'Instagram Grid'
   },
   {
     title: 'Hapus Metadata',
-    description: 'Bersihkan data privasi EXIF dari foto Anda secara permanen.',
+    description: 'Bersihkan data privasi EXIF dari foto Anda secara permanen & aman.',
     href: '/metadata-cleaner',
     icon: ShieldAlert,
     color: 'bg-green-500/10 text-green-600',
-    badge: 'Privacy'
+    badge: 'Privasi Aman',
+    useCase: 'Privacy Clean'
   },
   {
     title: 'Base64 Tool',
-    description: 'Ubah gambar menjadi string Base64 untuk kebutuhan pengembang.',
+    description: 'Ubah gambar menjadi string Base64 untuk kebutuhan pengembang web.',
     href: '/base64-tool',
     icon: Code2,
     color: 'bg-slate-500/10 text-slate-600',
-    badge: 'Dev Utility'
+    badge: 'Utilitas Dev',
+    useCase: 'Data URI'
   },
 ];
 
 export default function DashboardPage() {
   return (
-    <div className="min-h-full hero-gradient pb-20 overflow-x-hidden">
-      <div className="container mx-auto px-4 sm:px-6 md:p-12 lg:p-20 space-y-16 sm:space-y-20">
+    <div className="min-h-full hero-gradient pb-24 overflow-x-hidden">
+      <div className="container mx-auto px-4 sm:px-6 md:p-12 lg:px-24 space-y-16 sm:space-y-24">
         
-        {/* Hero Section */}
-        <div className="flex flex-col items-center text-center space-y-4 sm:space-y-6 animate-in fade-in slide-in-from-bottom-8 duration-1000 pt-6 sm:pt-0">
-          <Badge variant="outline" className="px-4 py-1 text-[9px] sm:text-[10px] text-primary border-primary/30 bg-primary/5 rounded-full uppercase tracking-widest font-bold">
-            <Sparkles className="w-3 h-3 mr-2" />
-            Ultimate Visual Workstation
+        {/* Premium Hero Section */}
+        <div className="flex flex-col items-center text-center space-y-6 sm:space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-1000 pt-10 sm:pt-4">
+          <Badge variant="outline" className="px-5 py-1.5 text-[9px] sm:text-[10px] text-accent border-accent/20 bg-accent/5 rounded-full uppercase tracking-[0.2em] font-black">
+            <Sparkles className="w-3.5 h-3.5 mr-2 text-accent" />
+            Professional Visual Workstation
           </Badge>
           
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tighter leading-[1.1]">
-            Kreativitas Tanpa <br className="hidden sm:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-primary animate-gradient-x">
-              Batas Teknis.
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tighter leading-[0.95]">
+            Satu Workstation. <br className="hidden sm:block" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent via-primary to-accent animate-gradient-x">
+              Sepuluh Kekuatan.
             </span>
           </h1>
           
-          <p className="text-muted-foreground text-xs sm:text-sm md:text-base max-w-2xl mx-auto leading-relaxed px-4 opacity-80">
-            Ekosistem 10 alat pengolahan gambar profesional yang berjalan 100% lokal di browser Anda. Cepat, aman, dan tanpa biaya berlangganan.
+          <p className="text-muted-foreground text-xs sm:text-sm md:text-lg max-w-2xl mx-auto leading-relaxed px-6 opacity-70">
+            Ekosistem pengolahan visual terlengkap yang berjalan 100% lokal. 
+            Cepat, aman, dan tanpa biaya berlangganan selamanya.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-3 pt-2 w-full sm:w-auto px-6 sm:px-0">
-            <button 
-              className="bg-accent text-white px-8 py-3 rounded-full font-bold text-sm shadow-xl hover:shadow-accent/20 transition-all active:scale-95 w-full sm:w-auto"
+          <div className="flex flex-col sm:flex-row gap-4 pt-4 w-full sm:w-auto px-10 sm:px-0">
+            <Button 
+              size="lg"
+              className="bg-accent text-white px-10 h-12 rounded-full font-black text-xs uppercase tracking-widest shadow-2xl hover:shadow-accent/40 transition-all hover:scale-105 active:scale-95"
               onClick={() => document.getElementById('tools')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              Mulai Eksplorasi <Zap className="ml-2 w-3.5 h-3.5 inline" />
-            </button>
-            <Button size="lg" variant="outline" className="rounded-full px-8 backdrop-blur-sm h-11 w-full sm:w-auto font-bold text-sm" asChild>
+              Mulai Eksplorasi <Zap className="ml-2 w-4 h-4" />
+            </Button>
+            <Button size="lg" variant="outline" className="rounded-full px-10 h-12 backdrop-blur-md border-accent/20 font-bold text-xs uppercase tracking-widest hover:bg-accent/5" asChild>
               <Link href="/image-converter">Konversi Batch</Link>
             </Button>
           </div>
         </div>
 
-        {/* Visual Tools Grid */}
-        <div id="tools" className="space-y-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b pb-4 border-border/10">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-card shadow-sm border border-border/20 text-accent">
-                <LayoutGrid className="w-5 h-5" />
+        {/* Workstation Grid */}
+        <div id="tools" className="space-y-10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b pb-6 border-border/10">
+            <div className="flex items-center gap-4">
+              <div className="p-3 rounded-2xl bg-accent text-white shadow-xl shadow-accent/20">
+                <LayoutGrid className="w-6 h-6" />
               </div>
               <div>
-                <h2 className="text-lg sm:text-xl font-black tracking-tight uppercase">Dashboard Alat</h2>
-                <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-widest font-medium">10 Modul Visual Aktif</p>
+                <h2 className="text-xl sm:text-2xl font-black tracking-tight uppercase italic">Modul Kreatif</h2>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold opacity-60">Pilih alat yang Anda butuhkan</p>
               </div>
+            </div>
+            <div className="flex items-center gap-3 bg-muted/30 px-4 py-2 rounded-full border border-white/10">
+               <ShieldCheck className="w-4 h-4 text-green-500" />
+               <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">100% Local & Secure</span>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-            {visualTools.map((tool) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
+            {visualTools.map((tool, idx) => (
               <Link key={tool.title} href={tool.href} className="group">
-                <Card className="tool-card h-full flex flex-col border-border/10 bg-card/40 hover:bg-card transition-all duration-300">
-                  <CardHeader className="p-5">
+                <Card className="tool-card h-full flex flex-col border-border/10 bg-card/30 hover:bg-card/90 transition-all duration-500 rounded-3xl">
+                  <CardHeader className="p-6">
                     <div className={cn(
-                      "w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-all duration-500 group-hover:rotate-6 shadow-sm",
+                      "w-12 h-12 rounded-2xl flex items-center justify-center mb-5 transition-all duration-700 group-hover:scale-110 group-hover:rotate-6 shadow-sm",
                       tool.color
                     )}>
-                      <tool.icon className="w-5 h-5" />
+                      <tool.icon className="w-6 h-6" />
                     </div>
-                    <div className="flex items-center justify-between mb-1.5">
-                      <CardTitle className="text-sm font-bold group-hover:text-accent transition-colors tracking-tight">
+                    <div className="space-y-1.5">
+                      <CardTitle className="text-sm font-black group-hover:text-accent transition-colors tracking-tight uppercase">
                         {tool.title}
                       </CardTitle>
+                      <Badge variant="secondary" className="text-[8px] uppercase tracking-[0.15em] font-black bg-accent/5 text-accent/50 border-none">
+                        {tool.useCase}
+                      </Badge>
                     </div>
-                    <CardDescription className="text-[11px] leading-relaxed text-muted-foreground/80 line-clamp-2">
+                    <CardDescription className="text-[11px] leading-relaxed text-muted-foreground/80 pt-3 line-clamp-2">
                       {tool.description}
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="mt-auto pt-2 p-5 flex items-center justify-between">
-                     <Badge variant="secondary" className="text-[8px] uppercase tracking-wider font-black bg-accent/5 text-accent/60 border-none group-hover:bg-accent/10 transition-colors">
-                        {tool.badge}
-                      </Badge>
-                    <div className="flex items-center text-[10px] font-black text-accent opacity-0 group-hover:opacity-100 transition-all duration-300">
+                  <CardContent className="mt-auto pt-0 p-6 flex items-center justify-between">
+                    <span className="text-[9px] font-bold text-muted-foreground/40 uppercase tracking-tighter">Ready to use</span>
+                    <div className="flex items-center text-[10px] font-black text-accent opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">
                       BUKA <ArrowRight className="ml-1 w-3 h-3" />
                     </div>
                   </CardContent>
@@ -193,31 +209,37 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Quick Guide */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="glass-panel p-6 rounded-2xl border-none shadow-sm space-y-3">
-                <h3 className="text-sm font-black flex items-center gap-2 uppercase tracking-tight">
-                  <Zap className="w-4 h-4 text-accent" /> Kecepatan Lokal
-                </h3>
-                <p className="text-[11px] text-muted-foreground leading-relaxed">
-                  Semua proses dilakukan di perangkat Anda. Tidak ada antrean server, data tidak pernah meninggalkan browser, dan privasi Anda terjamin 100%.
+        {/* Feature Highlights */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="glass-panel p-8 rounded-[2.5rem] border-none space-y-4 group">
+                <div className="p-3 bg-accent/10 rounded-2xl w-fit group-hover:scale-110 transition-transform"><Zap className="w-6 h-6 text-accent" /></div>
+                <h3 className="text-lg font-black uppercase tracking-tighter">Zero Latency</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed opacity-80">
+                  Semua proses dilakukan di perangkat Anda. Tanpa antrean server, tanpa upload data, hasil instan.
                 </p>
             </div>
-            <div className="glass-panel p-6 rounded-2xl border-none shadow-sm space-y-3">
-                <h3 className="text-sm font-black flex items-center gap-2 uppercase tracking-tight">
-                  <Maximize2 className="w-4 h-4 text-accent" /> Standar Industri
-                </h3>
-                <p className="text-[11px] text-muted-foreground leading-relaxed">
-                  Output berkualitas tinggi yang dioptimalkan untuk performa web dan media sosial tanpa kompromi pada fidelitas visual.
+            <div className="glass-panel p-8 rounded-[2.5rem] border-none space-y-4 group">
+                <div className="p-3 bg-accent/10 rounded-2xl w-fit group-hover:scale-110 transition-transform"><ShieldCheck className="w-6 h-6 text-accent" /></div>
+                <h3 className="text-lg font-black uppercase tracking-tighter">Privacy First</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed opacity-80">
+                  Data Anda tidak pernah meninggalkan browser. Privasi 100% terjamin untuk aset perusahaan atau pribadi.
+                </p>
+            </div>
+            <div className="glass-panel p-8 rounded-[2.5rem] border-none space-y-4 group">
+                <div className="p-3 bg-accent/10 rounded-2xl w-fit group-hover:scale-110 transition-transform"><CheckCircle2 className="w-6 h-6 text-accent" /></div>
+                <h3 className="text-lg font-black uppercase tracking-tighter">Industry Standard</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed opacity-80">
+                  Output berkualitas tinggi yang dioptimalkan untuk web, media sosial, dan kebutuhan desain profesional.
                 </p>
             </div>
         </div>
 
-        {/* Trust Badge Area */}
-        <div className="flex flex-wrap justify-center gap-8 py-4 opacity-40 grayscale hover:grayscale-0 transition-all duration-700">
-            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"><ShieldCheck className="w-4 h-4" /> Secure Processing</div>
-            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"><Globe className="w-4 h-4" /> Global Standards</div>
-            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"><Zap className="w-4 h-4" /> Zero Latency</div>
+        {/* Professional Trust Area */}
+        <div className="flex flex-wrap justify-center gap-12 py-10 opacity-30 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-1000">
+            <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em]"><ShieldCheck className="w-5 h-5" /> Secured</div>
+            <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em]"><Globe className="w-5 h-5" /> Global Access</div>
+            <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em]"><Zap className="w-5 h-5" /> Instant Engine</div>
+            <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em]"><Maximize2 className="w-5 h-5" /> Pro Quality</div>
         </div>
 
       </div>
