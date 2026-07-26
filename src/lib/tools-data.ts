@@ -98,7 +98,7 @@ export const ALL_TOOLS: Tool[] = [
   { title: 'Gamma Tuner', description: 'Koreksi pencahayaan mid-tone.', href: '/gamma', icon: Sun, category: 'advanced', useCase: 'Luma' },
   { title: 'Luma Keyer', description: 'Ekstraksi matte berdasarkan luminansi.', href: '/luma-key', icon: Microscope, category: 'advanced', useCase: 'Matte' },
   { title: 'RGB Splitter', description: 'Pisahkan saluran warna primer.', href: '/rgb-split', icon: Split, category: 'advanced', useCase: 'Split' },
-  { title: 'CMYK Splitter', description: 'Pisahkan kanal warna untuk kebutuhan cetak.', href: '/cmyk-split', icon: PaletteIcon, category: 'advanced', useCase: 'Print' },
+  { title: 'CMYK Splitter', description: 'Pisahkan kanal warna untuk kebutuhan cetak.', href: '/cmyk-split', icon: Palette, category: 'advanced', useCase: 'Print' },
   { title: 'Histogram', description: 'Analisis distribusi tonal citra.', href: '/histogram', icon: Activity, category: 'advanced', useCase: 'Analyze' },
   { title: 'Bulge Warp', description: 'Distorsi lensa cembung/cekung.', href: '/bulge', icon: Maximize2, category: 'advanced', useCase: 'Distort' },
   { title: 'Wave Distortion', description: 'Efek riak gelombang air fungsional.', href: '/wave', icon: Waves, category: 'advanced', useCase: 'Liquid' },
