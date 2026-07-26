@@ -8,9 +8,9 @@ import { GlobalErrorHandler } from '@/components/global-error-handler';
 
 
 export const metadata: Metadata = {
-  title: 'Visual Creative Suite - Ultimate Workstation 40-in-1',
-  description: 'Workstation digital profesional terlengkap dengan 40 alat pengolahan gambar, konversi massal, dan utilitas desain 100% lokal di browser tanpa bantuan AI eksternal.',
-  keywords: 'image converter, mockup generator, resize image, local image tools, privacy image editor, batch conversion, professional designer tools, image filters, watermark pro',
+  title: 'Visual Creative Suite - Ultimate 60-in-1 Workstation',
+  description: 'Workstation digital murni terlengkap dengan 60 alat visual, audio studio, subtitle generator, dan utilitas dev lokal tanpa bantuan AI eksternal.',
+  keywords: 'image converter, audio cleaner, subtitle generator, qr code generator, barcode maker, photo filters, metadata cleaner, privacy tools, local workstation, 60-in-1 tools',
 };
 
 export default function RootLayout({

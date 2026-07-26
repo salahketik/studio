@@ -8,7 +8,10 @@ import {
   ShieldAlert, Code2, Search, Box, Image as ImageIcon, RotateCcw, 
   Palette, Calculator, Layers, Wind, Square, FileCode, Split, Eye, 
   Type, Scaling, Ghost, Contrast, Aperture, Paintbrush2, Minimize2, 
-  IterationCcw, Frame, Component, Focus, Sun, Camera, Download, Filter
+  IterationCcw, Frame, Component, Focus, Sun, Camera, Download, Filter,
+  Music, Mic2, TimerOff, Captions, QrCode, Barcode, Terminal, UserCircle,
+  Hash, Disc, Binary, Share2, ScanLine, Layers2, MousePointer2, Settings2,
+  Tv2, Waves, Heart, Globe, SearchCode
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -21,51 +24,83 @@ const categories = [
   { id: 'core', label: 'Core & Export', icon: Zap },
   { id: 'social', label: 'Social & Layout', icon: Grid3X3 },
   { id: 'studio', label: 'Studio & Filter', icon: Palette },
-  { id: 'advanced', label: 'Advanced Tools', icon: Layers },
+  { id: 'advanced', label: 'Pro Graphics', icon: Layers2 },
   { id: 'utility', label: 'Utility & Dev', icon: Code2 },
+  { id: 'audio', label: 'Audio & Voice', icon: Music },
 ];
 
 const visualTools = [
+  // CORE & EXPORT (10)
   { title: 'Konverter Gambar', description: 'Konversi massal ke WebP, JPG, PNG.', href: '/image-converter', icon: FileImage, category: 'core', useCase: 'Batch' },
+  { title: 'PNG Optimizer', description: 'Optimasi aset PNG tanpa kehilangan.', href: '/png-opt', icon: Minimize2, category: 'core', useCase: 'Size' },
   { title: 'Generator Mockup', description: 'Presentasi produk dengan frame browser.', href: '/mockup', icon: Monitor, category: 'core', useCase: 'Showcase' },
+  { title: 'PDF Converter', description: 'Transformasi PDF ke Word/Excel/PPT.', href: '/pdf-converter', icon: Globe, category: 'core', useCase: 'Docs' },
+  { title: 'DPI Adjuster', description: 'Atur resolusi cetak (DPI) gambar.', href: '/dpi-adjuster', icon: Hash, category: 'core', useCase: 'Print' },
+  { title: 'WebP Tester', description: 'Bandingkan kualitas vs ukuran WebP.', href: '/webp-test', icon: SearchCode, category: 'core', useCase: 'Analyze' },
+  { title: 'SVG Viewer', description: 'Inspeksi & pratinjau kode SVG.', href: '/svg-view', icon: FileCode, category: 'core', useCase: 'Vector' },
+  { title: 'Favicon Maker', description: 'Buat file .ico standar web.', href: '/favicon-generator', icon: Box, category: 'core', useCase: 'Web Icon' },
+  { title: 'Hapus Metadata', description: 'Bersihkan data privasi EXIF permanen.', href: '/metadata-cleaner', icon: ShieldAlert, category: 'core', useCase: 'Privacy' },
+  { title: 'Base64 Tool', description: 'Ubah gambar ke string data URI.', href: '/base64-tool', icon: Code2, category: 'core', useCase: 'Dev' },
+
+  // SOCIAL & LAYOUT (10)
   { title: 'Resizer Pro', description: 'Preset media sosial & kustom piksel.', href: '/resizer', icon: Maximize2, category: 'social', useCase: 'Resize' },
+  { title: 'Grid Splitter', description: 'Potong gambar untuk grid Instagram.', href: '/grid-splitter', icon: Grid3X3, category: 'social', useCase: 'IG Feed' },
   { title: 'Potong Cerdas', description: 'Hapus margin kosong secara otomatis.', href: '/trim', icon: Crop, category: 'social', useCase: 'Cleanup' },
+  { title: 'Image Stitcher', description: 'Gabungkan gambar secara vertikal.', href: '/stitcher', icon: Split, category: 'social', useCase: 'Layout' },
+  { title: 'Circular Avatar', description: 'Potong gambar menjadi profil bulat.', href: '/avatar-circle', icon: UserCircle, category: 'social', useCase: 'Profile' },
+  { title: 'Image Flipper', description: 'Putar balik gambar secara instan.', href: '/image-flipper', icon: RotateCcw, category: 'social', useCase: 'Flip' },
+  { title: 'Corner Rounder', description: 'Bulatkan sudut gambar secara presisi.', href: '/corners', icon: Frame, category: 'social', useCase: 'UI/UX' },
+  { title: 'Mirror Studio', description: 'Efek cermin reflektif horizontal.', href: '/mirror', icon: IterationCcw, category: 'social', useCase: 'Symmetry' },
+  { title: 'Canvas Text', description: 'Tambahkan teks minimalis ke gambar.', href: '/canvas-text', icon: Type, category: 'social', useCase: 'Banner' },
+  { title: 'Aspect Ratio', description: 'Kalkulator proporsi & dimensi.', href: '/aspect-calculator', icon: Calculator, category: 'social', useCase: 'Logic' },
+
+  // STUDIO & FILTERS (20)
   { title: 'Filter Studio', description: 'Edit kecerahan, kontras, & mood.', href: '/filters', icon: SlidersHorizontal, category: 'studio', useCase: 'Editor' },
   { title: 'Ekstrak Palet', description: 'Ambil kode HEX warna dari gambar.', href: '/palette-extractor', icon: Pipette, category: 'studio', useCase: 'Colors' },
-  { title: 'Watermark Pro', description: 'Tambahkan logo/teks hak cipta.', href: '/watermark', icon: Stamp, category: 'advanced', useCase: 'Protect' },
-  { title: 'Grid Splitter', description: 'Potong gambar untuk grid Instagram.', href: '/grid-splitter', icon: Grid3X3, category: 'social', useCase: 'Instagram' },
-  { title: 'Hapus Metadata', description: 'Bersihkan data privasi EXIF permanen.', href: '/metadata-cleaner', icon: ShieldAlert, category: 'utility', useCase: 'Security' },
-  { title: 'Base64 Tool', description: 'Ubah gambar ke string data URI.', href: '/base64-tool', icon: Code2, category: 'utility', useCase: 'Dev' },
-  { title: 'Favicon Generator', description: 'Buat file .ico berbagai ukuran.', href: '/favicon-generator', icon: Box, category: 'utility', useCase: 'Web Icon' },
-  { title: 'Shadow Studio', description: 'Drop-shadow lembut untuk aset PNG.', href: '/shadow-studio', icon: Layers, category: 'advanced', useCase: 'Depth' },
-  { title: 'Image Flipper', description: 'Putar balik gambar secara instan.', href: '/image-flipper', icon: RotateCcw, category: 'social', useCase: 'Flip' },
   { title: 'Grayscale Pro', description: 'Kontrol monokrom kontras tinggi.', href: '/grayscale-pro', icon: ImageIcon, category: 'studio', useCase: 'B&W' },
-  { title: 'Color Mixer', description: 'Eksperimen harmoni warna baru.', href: '/color-mixer', icon: Palette, category: 'studio', useCase: 'Mixer' },
-  { title: 'Aspect Ratio', description: 'Kalkulator proporsi & dimensi.', href: '/aspect-calculator', icon: Calculator, category: 'utility', useCase: 'Logic' },
-  { title: 'Duotone Filter', description: 'Efek gradasi dua warna modern.', href: '/duotone', icon: Sparkles, category: 'studio', useCase: 'Creative' },
+  { title: 'Duotone Filter', description: 'Efek gradasi dua warna modern.', href: '/duotone', icon: Sparkles, category: 'studio', useCase: 'Art' },
   { title: 'Film Grain', description: 'Tekstur vintage grain artistik.', href: '/film-grain', icon: Wind, category: 'studio', useCase: 'Texture' },
-  { title: 'Border Master', description: 'Tambahkan bingkai solid/gradien.', href: '/image-border', icon: Square, category: 'advanced', useCase: 'Frame' },
-  { title: 'SVG Viewer', description: 'Inspeksi & pratinjau kode SVG.', href: '/svg-view', icon: FileCode, category: 'utility', useCase: 'Dev' },
-  { title: 'Vignette Studio', description: 'Efek fokus tepian gelap dramatis.', href: '/vignette', icon: Aperture, category: 'studio', useCase: 'Mood' },
-  { title: 'Pixelate Art', description: 'Sensor atau efek retro pixelation.', href: '/pixelate', icon: Component, category: 'studio', useCase: 'Creative' },
-  { title: 'Noise Studio', description: 'Kurangi atau tambahkan noise visual.', href: '/noise', icon: Filter, category: 'studio', useCase: 'Detail' },
-  { title: 'Corner Rounder', description: 'Bulatkan sudut gambar secara presisi.', href: '/corners', icon: Frame, category: 'social', useCase: 'UI' },
-  { title: 'Glitch Maker', description: 'Efek distorsi digital artistik.', href: '/glitch', icon: IterationCcw, category: 'studio', useCase: 'Creative' },
-  { title: 'Image Overlay', description: 'Tumpuk gambar dengan blend mode.', href: '/overlay', icon: Layers, category: 'advanced', useCase: 'Stitch' },
-  { title: 'Blur Pro', description: 'Gaussian blur dengan radius kustom.', href: '/blur', icon: Ghost, category: 'studio', useCase: 'Depth' },
-  { title: 'Color Inverter', description: 'Balikkan warna gambar (negatif).', href: '/invert', icon: IterationCcw, category: 'studio', useCase: 'Logic' },
+  { title: 'Vignette Studio', description: 'Efek fokus tepian gelap dramatis.', href: '/vignette', icon: Aperture, category: 'studio', useCase: 'Focus' },
+  { title: 'Pixelate Art', description: 'Sensor atau efek retro pixelation.', href: '/pixelate', icon: Component, category: 'studio', useCase: 'Retro' },
+  { title: 'Glitch Maker', description: 'Efek distorsi digital artistik.', href: '/glitch', icon: IterationCcw, category: 'studio', useCase: 'Digital' },
+  { title: 'Noise Studio', description: 'Kurangi atau tambahkan noise visual.', href: '/noise', icon: Filter, category: 'studio', useCase: 'Grain' },
+  { title: 'Threshold B&W', description: 'Ubah ke hitam putih murni (biner).', href: '/threshold', icon: Contrast, category: 'studio', useCase: 'Shape' },
   { title: 'Posterize Filter', description: 'Kurangi palet warna bergaya poster.', href: '/posterize', icon: Paintbrush2, category: 'studio', useCase: 'Art' },
-  { title: 'Luminance Tool', description: 'Kontrol pencahayaan tingkat lanjut.', href: '/luminance', icon: Sun, category: 'studio', useCase: 'Light' },
-  { title: 'Opacity Adjuster', description: 'Atur transparansi aset visual.', href: '/opacity', icon: Ghost, category: 'advanced', useCase: 'Assets' },
-  { title: 'Threshold B&W', description: 'Ubah ke hitam putih murni (biner).', href: '/threshold', icon: Contrast, category: 'studio', useCase: 'Silhouette' },
-  { title: 'Mirror Studio', description: 'Efek cermin reflektif horizontal.', href: '/mirror', icon: IterationCcw, category: 'social', useCase: 'Symmetry' },
-  { title: 'Canvas Text', description: 'Tambahkan teks minimalis ke gambar.', href: '/canvas-text', icon: Type, category: 'advanced', useCase: 'Banners' },
-  { title: 'Image Stitcher', description: 'Gabungkan gambar secara vertikal.', href: '/stitcher', icon: Split, category: 'social', useCase: 'Layout' },
-  { title: 'EXIF Inspector', description: 'Lihat metadata detail tanpa hapus.', href: '/exif-view', icon: Eye, category: 'utility', useCase: 'Info' },
-  { title: 'PNG Optimizer', description: 'Optimasi aset PNG tanpa kehilangan.', href: '/png-opt', icon: Minimize2, category: 'core', useCase: 'Size' },
-  { title: 'Pattern Maker', description: 'Ubah gambar menjadi pola berulang.', href: '/pattern', icon: Scaling, category: 'advanced', useCase: 'Repeat' },
-  { title: 'Kaleidoscope', description: 'Efek geometri fraktal reaktif.', href: '/kaleido', icon: Focus, category: 'studio', useCase: 'Fractal' },
-  { title: 'Loji Mixer', description: 'Pencampuran warna logaritma murni.', href: '/loji-mix', icon: Camera, category: 'studio', useCase: 'Color' },
+  { title: 'Loji Mixer', description: 'Pencampuran warna logaritma murni.', href: '/loji-mix', icon: Camera, category: 'studio', useCase: 'Tone' },
+  { title: 'Color Inverter', description: 'Balikkan warna gambar (negatif).', href: '/invert', icon: IterationCcw, category: 'studio', useCase: 'Logic' },
+  { title: 'ASCII Art Pro', description: 'Ubah gambar menjadi karakter teks.', href: '/ascii-art', icon: Terminal, category: 'studio', useCase: 'Text' },
+  { title: 'Halftone Filter', description: 'Efek titik cetak retro koran.', href: '/halftone', icon: Binary, category: 'studio', useCase: 'Print' },
+  { title: 'Lomo Cam', description: 'Filter vintage saturasi tinggi.', href: '/lomo', icon: Disc, category: 'studio', useCase: 'Toy' },
+  { title: 'Scanline FX', description: 'Efek garis monitor CRT lama.', href: '/scanline', icon: ScanLine, category: 'studio', useCase: 'TV' },
+  { title: 'Solarize Art', description: 'Efek pembalikan warna artistik.', href: '/solarize', icon: Sun, category: 'studio', useCase: 'Neon' },
+  { title: 'Emboss Effect', description: 'Ubah gambar menjadi tekstur 3D.', href: '/emboss', icon: MousePointer2, category: 'studio', useCase: 'Relief' },
+  { title: 'Sharpen Tool', description: 'Perjelas detail dan tepian gambar.', href: '/sharpen', icon: Settings2, category: 'studio', useCase: 'Details' },
+
+  // PRO GRAPHICS & LAYERS (10)
+  { title: 'Watermark Pro', description: 'Tambahkan logo/teks hak cipta.', href: '/watermark', icon: Stamp, category: 'advanced', useCase: 'Protect' },
+  { title: 'Shadow Studio', description: 'Drop-shadow lembut untuk aset PNG.', href: '/shadow-studio', icon: Layers, category: 'advanced', useCase: 'Depth' },
+  { title: 'Border Master', description: 'Tambahkan bingkai artistik.', href: '/image-border', icon: Square, category: 'advanced', useCase: 'Frame' },
+  { title: 'Image Overlay', description: 'Tumpuk gambar dengan blend mode.', href: '/overlay', icon: Layers, category: 'advanced', useCase: 'Composite' },
+  { title: 'Blur Pro', description: 'Gaussian blur dengan radius kustom.', href: '/blur', icon: Ghost, category: 'advanced', useCase: 'Depth' },
+  { title: 'Opacity Adjuster', description: 'Atur transparansi aset visual.', href: '/opacity', icon: Ghost, category: 'advanced', useCase: 'Alpha' },
+  { title: 'Pattern Maker', description: 'Ubah gambar menjadi pola berulang.', href: '/pattern', icon: Scaling, category: 'advanced', useCase: 'Texture' },
+  { title: 'Kaleidoscope', description: 'Efek geometri fraktal reaktif.', href: '/kaleido', icon: Focus, category: 'advanced', useCase: 'Fractal' },
+  { title: 'Luminance Tool', description: 'Kontrol pencahayaan tingkat lanjut.', href: '/luminance', icon: Sun, category: 'advanced', useCase: 'Light' },
+  { title: 'Perspective Warp', description: 'Ubah sudut pandang gambar (Skew).', href: '/perspective', icon: Share2, category: 'advanced', useCase: 'Transform' },
+
+  // UTILITY & DEV (5)
+  { title: 'QR Code Maker', description: 'Buat kode QR untuk link/teks.', href: '/qr-gen', icon: QrCode, category: 'utility', useCase: 'Contact' },
+  { title: 'Barcode Studio', description: 'Generate barcode standar produk.', href: '/barcode-gen', icon: Barcode, category: 'utility', useCase: 'Retail' },
+  { title: 'EXIF Inspector', description: 'Lihat metadata detail tanpa hapus.', href: '/exif-view', icon: Eye, category: 'utility', useCase: 'Metadata' },
+  { title: 'Color Blind Sim', description: 'Simulasi penglihatan buta warna.', href: '/color-blind', icon: Heart, category: 'utility', useCase: 'A11y' },
+  { title: 'CMYK Splitter', description: 'Visualisasi kanal warna cetak.', href: '/cmyk-split', icon: Palette, category: 'utility', useCase: 'Preview' },
+
+  // AUDIO & VOICE (5)
+  { title: 'Audio FX Studio', description: 'Edit suara dengan profil studio.', href: '/audio-cleaner', icon: Music, category: 'audio', useCase: 'Studio' },
+  { title: 'Dead Air Remover', description: 'Hapus bagian diam secara otomatis.', href: '/dead-air-remover', icon: TimerOff, category: 'audio', useCase: 'Podcast' },
+  { title: 'Voice to SRT', description: 'Workstation subtitle manual presisi.', href: '/voice-to-srt', icon: Captions, category: 'audio', useCase: 'Video' },
+  { title: 'Voice Enhancer', description: 'Meningkatkan kejernihan vokal.', href: '/voice-boost', icon: Mic2, category: 'audio', useCase: 'Voice' },
+  { title: 'Vintage Radio', description: 'Filter suara radio lama retro.', href: '/audio-vintage', icon: Tv2, category: 'audio', useCase: 'SFX' },
 ];
 
 export default function DashboardPage() {
@@ -75,31 +110,33 @@ export default function DashboardPage() {
   const filteredTools = useMemo(() => {
     return visualTools.filter(tool => {
       const matchesSearch = tool.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          tool.description.toLowerCase().includes(searchQuery.toLowerCase());
+                          tool.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          tool.useCase.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = activeCategory === 'all' || tool.category === activeCategory;
       return matchesSearch && matchesCategory;
     });
   }, [searchQuery, activeCategory]);
 
   return (
-    <div className="min-h-full hero-gradient pb-24 overflow-x-hidden">
+    <div className="min-h-full hero-gradient pb-24 overflow-x-hidden workstation-content">
       <div className="container mx-auto px-4 sm:px-6 md:p-12 lg:px-24 space-y-12 sm:space-y-20">
         
         <div className="flex flex-col items-center text-center space-y-6 sm:space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-1000 pt-10 sm:pt-6">
           <Badge variant="outline" className="px-5 py-1.5 text-[9px] sm:text-[10px] text-accent border-accent/20 bg-accent/5 rounded-full uppercase tracking-[0.25em] font-black">
             <Sparkles className="w-3.5 h-3.5 mr-2 text-accent" />
-            Visual Creative Workstation 4.0
+            60-in-1 Ultimate Creative Workstation
           </Badge>
           
-          <h1 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] max-w-4xl">
-            Workstation Efisien. <br className="hidden sm:block" />
+          <h1 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] max-w-5xl">
+            Solusi Kreatif <br className="hidden sm:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent via-primary/80 to-accent animate-gradient-x">
-              Performa Maksimal.
+              Tanpa Batas.
             </span>
           </h1>
           
-          <p className="text-muted-foreground text-[11px] sm:text-sm md:text-lg max-w-2xl mx-auto leading-relaxed px-8 opacity-80 uppercase tracking-widest font-medium">
-            40 alat kreatif yang hanya berjalan saat Anda membutuhkannya. Hemat RAM, cepat, dan murni lokal.
+          <p className="text-muted-foreground text-[11px] sm:text-sm md:text-lg max-w-3xl mx-auto leading-relaxed px-8 opacity-80 uppercase tracking-widest font-medium">
+            Ekosistem 60 alat modular untuk pengolahan visual, audio, dan utilitas digital. 
+            <br className="hidden md:block" /> Berjalan instan secara lokal, menjamin privasi 100%.
           </p>
         </div>
 
@@ -126,7 +163,7 @@ export default function DashboardPage() {
             <div className="relative w-full lg:w-[400px]">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input 
-                placeholder="Cari alat visual..." 
+                placeholder="Cari alat (cth: konversi, subtitle, qr)..." 
                 className="pl-12 h-14 rounded-2xl bg-white/40 backdrop-blur-md border-accent/5 focus:border-accent/40 transition-all text-xs"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -134,7 +171,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 animate-in fade-in duration-700">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4 animate-in fade-in duration-700">
             {filteredTools.map((tool) => (
               <Link key={tool.title} href={tool.href} className="group">
                 <Card className="tool-card h-full flex flex-col border-border/5 bg-card/20 hover:bg-card/95 transition-all duration-500 rounded-[1.5rem]">
@@ -147,6 +184,7 @@ export default function DashboardPage() {
                         tool.category === 'studio' && 'bg-pink-500/10 text-pink-600',
                         tool.category === 'advanced' && 'bg-purple-500/10 text-purple-600',
                         tool.category === 'utility' && 'bg-slate-500/10 text-slate-600',
+                        tool.category === 'audio' && 'bg-emerald-500/10 text-emerald-600',
                       )}>
                         <tool.icon className="w-5 h-5" />
                       </div>
@@ -184,10 +222,10 @@ export default function DashboardPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 opacity-70">
             {[
-              { label: 'On-Demand Engine', icon: ShieldCheck, desc: 'Sangat Ringan' },
-              { label: 'Zero Latency', icon: Zap, desc: 'Instan Lokal' },
-              { label: 'Privacy 100%', icon: Download, desc: 'Tanpa Upload' },
-              { label: '40 Modular Tools', icon: Component, desc: 'Ekosistem Lengkap' }
+              { label: 'On-Demand Processor', icon: ShieldCheck, desc: 'Instan & Ringan' },
+              { label: 'Privacy First', icon: Zap, desc: 'Tanpa Cloud Upload' },
+              { label: 'High Fidelity', icon: Download, desc: 'Ekspor Berkualitas' },
+              { label: '60 Modular Units', icon: Component, desc: 'Ekosistem Lengkap' }
             ].map((stat, i) => (
               <div key={i} className="glass-panel p-6 rounded-[2rem] flex flex-col items-center text-center gap-3 hover:bg-white/60 transition-colors">
                   <stat.icon className="w-5 h-5 text-accent" />
