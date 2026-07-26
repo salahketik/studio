@@ -14,7 +14,7 @@ import {
   Database, Activity,
   Wand2, Layers2, RefreshCcw, Flame, Coins,
   ImagePlus, Monitor,
-  GlassWater, Camera
+  GlassWater, Camera, Cpu, Globe
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -104,91 +104,80 @@ export default function DashboardPage() {
   }, [searchQuery]);
 
   return (
-    <div className="min-h-full pb-20 bg-[#090a0f] text-foreground">
-      <div className="container mx-auto px-6 lg:px-12 py-10 space-y-12">
+    <div className="min-h-full pb-20 bg-background text-foreground">
+      <div className="container mx-auto px-6 lg:px-10 py-10 space-y-12">
         
-        {/* Header - Command Center */}
+        {/* Header Ribbon */}
         <div className="flex flex-col space-y-2">
-            <h1 className="text-5xl font-black tracking-tighter uppercase text-white">Dasbor Utama</h1>
+            <h1 className="text-4xl font-black tracking-tighter uppercase">Dasbor Utama</h1>
             <div className="flex items-center justify-between flex-wrap gap-4">
-               <p className="text-muted-foreground text-sm font-medium opacity-60">
+               <p className="text-muted-foreground text-xs font-medium opacity-60">
                  Workstation aktif. {allTools.length}+ modul operasional siap digunakan 100% lokal.
                </p>
-               <div className="flex items-center gap-2 px-4 py-1.5 bg-green-500/10 border border-green-500/20 rounded-full">
-                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                 <span className="text-[10px] font-black uppercase text-green-500 tracking-widest">Node Stabil v4.2</span>
+               <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full">
+                 <div className="w-1.5 h-1.2 rounded-full bg-green-500 animate-pulse" />
+                 <span className="text-[9px] font-black uppercase text-primary tracking-widest">Node Stabil v4.5</span>
                </div>
             </div>
         </div>
 
-        {/* System Stat Ribbon */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Horizontal Stat Ribbon */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { label: 'Total Modul', value: `${allTools.length}+`, sub: 'Aktif & Stabil', icon: Sparkles, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-            { label: 'Latensi Node', value: '0ms', sub: 'Pemrosesan Lokal', icon: Zap, color: 'text-orange-500', bg: 'bg-orange-500/10' },
-            { label: 'Cache Buffer', value: '3.4 MB', sub: 'Optimasi Memori', icon: Database, color: 'text-cyan-500', bg: 'bg-cyan-500/10' },
-            { label: 'Versi Build', value: 'RAN.PRO', sub: 'Produksi 2025', icon: Activity, color: 'text-green-500', bg: 'bg-green-500/10' },
+            { label: 'Modul Aktif', value: `${allTools.length}+`, sub: 'Total Terintegrasi', icon: Cpu, color: 'text-primary' },
+            { label: 'Latensi Node', value: '0ms', sub: 'Pemrosesan Lokal', icon: Zap, color: 'text-orange-500' },
+            { label: 'Cache Buffer', value: '1.2 GB', sub: 'Optimasi RAM', icon: Database, color: 'text-cyan-500' },
+            { label: 'Status Region', value: 'ID', sub: 'Bahasa Terpasang', icon: Globe, color: 'text-green-500' },
           ].map((stat, i) => (
-            <Card key={i} className="bg-[#11121d] border-white/5 rounded-[2rem] p-6 shadow-xl relative overflow-hidden group border hover:border-accent/30 transition-all duration-500">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/5 to-transparent -translate-y-16 translate-x-16 rounded-full group-hover:scale-125 transition-transform duration-700" />
-                <div className="flex justify-between items-start relative z-10">
+            <Card key={i} className="bg-card/40 border-border/50 rounded-2xl p-5 shadow-sm group hover:border-primary/30 transition-all">
+                <div className="flex justify-between items-start">
                   <div className="space-y-1">
-                      <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50">{stat.label}</p>
-                      <p className="text-3xl font-black tracking-tight text-white">{stat.value}</p>
+                      <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-50">{stat.label}</p>
+                      <p className="text-2xl font-black tracking-tight">{stat.value}</p>
                   </div>
-                  <div className={cn("p-3 rounded-2xl", stat.bg)}>
-                    <stat.icon className={cn("w-5 h-5", stat.color)} />
+                  <div className="p-2.5 rounded-xl bg-muted/50">
+                    <stat.icon className={cn("w-4 h-4", stat.color)} />
                   </div>
                 </div>
-                <div className="mt-6 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground relative z-10">
-                  <ArrowRight className={cn("w-3.5 h-3.5", stat.color)} /> {stat.sub}
+                <div className="mt-4 flex items-center gap-1.5 text-[8px] font-bold uppercase tracking-widest text-muted-foreground">
+                  <ArrowRight className="w-2.5 h-2.5" /> {stat.sub}
                 </div>
             </Card>
           ))}
         </div>
 
-        {/* Global Search Hub */}
-        <div className="relative group max-w-4xl mx-auto">
-           <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-muted-foreground opacity-30 group-focus-within:opacity-100 transition-opacity" />
+        {/* Search Hub */}
+        <div className="relative group max-w-3xl mx-auto">
+           <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground opacity-30 group-focus-within:opacity-100 transition-opacity" />
            <Input 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Cari di antara 110+ modul visual dan utilitas..." 
-            className="h-20 pl-16 pr-8 rounded-[2.5rem] bg-[#11121d] border-white/5 focus-visible:ring-1 focus-visible:ring-accent/40 text-lg font-bold tracking-tight shadow-2xl text-white placeholder:text-muted-foreground/30"
+            placeholder="Cari modul visual (cth: konverter, filter, srt)..." 
+            className="h-16 pl-14 pr-8 rounded-2xl bg-card/80 border-border/50 focus-visible:ring-1 focus-visible:ring-primary/40 text-sm font-bold tracking-tight shadow-xl"
            />
-           <div className="absolute right-6 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-2">
-              <Button 
-                variant="ghost" 
-                size="sm"
-                className="h-10 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest border border-white/10"
-                onClick={() => setSearchQuery('')}
-              >
-                <RefreshCcw className="w-3 h-3 mr-2" /> Reset
-              </Button>
-           </div>
         </div>
 
-        {/* Catalog */}
-        <div className="space-y-10 pt-4">
-          <div className="flex items-center justify-between border-b border-white/5 pb-6">
-             <div className="flex items-center gap-3">
-                <LayoutGrid className="w-5 h-5 text-accent" />
-                <h2 className="text-xs font-black uppercase tracking-[0.3em] text-white/40">Katalog Modul Aktif</h2>
+        {/* Tools Catalog */}
+        <div className="space-y-8">
+          <div className="flex items-center justify-between border-b border-border/50 pb-4">
+             <div className="flex items-center gap-2">
+                <LayoutGrid className="w-4 h-4 text-primary" />
+                <h2 className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40">Katalog Modul</h2>
              </div>
-             <Badge variant="secondary" className="bg-accent/10 text-accent text-[10px] uppercase tracking-widest font-black px-6 py-1.5 border-none rounded-full">
-                {filteredTools.length} Alat Tersedia
+             <Badge variant="secondary" className="bg-primary/5 text-primary text-[8px] uppercase font-black px-4 py-0.5 border-none rounded-full">
+                {filteredTools.length} Unit
              </Badge>
           </div>
 
           {filteredTools.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {filteredTools.map((tool) => (
                 <Link key={tool.title} href={tool.href} className="group">
-                  <Card className="tool-card h-full flex flex-col rounded-[2.5rem] border border-white/5 hover:border-accent/40 transition-all duration-500 bg-[#11121d]/40 backdrop-blur-md overflow-hidden">
-                    <CardHeader className="p-8 pb-4">
-                      <div className="flex items-start justify-between mb-6">
+                  <Card className="tool-card h-full flex flex-col rounded-2xl">
+                    <CardHeader className="p-6 pb-2">
+                      <div className="flex items-start justify-between mb-4">
                         <div className={cn(
-                          "w-14 h-14 rounded-[1.5rem] flex items-center justify-center transition-all duration-700 group-hover:scale-110 shadow-lg border border-white/5",
+                          "w-11 h-11 rounded-xl flex items-center justify-center transition-all group-hover:scale-110 shadow-sm border border-border/50",
                           tool.category === 'core' && 'bg-blue-500/10 text-blue-500',
                           tool.category === 'social' && 'bg-orange-500/10 text-orange-500',
                           tool.category === 'studio' && 'bg-pink-500/10 text-pink-500',
@@ -196,25 +185,25 @@ export default function DashboardPage() {
                           tool.category === 'utility' && 'bg-slate-500/10 text-slate-500',
                           tool.category === 'audio' && 'bg-emerald-500/10 text-emerald-500',
                         )}>
-                          <tool.icon className="w-6 h-6" />
+                          <tool.icon className="w-5 h-5" />
                         </div>
-                        <Badge variant="outline" className="text-[9px] uppercase tracking-[0.2em] font-black opacity-30 group-hover:opacity-100 transition-opacity border-white/10 px-3 py-1 rounded-full">
+                        <Badge variant="outline" className="text-[8px] uppercase font-black opacity-30 group-hover:opacity-100 transition-opacity px-2 py-0.5 rounded-full">
                           {tool.useCase}
                         </Badge>
                       </div>
-                      <div className="space-y-2">
-                        <CardTitle className="text-base font-black tracking-tighter uppercase text-white leading-tight">
+                      <div className="space-y-1">
+                        <CardTitle className="text-sm font-black tracking-tight uppercase leading-tight">
                           {tool.title}
                         </CardTitle>
-                        <CardDescription className="text-xs leading-relaxed text-muted-foreground/60 line-clamp-2">
+                        <CardDescription className="text-[10px] leading-relaxed line-clamp-2 opacity-60">
                           {tool.description}
                         </CardDescription>
                       </div>
                     </CardHeader>
-                    <CardContent className="mt-auto pt-6 p-8 flex items-center justify-between border-t border-white/5 bg-white/[0.02]">
-                      <span className="text-[9px] font-black text-muted-foreground/20 uppercase tracking-[0.4em] group-hover:text-accent/40 transition-colors">Muat Modul</span>
-                      <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center text-accent opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">
-                        <ArrowRight className="w-4 h-4" />
+                    <CardContent className="mt-auto pt-4 p-6 flex items-center justify-between border-t border-border/5 bg-muted/5">
+                      <span className="text-[8px] font-black text-muted-foreground/40 uppercase tracking-widest group-hover:text-primary transition-colors">Buka Alat</span>
+                      <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all">
+                        <ArrowRight className="w-3 h-3" />
                       </div>
                     </CardContent>
                   </Card>
@@ -222,14 +211,11 @@ export default function DashboardPage() {
               ))}
             </div>
           ) : (
-            <div className="py-24 text-center space-y-6 bg-[#11121d]/40 rounded-[3rem] border border-dashed border-white/5">
-               <div className="p-6 bg-white/5 rounded-full inline-block animate-bounce"><Search className="w-10 h-10 text-muted-foreground opacity-20" /></div>
-               <div className="space-y-1">
-                  <p className="text-white text-lg font-bold uppercase tracking-widest">Modul tidak ditemukan</p>
-                  <p className="text-muted-foreground text-xs uppercase tracking-widest opacity-60">Coba gunakan kata kunci lain</p>
-               </div>
-               <Button variant="outline" onClick={() => setSearchQuery('')} className="rounded-full px-8 text-xs font-bold uppercase tracking-widest border-white/10">
-                 Reset Pencarian
+            <div className="py-20 text-center space-y-4 bg-muted/20 rounded-3xl border border-dashed border-border/50">
+               <Search className="w-10 h-10 text-muted-foreground opacity-10 mx-auto" />
+               <p className="text-[10px] font-black uppercase tracking-widest opacity-40">Modul tidak ditemukan</p>
+               <Button variant="outline" size="sm" onClick={() => setSearchQuery('')} className="rounded-full px-6 text-[10px] font-bold uppercase tracking-widest">
+                 Reset
                </Button>
             </div>
           )}

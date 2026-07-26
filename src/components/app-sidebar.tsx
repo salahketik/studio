@@ -17,8 +17,10 @@ import {
   Binary,
   Monitor,
   Camera,
-  History,
-  Info
+  Layers2,
+  ShieldCheck,
+  Cpu,
+  History
 } from 'lucide-react';
 
 import {
@@ -35,6 +37,7 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
 } from '@/components/ui/sidebar';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
 
 const navMain = [
@@ -45,7 +48,6 @@ const navMain = [
   },
   {
     title: "Berkas Core",
-    url: "/image-converter",
     icon: Folder,
     items: [
       { title: "Konverter Massal", url: "/image-converter" },
@@ -58,7 +60,6 @@ const navMain = [
   },
   {
     title: "Kreator Sosial",
-    url: "/resizer",
     icon: Smartphone,
     items: [
       { title: "Resizer Pro", url: "/resizer" },
@@ -71,7 +72,6 @@ const navMain = [
   },
   {
     title: "Studio FX",
-    url: "/filters",
     icon: Box,
     items: [
       { title: "Ruang Filter", url: "/filters" },
@@ -84,7 +84,6 @@ const navMain = [
   },
   {
     title: "Editor Teknis",
-    url: "/luminance",
     icon: Wand2,
     items: [
       { title: "Kontrol Luminansi", url: "/luminance" },
@@ -92,11 +91,11 @@ const navMain = [
       { title: "Warp Perspektif", url: "/perspective" },
       { title: "Sepia Pro", url: "/sepia" },
       { title: "Invert Warna", url: "/invert" },
+      { title: "Ketajaman (Sharpen)", url: "/sharpen" },
     ],
   },
   {
     title: "Studio Audio",
-    url: "/audio-cleaner",
     icon: Music,
     items: [
       { title: "Studio FX Audio", url: "/audio-cleaner" },
@@ -106,7 +105,6 @@ const navMain = [
   },
   {
     title: "Dev & Utilitas",
-    url: "/qr-gen",
     icon: Binary,
     items: [
       { title: "QR Generator", url: "/qr-gen" },
@@ -122,57 +120,74 @@ export function AppSidebar() {
   const pathname = usePathname();
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-white/5 bg-[#0d0e16]">
-      <SidebarHeader className="h-20 flex items-center justify-center border-b border-white/5">
+    <Sidebar collapsible="icon" className="border-r border-border/50 bg-[#07080d]">
+      <SidebarHeader className="h-16 flex items-center justify-center border-b border-border/50">
         <Link href="/" className="flex items-center gap-3 px-4 group w-full">
-          <div className="bg-accent p-2 rounded-xl transition-all group-hover:scale-110 shadow-lg shadow-accent/20">
-            <Zap className="h-5 w-5 text-white" />
+          <div className="bg-primary p-1.5 rounded-lg transition-all group-hover:scale-110 shadow-lg shadow-primary/20">
+            <Zap className="h-4 w-4 text-white" />
           </div>
           <div className="flex flex-col truncate group-data-[collapsible=icon]:hidden">
-            <span className="font-black text-sm tracking-tighter uppercase leading-none">Visual Suite</span>
-            <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-[0.3em] mt-1">RAN DEV WORKSTATION</span>
+            <span className="font-black text-xs tracking-tighter uppercase leading-none">Visual Suite</span>
+            <span className="text-[7px] font-bold text-muted-foreground uppercase tracking-[0.3em] mt-0.5">RAN DEV</span>
           </div>
         </Link>
       </SidebarHeader>
       
-      <SidebarContent className="px-2">
+      <SidebarContent className="px-2 pt-4">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[9px] uppercase tracking-[0.2em] font-black px-4 mb-4 mt-2 opacity-40 text-white">Menu Utama</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-[9px] uppercase tracking-[0.2em] font-black px-4 mb-2 opacity-40">Modul Kerja</SidebarGroupLabel>
           <SidebarMenu className="gap-1">
             {navMain.map((item) => (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton 
+                {item.items ? (
+                  <Collapsible defaultOpen={item.items.some(sub => sub.url === pathname)}>
+                    <CollapsibleTrigger asChild>
+                      <SidebarMenuButton 
+                        tooltip={item.title}
+                        className={cn(
+                          "h-10 rounded-xl px-4 transition-all hover:bg-white/5",
+                          item.items.some(sub => sub.url === pathname) && "bg-primary/10 text-primary"
+                        )}
+                      >
+                        <item.icon className="w-4 h-4" />
+                        <span className="font-bold text-[10px] uppercase tracking-wider">{item.title}</span>
+                        <ChevronRight className="ml-auto w-3 h-3 transition-transform group-data-[state=open]:rotate-90" />
+                      </SidebarMenuButton>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <SidebarMenuSub className="ml-4 border-l border-border/50 mt-1 py-1 gap-1">
+                        {item.items.map((subItem) => (
+                          <SidebarMenuSubItem key={subItem.title}>
+                            <SidebarMenuSubButton 
+                                asChild 
+                                isActive={pathname === subItem.url}
+                                className={cn(
+                                  "h-8 rounded-lg text-[9px] font-bold uppercase tracking-widest px-4 transition-colors",
+                                  pathname === subItem.url ? "text-primary bg-primary/5" : "text-muted-foreground hover:text-white"
+                                )}
+                            >
+                              <Link href={subItem.url}>{subItem.title}</Link>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        ))}
+                      </SidebarMenuSub>
+                    </CollapsibleContent>
+                  </Collapsible>
+                ) : (
+                  <SidebarMenuButton 
                     asChild 
                     tooltip={item.title}
-                    isActive={pathname === item.url || (item.items?.some(i => pathname === i.url))}
+                    isActive={pathname === item.url}
                     className={cn(
-                      "h-11 rounded-xl px-4 transition-all hover:bg-white/5",
-                      (pathname === item.url || item.items?.some(i => pathname === i.url)) && "bg-accent/10 text-accent"
+                      "h-10 rounded-xl px-4 transition-all hover:bg-white/5",
+                      pathname === item.url && "bg-primary/10 text-primary"
                     )}
-                >
-                  <Link href={item.url} className="flex items-center gap-3">
-                    <item.icon className="w-4 h-4" />
-                    <span className="font-bold text-[11px] uppercase tracking-wider">{item.title}</span>
-                    {item.items && <ChevronRight className={cn("ml-auto w-3.5 h-3.5 transition-transform", (pathname === item.url || item.items?.some(i => pathname === i.url)) && "rotate-90")} />}
-                  </Link>
-                </SidebarMenuButton>
-                {item.items && (pathname === item.url || item.items?.some(i => pathname === i.url)) && (
-                  <SidebarMenuSub className="ml-6 border-l border-white/5 mt-1 py-1">
-                    {item.items.map((subItem) => (
-                      <SidebarMenuSubItem key={subItem.title}>
-                        <SidebarMenuSubButton 
-                            asChild 
-                            isActive={pathname === subItem.url}
-                            className={cn(
-                              "h-8 rounded-lg text-[10px] font-medium uppercase tracking-widest px-4 transition-colors",
-                              pathname === subItem.url ? "text-accent bg-accent/5" : "text-muted-foreground hover:text-white"
-                            )}
-                        >
-                          <Link href={subItem.url}>{subItem.title}</Link>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                    ))}
-                  </SidebarMenuSub>
+                  >
+                    <Link href={item.url}>
+                      <item.icon className="w-4 h-4" />
+                      <span className="font-bold text-[10px] uppercase tracking-wider">{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
                 )}
               </SidebarMenuItem>
             ))}
@@ -180,14 +195,14 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-4 border-t border-white/5 bg-black/20">
+      <SidebarFooter className="p-4 border-t border-border/50">
         <div className="flex items-center gap-3 px-2 group-data-[collapsible=icon]:justify-center">
-          <div className="w-9 h-9 rounded-xl bg-accent/10 flex items-center justify-center shrink-0 border border-accent/20">
-             <Settings className="w-4 h-4 text-accent" />
+          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 border border-primary/20">
+             <Cpu className="w-4 h-4 text-primary" />
           </div>
           <div className="flex flex-col truncate group-data-[collapsible=icon]:hidden">
-             <span className="text-[10px] font-black uppercase tracking-tight text-white">Sistem Node</span>
-             <span className="text-[8px] text-green-500 font-bold uppercase tracking-widest">v3.8.0 STABIL</span>
+             <span className="text-[9px] font-black uppercase tracking-tight">Node Lokal</span>
+             <span className="text-[7px] text-green-500 font-bold uppercase tracking-widest">v4.5.0 STABIL</span>
           </div>
         </div>
       </SidebarFooter>
