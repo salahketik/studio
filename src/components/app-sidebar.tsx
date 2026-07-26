@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -11,21 +10,15 @@ import {
   Settings,
   LayoutDashboard,
   Box,
-  Github,
-  Heart,
   Folder,
   Palette,
-  Globe,
   Wand2,
   Smartphone,
-  ShieldCheck,
   Binary,
   Monitor,
-  LayoutGrid,
-  ShieldAlert,
-  Flame,
-  Droplets,
-  Coins
+  Camera,
+  History,
+  Info
 } from 'lucide-react';
 
 import {
@@ -88,7 +81,6 @@ const navMain = [
       { title: "Kaleidoskop", url: "/kaleido" },
       { title: "Seni Pixelate", url: "/pixelate" },
       { title: "Heatmap Visual", url: "/heatmap" },
-      { title: "Solarize Pro", url: "/solarize" },
     ],
   },
   {
@@ -99,7 +91,6 @@ const navMain = [
       { title: "Kontrol Luminansi", url: "/luminance" },
       { title: "Studio Bayangan", url: "/shadow-studio" },
       { title: "Warp Perspektif", url: "/perspective" },
-      { title: "Threshold Blur", url: "/threshold-blur" },
       { title: "Sepia Pro", url: "/sepia" },
       { title: "Invert Warna", url: "/invert" },
     ],

@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useMemo } from 'react';
@@ -12,11 +11,10 @@ import {
   IterationCcw, Frame, Component, Focus, Sun, Filter,
   Music, TimerOff, Captions, Terminal, UserCircle,
   Hash, Binary, Search,
-  Database, Activity, Cpu, HardDrive,
-  Wand2, Layers2, Scan, RefreshCcw, Flame, Droplets, Coins, Puzzle,
-  Camera, MousePointer2, BoxSelect, Eraser, Move3d,
-  CircleDashed, ImagePlus, Monitor as Screen,
-  GlassWater, Focus as FocusIcon, Layers as LayersIcon
+  Database, Activity,
+  Wand2, Layers2, RefreshCcw, Flame, Coins,
+  ImagePlus, Monitor as Screen,
+  GlassWater, Focus as FocusIcon, Camera
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -43,6 +41,7 @@ const allTools = [
   { title: 'Corner Rounder', description: 'Bulatkan sudut gambar dengan presisi.', href: '/corners', icon: Frame, category: 'social', useCase: 'UI/UX' },
   { title: 'Canvas Text', description: 'Tambah teks caption pada kanvas gambar.', href: '/canvas-text', icon: Type, category: 'social', useCase: 'Teks' },
   { title: 'Watermark Pro', description: 'Tambah logo/teks hak cipta pada gambar.', href: '/watermark', icon: ImagePlus, category: 'social', useCase: 'Copyright' },
+  { title: 'Image Flipper', description: 'Putar balik gambar secara horisontal/vertikal.', href: '/image-flipper', icon: RefreshCcw, category: 'social', useCase: 'Mirror' },
 
   // 3. Studio FX (Artistic)
   { title: 'Filter Studio', description: 'Edit pencahayaan, kontras, & suasana.', href: '/filters', icon: SlidersHorizontal, category: 'studio', useCase: 'Editor' },
@@ -56,6 +55,7 @@ const allTools = [
   { title: 'ASCII Art Pro', description: 'Ubah gambar menjadi karakter teks unik.', href: '/ascii-art', icon: Terminal, category: 'studio', useCase: 'Retro' },
   { title: 'Kaleidoscope', description: 'Ciptakan geometri fraktal melingkar.', href: '/kaleido', icon: Focus, category: 'studio', useCase: 'Fraktal' },
   { title: 'Pixelate Art', description: 'Ubah gambar menjadi gaya retro 8-bit.', href: '/pixelate', icon: Component, category: 'studio', useCase: 'Retro' },
+  { title: 'Halftone Filter', description: 'Filter titik-titik koran retro klasik.', href: '/halftone', icon: Binary, category: 'studio', useCase: 'Print Art' },
 
   // 4. Editor Teknis (Precision)
   { title: 'Sharpen Pro', description: 'Tingkatkan ketajaman garis tepi gambar.', href: '/sharpen', icon: Wand2, category: 'advanced', useCase: 'Detail' },
@@ -63,17 +63,18 @@ const allTools = [
   { title: 'Luminance Tool', description: 'Kontrol pencahayaan tingkat lanjut.', href: '/luminance', icon: Sun, category: 'advanced', useCase: 'Cahaya' },
   { title: 'Opacity Pro', description: 'Kontrol saluran alfa transparansi.', href: '/opacity', icon: Ghost, category: 'advanced', useCase: 'Alpha' },
   { title: 'Shadow Studio', description: 'Tambah kedalaman bayangan (drop shadow).', href: '/shadow-studio', icon: Layers, category: 'advanced', useCase: 'Dimensi' },
-  { title: 'Perspective Warp', description: 'Transformasi 3D skew & tilt gambar.', href: '/perspective', icon: Move3d, category: 'advanced', useCase: '3D' },
   { title: 'Threshold B&W', description: 'Konversi biner hitam putih murni.', href: '/threshold', icon: Contrast, category: 'advanced', useCase: 'Binary' },
   { title: 'Color Mixer', description: 'Eksperimen RGB channel lab.', href: '/color-mixer', icon: Palette, category: 'advanced', useCase: 'Lab' },
   { title: 'Loji Mixer', description: 'Pencampuran warna logaritma.', href: '/loji-mix', icon: Camera, category: 'advanced', useCase: 'Tone' },
+  { title: 'Color Balance', description: 'Keseimbangan warna RGB tingkat lanjut.', href: '/color-balance', icon: Palette, category: 'advanced', useCase: 'Grade' },
+  { title: 'Edge Detection', description: 'Analisis kontur garis tepi Laplacian.', href: '/edge-detection', icon: Wand2, category: 'advanced', useCase: 'Analytic' },
 
   // 5. Studio Audio
   { title: 'Audio FX Studio', description: 'Edit suara dengan profil studio musik.', href: '/audio-cleaner', icon: Music, category: 'audio', useCase: 'Studio' },
   { title: 'Dead Air Remover', description: 'Hapus jeda sunyi secara otomatis.', href: '/dead-air-remover', icon: TimerOff, category: 'audio', useCase: 'Podcast' },
   { title: 'Subtitle Workstation', description: 'Workstation subtitle manual presisi.', href: '/voice-to-srt', icon: Captions, category: 'audio', useCase: 'Video' },
 
-  // 6. Utilitas Dev & Desain Baru
+  // 6. Utilitas Dev & Desain
   { title: 'Gradient Studio', description: 'Generator gradien linear & radial.', href: '/gradient-gen', icon: Palette, category: 'utility', useCase: 'CSS' },
   { title: 'Glassmorphism', description: 'Generator efek kaca transparan CSS.', href: '/glassmorphism', icon: GlassWater, category: 'utility', useCase: 'UI' },
   { title: 'Tilt-Shift FX', description: 'Efek miniatur dengan blur lensa.', href: '/tilt-shift', icon: FocusIcon, category: 'utility', useCase: 'Fokus' },
@@ -81,10 +82,14 @@ const allTools = [
   { title: 'Polaroid Frame', description: 'Bingkai foto instan gaya retro.', href: '/polaroid', icon: Box, category: 'utility', useCase: 'Instan' },
   { title: 'QR Generator', description: 'Generate kode QR statis instan.', href: '/qr-gen', icon: Binary, category: 'utility', useCase: 'Scan' },
   { title: 'Favicon Gen', description: 'Buat ikon situs web .ico standar.', href: '/favicon-generator', icon: Box, category: 'utility', useCase: 'Web' },
-  { title: 'SVG Inspector', description: 'Inspeksi & pratinjau kode vektor SVG.', href: '/svg-view', icon: Code2, category: 'utility', useCase: 'Vektor' },
   { title: 'Kalkulator Aspek', description: 'Hitung proporsi dimensi gambar.', href: '/aspect-calculator', icon: Hash, category: 'utility', useCase: 'Desain' },
   { title: 'Inspektur EXIF', description: 'Baca atribut data biner asli foto.', href: '/exif-view', icon: Eye, category: 'utility', useCase: 'Metadata' },
   { title: 'Pola Berulang', description: 'Buat pratinjau pola ubin mulus.', href: '/pattern', icon: Scaling, category: 'utility', useCase: 'Texture' },
+  { title: 'Heatmap Visual', description: 'Analisis densitas warna piksel.', href: '/heatmap', icon: Flame, category: 'utility', useCase: 'Analytics' },
+  { title: 'Image Border', description: 'Tambah bingkai artistik pada gambar.', href: '/image-border', icon: Frame, category: 'utility', useCase: 'Frame' },
+  { title: 'Blur Pro', description: 'Filter blur Gaussian presisi tinggi.', href: '/blur', icon: Ghost, category: 'utility', useCase: 'Depth' },
+  { title: 'Noise Studio', description: 'Tekstur grain analog kustom.', href: '/noise', icon: Filter, category: 'utility', useCase: 'Analog' },
+  { title: 'Overlay Studio', description: 'Gabungkan dua gambar dengan transparansi.', href: '/overlay', icon: Layers, category: 'utility', useCase: 'Merge' },
 ];
 
 export default function DashboardPage() {
@@ -99,30 +104,30 @@ export default function DashboardPage() {
   }, [searchQuery]);
 
   return (
-    <div className="min-h-full pb-20 workstation-content bg-[#090a0f]">
+    <div className="min-h-full pb-20 bg-[#090a0f] text-foreground">
       <div className="container mx-auto px-6 lg:px-12 py-10 space-y-12">
         
-        {/* Dashboard Header - Clean & Wide */}
+        {/* Header - Command Center */}
         <div className="flex flex-col space-y-2">
-            <h1 className="text-5xl font-black tracking-tighter uppercase text-white">Dasbor</h1>
-            <div className="flex items-center justify-between">
+            <h1 className="text-5xl font-black tracking-tighter uppercase text-white">Dasbor Utama</h1>
+            <div className="flex items-center justify-between flex-wrap gap-4">
                <p className="text-muted-foreground text-sm font-medium opacity-60">
-                 Sistem terintegrasi. {allTools.length}+ modul operasional siap digunakan.
+                 Workstation aktif. {allTools.length}+ modul operasional siap digunakan 100% lokal.
                </p>
                <div className="flex items-center gap-2 px-4 py-1.5 bg-green-500/10 border border-green-500/20 rounded-full">
                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                 <span className="text-[10px] font-black uppercase text-green-500 tracking-widest">Sistem Online</span>
+                 <span className="text-[10px] font-black uppercase text-green-500 tracking-widest">Node Stabil v3.8</span>
                </div>
             </div>
         </div>
 
-        {/* Workstation Statistics - Horizontal Ribbon */}
+        {/* System Stat Ribbon */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
             { label: 'Total Modul', value: `${allTools.length}+`, sub: 'Aktif & Stabil', icon: Sparkles, color: 'text-blue-500', bg: 'bg-blue-500/10' },
             { label: 'Latensi Node', value: '0ms', sub: 'Pemrosesan Lokal', icon: Zap, color: 'text-orange-500', bg: 'bg-orange-500/10' },
-            { label: 'Memori Cache', value: '2.8 MB', sub: 'Buffer Optimal', icon: Database, color: 'text-cyan-500', bg: 'bg-cyan-500/10' },
-            { label: 'Status Build', value: 'v3.8.0', sub: 'Stabil Pro', icon: Activity, color: 'text-green-500', bg: 'bg-green-500/10' },
+            { label: 'Cache Buffer', value: '2.8 MB', sub: 'Optimasi Memori', icon: Database, color: 'text-cyan-500', bg: 'bg-cyan-500/10' },
+            { label: 'Versi Build', value: 'RAN.25', sub: 'Produksi Pro', icon: Activity, color: 'text-green-500', bg: 'bg-green-500/10' },
           ].map((stat, i) => (
             <Card key={i} className="bg-[#11121d] border-white/5 rounded-[2rem] p-6 shadow-xl relative overflow-hidden group border hover:border-accent/30 transition-all duration-500">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/5 to-transparent -translate-y-16 translate-x-16 rounded-full group-hover:scale-125 transition-transform duration-700" />
@@ -142,23 +147,33 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        {/* Global Search Hub - Prominent */}
+        {/* Global Search Hub */}
         <div className="relative group max-w-4xl mx-auto">
            <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-muted-foreground opacity-30 group-focus-within:opacity-100 transition-opacity" />
            <Input 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Cari di antara 90+ modul workstation..." 
+            placeholder="Cari di antara 110+ modul visual dan utilitas..." 
             className="h-20 pl-16 pr-8 rounded-[2.5rem] bg-[#11121d] border-white/5 focus-visible:ring-1 focus-visible:ring-accent/40 text-lg font-bold tracking-tight shadow-2xl text-white placeholder:text-muted-foreground/30"
            />
+           <div className="absolute right-6 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-2">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className="h-10 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest border border-white/10"
+                onClick={() => setSearchQuery('')}
+              >
+                <RefreshCcw className="w-3 h-3 mr-2" /> Reset
+              </Button>
+           </div>
         </div>
 
-        {/* Tools Exploration Grid */}
+        {/* Filtered Content */}
         <div className="space-y-10 pt-4">
           <div className="flex items-center justify-between border-b border-white/5 pb-6">
              <div className="flex items-center gap-3">
                 <LayoutGrid className="w-5 h-5 text-accent" />
-                <h2 className="text-xs font-black uppercase tracking-[0.3em] text-white/40">Eksplorasi Modul Utama</h2>
+                <h2 className="text-xs font-black uppercase tracking-[0.3em] text-white/40">Katalog Modul Aktif</h2>
              </div>
              <Badge variant="secondary" className="bg-accent/10 text-accent text-[10px] uppercase tracking-widest font-black px-6 py-1.5 border-none rounded-full">
                 {filteredTools.length} Alat Tersedia
@@ -211,7 +226,7 @@ export default function DashboardPage() {
                <div className="p-6 bg-white/5 rounded-full inline-block animate-bounce"><Search className="w-10 h-10 text-muted-foreground opacity-20" /></div>
                <div className="space-y-1">
                   <p className="text-white text-lg font-bold uppercase tracking-widest">Modul tidak ditemukan</p>
-                  <p className="text-muted-foreground text-xs uppercase tracking-widest opacity-60">Coba gunakan kata kunci lain seperti 'Konversi' atau 'Filter'</p>
+                  <p className="text-muted-foreground text-xs uppercase tracking-widest opacity-60">Coba gunakan kata kunci lain</p>
                </div>
                <Button variant="outline" onClick={() => setSearchQuery('')} className="rounded-full px-8 text-xs font-bold uppercase tracking-widest border-white/10">
                  Reset Pencarian

@@ -4,6 +4,38 @@
 
 @layer base {
   :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 217 91% 60%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 10% 3.9%;
+    --radius: 1rem;
+    
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
     --card: 240 10% 6%;
@@ -23,13 +55,13 @@
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 217.2 91.2% 59.8%;
-    --radius: 1rem;
+    
     --sidebar-background: 240 10% 4%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-foreground: 240 5% 64.9%;
+    --sidebar-primary: 217.2 91.2% 59.8%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5% 64.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
@@ -40,7 +72,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-[#090a0f] text-foreground font-body antialiased;
+    @apply bg-background text-foreground font-body antialiased;
     font-size: 13px;
     letter-spacing: -0.015em;
     line-height: 1.4;
@@ -51,21 +83,17 @@
 }
 
 .glass-panel {
-  @apply bg-[#11121d]/60 backdrop-blur-xl border border-white/5 shadow-2xl;
+  @apply bg-card/60 backdrop-blur-xl border border-white/5 shadow-2xl;
 }
 
 .tool-card {
-  @apply relative overflow-hidden transition-all duration-500 border-white/5 bg-[#11121d]/40 backdrop-blur-md;
+  @apply relative overflow-hidden transition-all duration-500 border-white/5 bg-card/40 backdrop-blur-md;
 }
 
 .tool-card:hover {
-  @apply shadow-[0_20px_50px_rgba(0,0,0,0.3)] -translate-y-1 bg-[#161827] border-accent/30;
-}
-
-.stat-card {
-  @apply bg-[#11121d] border-white/5 rounded-2xl p-5 hover:border-white/10 transition-all overflow-hidden relative shadow-lg;
+  @apply shadow-[0_20px_50px_rgba(0,0,0,0.3)] -translate-y-1 bg-card/60 border-accent/30;
 }
 
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { @apply bg-transparent; }
-::-webkit-scrollbar-thumb { @apply bg-white/10 rounded-full hover:bg-accent/40 transition-colors; }
+::-webkit-scrollbar-thumb { @apply bg-accent/40 rounded-full hover:bg-accent/60 transition-colors; }

@@ -21,7 +21,7 @@ export function AppHeader() {
   return (
     <header className={cn(
       "sticky top-0 z-50 w-full h-16 flex items-center transition-all duration-300 border-b",
-      scrolled ? "bg-[#090a0f]/90 backdrop-blur-xl border-white/5 shadow-sm" : "bg-transparent border-transparent"
+      scrolled ? "bg-background/90 backdrop-blur-xl border-white/5 shadow-sm" : "bg-transparent border-transparent"
     )}>
       <div className="container mx-auto px-6 flex items-center justify-between gap-4">
         <div className="flex items-center gap-4 flex-1">
@@ -29,7 +29,7 @@ export function AppHeader() {
           <div className="relative w-full max-w-xl hidden md:block">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground opacity-30" />
             <Input 
-              placeholder="Cari alat cepat..." 
+              placeholder="Akses alat cepat (Cmd+K)..." 
               className="pl-11 h-10 rounded-2xl bg-white/5 border-none focus-visible:ring-1 focus-visible:ring-accent/30 text-[11px] font-bold tracking-tight"
             />
             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1 opacity-20 pointer-events-none">
@@ -40,6 +40,7 @@ export function AppHeader() {
         </div>
 
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           <Badge variant="outline" className="hidden lg:flex px-4 py-1.5 text-[9px] font-black uppercase tracking-widest border-white/5 text-muted-foreground bg-white/5">
             <Globe className="w-3 h-3 mr-2" /> ID
           </Badge>
