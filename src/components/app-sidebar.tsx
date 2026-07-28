@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -6,23 +5,19 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   Zap,
-  Music,
   ChevronRight,
   LayoutDashboard,
   Box,
   Folder,
   Wand2,
   Smartphone,
-  ShieldCheck,
   Code2,
   BrainCircuit,
   Star,
   History,
   Info,
   Cpu,
-  FileText,
-  Search,
-  Activity
+  FileText
 } from 'lucide-react';
 
 import {
@@ -126,9 +121,7 @@ export function AppSidebar() {
     },
   ];
 
-  function toolTitleClean(t: string) { return t.toLowerCase().trim(); }
-  const favoriteTools = mounted ? ALL_TOOLS.filter(t => favorites.includes(toolTitleClean(t.title))) : [];
-  const recentTools = mounted ? ALL_TOOLS.filter(t => recent.includes(toolTitleClean(t.title))).slice(0, 5) : [];
+  const recentTools = mounted ? ALL_TOOLS.filter(t => recent.includes(t.title.toLowerCase().trim())).slice(0, 5) : [];
 
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border bg-sidebar">
@@ -150,26 +143,20 @@ export function AppSidebar() {
           <SidebarGroupLabel className="text-[9px] uppercase tracking-[0.2em] font-black px-4 mb-2 opacity-40 text-sidebar-foreground/60">Personal Workspace</SidebarGroupLabel>
           <SidebarMenu className="gap-1">
             <SidebarMenuItem>
-                <Collapsible className="group/collapsible">
-                    <CollapsibleTrigger asChild>
-                        <SidebarMenuButton tooltip="Favorit Saya" className="text-sidebar-foreground hover:text-sidebar-foreground">
-                            <Star className="w-4 h-4 text-yellow-500" />
-                            <span className="font-bold text-[10px] uppercase tracking-wider">Favorit</span>
-                            <ChevronRight className="ml-auto w-3 h-3 transition-transform group-data-[state=open]:rotate-90" />
-                        </SidebarMenuButton>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent>
-                        <SidebarMenuSub className="ml-4 border-l border-sidebar-border mt-1 py-1 gap-1">
-                            {favoriteTools.length > 0 ? favoriteTools.map(t => (
-                                <SidebarMenuSubItem key={t.href}>
-                                    <SidebarMenuSubButton asChild className="h-8 rounded-lg text-[9px] font-bold uppercase tracking-widest px-4 text-sidebar-foreground/80 hover:text-sidebar-foreground">
-                                        <Link href={t.href}>{t.title}</Link>
-                                    </SidebarMenuSubButton>
-                                </SidebarMenuSubItem>
-                            )) : <p className="text-[8px] px-4 opacity-50 italic text-sidebar-foreground/40">Belum ada favorit</p>}
-                        </SidebarMenuSub>
-                    </CollapsibleContent>
-                </Collapsible>
+              <SidebarMenuButton 
+                asChild 
+                tooltip="Favorit Saya"
+                isActive={pathname === '/favorites'}
+                className={cn(
+                  "text-sidebar-foreground hover:text-sidebar-foreground",
+                  pathname === '/favorites' && "bg-sidebar-accent text-primary"
+                )}
+              >
+                <Link href="/favorites">
+                  <Star className={cn("w-4 h-4", pathname === '/favorites' ? "text-primary fill-primary" : "text-yellow-500")} />
+                  <span className="font-bold text-[10px] uppercase tracking-wider">Favorit</span>
+                </Link>
+              </SidebarMenuButton>
             </SidebarMenuItem>
             
             <SidebarMenuItem>
@@ -257,33 +244,10 @@ export function AppSidebar() {
             ))}
           </SidebarMenu>
         </SidebarGroup>
-
-        {/* SYSTEM INFO */}
-        <SidebarGroup>
-            <SidebarGroupLabel className="text-[9px] uppercase tracking-[0.2em] font-black px-4 mb-2 opacity-40 text-sidebar-foreground/60">System Node</SidebarGroupLabel>
-            <SidebarMenu className="gap-1">
-                <SidebarMenuItem>
-                    <SidebarMenuButton asChild tooltip="Changelog" className="text-sidebar-foreground hover:text-sidebar-foreground">
-                        <Link href="/changelog">
-                            <FileText className="w-4 h-4 text-emerald-500" />
-                            <span className="font-bold text-[10px] uppercase tracking-wider">Changelog</span>
-                        </Link>
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                    <SidebarMenuButton asChild tooltip="Tentang Workstation" className="text-sidebar-foreground hover:text-sidebar-foreground">
-                        <Link href="/about">
-                            <Info className="w-4 h-4 text-cyan-500" />
-                            <span className="font-bold text-[10px] uppercase tracking-wider">Tentang</span>
-                        </Link>
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
-            </SidebarMenu>
-        </SidebarGroup>
       </SidebarContent>
 
       <SidebarFooter className="p-4 border-t border-sidebar-border">
-        <div className="flex items-center gap-3 px-2 group-data-[collapsible=icon]:justify-center">
+        <div className="flex items-center gap-3 px-2">
           <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 border border-primary/20">
              <Cpu className="w-4 h-4 text-primary" />
           </div>

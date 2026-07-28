@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -8,7 +7,6 @@ import { useToast } from '@/hooks/use-toast';
 import { 
   ChevronLeft, 
   BrainCircuit, 
-  UploadCloud, 
   RefreshCcw, 
   Loader2,
   Sparkles,
@@ -20,7 +18,6 @@ import Link from 'next/link';
 import { ImageUploader } from '@/features/image-converter/components/image-uploader';
 import { analyzeImage, type AnalyzeImageOutput } from '@/ai/flows/analyze-image';
 import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Label } from '@/components/ui/label';
 
 export default function AIAnalystPage() {

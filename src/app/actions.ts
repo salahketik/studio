@@ -2,6 +2,9 @@
 
 import { optimizeWebpCompression } from '@/ai/flows/optimize-webp-compression';
 import type { OptimizeWebpCompressionInput } from '@/ai/flows/optimize-webp-compression';
+import { convertPdfToWord } from '@/ai/flows/convert-pdf-to-word';
+import { convertPdfToExcel } from '@/ai/flows/convert-pdf-to-excel';
+import { convertPdfToPpt } from '@/ai/flows/convert-pdf-to-ppt';
 
 interface AIResult {
     optimizedImageUri?: string;
@@ -11,7 +14,6 @@ interface AIResult {
 
 /**
  * Menjalankan optimisasi WebP menggunakan AI Genkit.
- * Dipertahankan hanya untuk Konverter Gambar jika pengguna memilih Bantuan AI.
  */
 export async function runAIOptimization(
   input: OptimizeWebpCompressionInput
@@ -32,5 +34,35 @@ export async function runAIOptimization(
     return {
       error: error instanceof Error ? error.message : 'An unknown error occurred during AI optimization.',
     };
+  }
+}
+
+/**
+ * PDF Conversions
+ */
+export async function runPDFToWordConversion(input: { pdfDataUri: string }) {
+  try {
+    const result = await convertPdfToWord(input);
+    return { dataUri: result.docxDataUri };
+  } catch (error: any) {
+    return { error: error.message || 'Gagal konversi ke Word.' };
+  }
+}
+
+export async function runPDFToExcelConversion(input: { pdfDataUri: string }) {
+  try {
+    const result = await convertPdfToExcel(input);
+    return { dataUri: result.excelDataUri };
+  } catch (error: any) {
+    return { error: error.message || 'Gagal konversi ke Excel.' };
+  }
+}
+
+export async function runPDFToPptConversion(input: { pdfDataUri: string }) {
+  try {
+    const result = await convertPdfToPpt(input);
+    return { dataUri: result.pptDataUri };
+  } catch (error: any) {
+    return { error: error.message || 'Gagal konversi ke PowerPoint.' };
   }
 }
