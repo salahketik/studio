@@ -1,7 +1,6 @@
-
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
@@ -17,6 +16,7 @@ import {
 import Link from 'next/link';
 import { ImageUploader } from '@/features/image-converter/components/image-uploader';
 import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 
 export default function Base64ToolPage() {
   const { toast } = useToast();

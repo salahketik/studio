@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -12,7 +11,6 @@ import {
   RefreshCcw, 
   Loader2,
   Sparkles,
-  Info,
   Pipette,
   Type,
   Search
@@ -22,6 +20,7 @@ import { ImageUploader } from '@/features/image-converter/components/image-uploa
 import { analyzeImage, type AnalyzeImageOutput } from '@/ai/flows/analyze-image';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Label } from '@/components/ui/label';
 
 export default function AIAnalystPage() {
   const { toast } = useToast();
