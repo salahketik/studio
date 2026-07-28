@@ -1,3 +1,4 @@
+
 import { 
   FileImage, Crop, ArrowRight, Sparkles, Zap, 
   LayoutGrid, Maximize2, SlidersHorizontal, Pipette, Grid3X3, 

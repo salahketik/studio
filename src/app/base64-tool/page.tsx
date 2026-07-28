@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
@@ -16,7 +17,6 @@ import {
 import Link from 'next/link';
 import { ImageUploader } from '@/features/image-converter/components/image-uploader';
 import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
 
 export default function Base64ToolPage() {
   const { toast } = useToast();
@@ -93,12 +93,15 @@ export default function Base64ToolPage() {
           <div className="lg:col-span-7 space-y-6">
             <Card className="rounded-3xl border-none shadow-xl overflow-hidden h-full flex flex-col">
               <CardHeader className="bg-muted/50 border-b py-4">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest flex items-center justify-between">
-                  <div className="flex items-center gap-2"><Braces className="w-4 h-4 text-accent" /> Base64 Data URI</div>
+                <div className="flex items-center justify-between w-full">
+                  <div className="flex items-center gap-2">
+                    <Braces className="w-4 h-4 text-accent" />
+                    <span className="text-[10px] font-black uppercase tracking-widest">Base64 Data URI</span>
+                  </div>
                   <Button size="sm" variant="outline" className="h-8 rounded-xl text-[9px] font-black uppercase tracking-widest" onClick={copyToClipboard}>
                      <Copy className="w-3 h-3 mr-2" /> Salin Kode
                   </Button>
-                </CardTitle>
+                </div>
               </CardHeader>
               <CardContent className="p-4 flex-grow">
                 {isProcessing ? (
