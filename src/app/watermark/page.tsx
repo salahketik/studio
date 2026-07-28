@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useCallback, useRef } from 'react';
@@ -7,7 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { saveAs } from 'file-saver';
 import { 
   ChevronLeft, 
-  Stamp, 
+  Sticker, 
   Download, 
   RefreshCcw, 
   UploadCloud, 
@@ -158,7 +159,7 @@ export default function WatermarkPage() {
             <Card className="rounded-3xl border-none shadow-xl overflow-hidden">
               <CardHeader className="bg-muted/50 border-b py-4">
                 <CardTitle className="text-sm font-bold flex items-center gap-2">
-                  <Stamp className="w-4 h-4 text-accent" /> Jenis Watermark
+                  <Sticker className="w-4 h-4 text-accent" /> Jenis Watermark
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6 space-y-6">
@@ -215,11 +216,11 @@ export default function WatermarkPage() {
                     <Label className="text-[10px] uppercase font-bold text-muted-foreground">Posisi</Label>
                     <div className="grid grid-cols-3 gap-2">
                       {[
-                        { id: 'top-left', icon: Layout, label: 'TL' },
-                        { id: 'center', icon: Layout, label: 'Mid' },
-                        { id: 'top-right', icon: Layout, label: 'TR' },
-                        { id: 'bottom-left', icon: Layout, label: 'BL' },
-                        { id: 'bottom-right', icon: Layout, label: 'BR' },
+                        { id: 'top-left', label: 'TL' },
+                        { id: 'center', label: 'Mid' },
+                        { id: 'top-right', label: 'TR' },
+                        { id: 'bottom-left', label: 'BL' },
+                        { id: 'bottom-right', label: 'BR' },
                       ].map((pos) => (
                         <Button 
                           key={pos.id} 
@@ -255,7 +256,6 @@ export default function WatermarkPage() {
                  <div className="relative group max-w-full shadow-2xl border-4 border-white">
                     <img src={originalImage.url} alt="Main" className="max-w-full h-auto rounded-sm" />
                     
-                    {/* Watermark Overlay Emulator */}
                     <div 
                       className={cn(
                         "absolute pointer-events-none transition-all duration-200 flex",

@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
 
@@ -11,9 +12,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { saveAs } from 'file-saver';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-
 
 export default function TrimPage() {
   const { toast } = useToast();
@@ -30,37 +31,30 @@ export default function TrimPage() {
     }
   }, []);
   
-  const trimCanvas = (canvas: HTMLCanvasElement, tolerance: number) => {
+  const trimCanvas = (canvas: HTMLCanvasElement, toleranceValue: number) => {
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
     if (!ctx) return null;
 
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const { data, width, height } = imageData;
     
-    // Top-left pixel is often background
     const bgR = data[0], bgG = data[1], bgB = data[2], bgA = data[3];
 
     let top = height, bottom = -1, left = width, right = -1;
 
     function isPixelEmpty(i: number) {
         const r = data[i], g = data[i+1], b = data[i+2], a = data[i+3];
-        
-        // Alpha transparency check
-        if (a < tolerance) return true;
-        
-        // Color similarity check (useful for solid backgrounds)
+        if (a < toleranceValue) return true;
         const colorThreshold = 30;
         if (
             Math.abs(r - bgR) < colorThreshold &&
             Math.abs(g - bgG) < colorThreshold &&
             Math.abs(b - bgB) < colorThreshold &&
-            Math.abs(a - bgA) < tolerance
+            Math.abs(a - bgA) < toleranceValue
         ) return true;
-        
         return false;
     }
 
-    // Scanning algorithms
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
             if (!isPixelEmpty((y * width + x) * 4)) { top = y; break; }
@@ -136,7 +130,6 @@ export default function TrimPage() {
     if (originalImage) handleTrim();
   }, [originalImage, tolerance, handleTrim]);
 
-
   const handleDownload = () => {
     if (!trimmedImage || !originalImage) return;
     const extension = originalImage.file.name.split('.').pop();
@@ -180,7 +173,7 @@ export default function TrimPage() {
                           <div className="flex-1 p-6 space-y-4">
                               <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Original</h3>
                               <div className="aspect-square relative rounded-2xl overflow-hidden border bg-muted/20 flex items-center justify-center p-4">
-                                  <Image src={originalImage.url} alt="Original" width={0} height={0} sizes="100vw" className="w-auto h-auto max-h-full max-w-full object-contain" />
+                                  <Image src={originalImage.url} alt="Original" width={1000} height={1000} className="w-auto h-auto max-h-full max-w-full object-contain" />
                               </div>
                               <p className="text-center text-xs font-mono">{formatBytes(originalImage.file.size)}</p>
                           </div>
@@ -198,7 +191,7 @@ export default function TrimPage() {
                                           <p className="text-[10px] uppercase font-bold text-accent tracking-widest">Scanning Pixels...</p>
                                       </div>
                                   ) : trimmedImage ? (
-                                      <Image src={trimmedImage.url} alt="Trimmed" width={0} height={0} sizes="100vw" className="w-auto h-auto max-h-full max-w-full object-contain" />
+                                      <Image src={trimmedImage.url} alt="Trimmed" width={1000} height={1000} className="w-auto h-auto max-h-full max-w-full object-contain" />
                                   ) : (
                                       <ImageIcon className="w-8 h-8 text-muted-foreground" />
                                   )}
