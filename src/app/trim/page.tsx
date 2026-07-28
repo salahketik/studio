@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
@@ -178,7 +179,7 @@ export default function TrimPage() {
                               <div className="flex items-center justify-between">
                                 <h3 className="text-[10px] font-black uppercase tracking-widest text-accent">Trimmed Ready</h3>
                                 {trimmedImage && (
-                                   <Badge variant="secondary" className="bg-accent/10 text-accent text-[8px] font-black uppercase">Alpha Processed</Badge>
+                                   <Badge variant="secondary" className="bg-accent/10 text-accent text-[9px] font-black uppercase">Alpha Processed</Badge>
                                 )}
                               </div>
                               <div className="aspect-square relative rounded-2xl overflow-hidden border bg-accent/5 flex items-center justify-center p-4">

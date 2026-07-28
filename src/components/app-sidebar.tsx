@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -148,7 +149,7 @@ export function AppSidebar() {
                 tooltip="Favorit Saya"
                 isActive={pathname === '/favorites'}
                 className={cn(
-                  "text-sidebar-foreground hover:text-sidebar-foreground",
+                  "h-10 rounded-xl px-4 transition-all hover:bg-sidebar-accent text-sidebar-foreground hover:text-sidebar-foreground",
                   pathname === '/favorites' && "bg-sidebar-accent text-primary"
                 )}
               >
